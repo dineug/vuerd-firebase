@@ -1,7 +1,7 @@
 <template>
-  <v-app class="app">
+  <div>
     <router-view />
-  </v-app>
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,5 +11,4 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class App extends Vue {}
 </script>
 
-<style>
-</style>
+<style></style>
