@@ -1,8 +1,8 @@
 <template>
   <el-container>
-    <ae-aside active="1" />
+    <ae-aside active="3" />
     <el-container>
-      <el-main>Home</el-main>
+      <el-main>Bookmark</el-main>
     </el-container>
   </el-container>
 </template>
@@ -16,7 +16,7 @@ import AeAside from "./common/VeAside.vue";
     AeAside
   }
 })
-export default class Home extends Vue {}
+export default class Bookmark extends Vue {}
 </script>
 
 <style scoped lang="scss"></style>
