@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <ae-aside active="1" />
+    <ve-aside active="1" />
     <el-container>
       <el-main>Home</el-main>
     </el-container>
@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import AeAside from "./common/VeAside.vue";
+import VeAside from "./common/VeAside.vue";
 
 @Component({
   components: {
-    AeAside
+    VeAside
   }
 })
 export default class Home extends Vue {}

@@ -27,12 +27,28 @@
           <span>Bookmark</span>
         </el-menu-item>
       </el-tooltip>
-      <el-tooltip content="Sign in" placement="left" :open-delay="openDelay">
-        <el-menu-item index="4">
+      <el-submenu index="4">
+        <template slot="title">
           <i class="el-icon-connection"></i>
           <span>Sign in</span>
-        </el-menu-item>
-      </el-tooltip>
+        </template>
+        <el-menu-item-group>
+          <span slot="title">Sign in</span>
+          <el-menu-item index="login-google">
+            <el-button class="login-btn">
+              <el-row :gutter="20">
+                <el-col :span="2">
+                  <img class="login-logo" src="@/assets/google.png" />
+                </el-col>
+                <el-col :span="20">
+                  <span class="login-text">Sign in With Google</span>
+                </el-col>
+                <el-col :span="2"></el-col>
+              </el-row>
+            </el-button>
+          </el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
     </el-menu>
   </el-aside>
 </template>
@@ -47,7 +63,7 @@ export default class VeAside extends Vue {
   @Prop({ type: String, default: "1" })
   private active!: string;
 
-  private openDelay: number = 300;
+  private openDelay: number = 0;
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
@@ -70,10 +86,8 @@ export default class VeAside extends Vue {
           name: RouterName.Bookmark
         });
         break;
-      case "4":
-        this.$router.push({
-          name: RouterName.SignIn
-        });
+      case "login-google":
+        log.debug("login call");
         break;
     }
   }
@@ -84,5 +98,17 @@ export default class VeAside extends Vue {
 .aside-menu {
   height: 100vh;
   border: 0;
+}
+.login-btn {
+  width: 200px;
+
+  .login-logo {
+    width: 14px;
+    height: 14px;
+  }
+
+  .login-text {
+    font-size: 14px;
+  }
 }
 </style>

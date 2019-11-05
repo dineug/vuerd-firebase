@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <ae-aside active="3" />
+    <ve-aside active="3" />
     <el-container>
       <el-main>Bookmark</el-main>
     </el-container>
@@ -9,11 +9,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import AeAside from "./common/VeAside.vue";
+import VeAside from "./common/VeAside.vue";
 
 @Component({
   components: {
-    AeAside
+    VeAside
   }
 })
 export default class Bookmark extends Vue {}
