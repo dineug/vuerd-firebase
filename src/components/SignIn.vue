@@ -2,17 +2,17 @@
   <el-container>
     <ve-aside active="4" />
     <el-container>
-      <el-main class="login-main">
-        <el-row class="login-content">
+      <el-main class="sign-in-main">
+        <el-row class="sign-in-content">
           <el-col>
-            <el-row class="login-row" type="flex" justify="center">
-              <el-button class="login-btn">
+            <el-row class="sign-in-row" type="flex" justify="center">
+              <el-button class="sign-in-btn">
                 <el-row :gutter="20">
                   <el-col :span="2">
-                    <img class="login-logo" src="@/assets/google.png" />
+                    <img class="sign-in-logo" src="@/assets/google.png" />
                   </el-col>
                   <el-col :span="20">
-                    <span class="login-text">Sign in With Google</span>
+                    <span class="sign-in-text">Sign in With Google</span>
                   </el-col>
                   <el-col :span="2"></el-col>
                 </el-row>
@@ -38,27 +38,27 @@ export default class SignIn extends Vue {}
 </script>
 
 <style scoped lang="scss">
-.login-main {
+.sign-in-main {
   display: flex;
   align-items: center;
 
-  .login-content {
+  .sign-in-content {
     width: 100%;
     display: flex;
     justify-content: center;
 
-    .login-row {
+    .sign-in-row {
       margin-bottom: 10px;
 
-      .login-btn {
+      .sign-in-btn {
         width: 300px;
 
-        .login-logo {
+        .sign-in-logo {
           width: 20px;
           height: 20px;
         }
 
-        .login-text {
+        .sign-in-text {
           font-size: 20px;
         }
       }

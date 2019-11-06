@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import store, { Commit } from "@/store";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbknapvaSLGiJkzPmwO-lg8NNgKOUlrOM",
@@ -14,11 +15,20 @@ const firebaseConfig = {
 };
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
+export default firebase;
 export const db = firebaseApp.firestore();
 export const auth = firebaseApp.auth();
-auth.languageCode = "ko";
 
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
 export type DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 export type User = firebase.User;
+export type AuthProvider = firebase.auth.EmailAuthProvider;
+
+auth.onAuthStateChanged((user: User | null) => {
+  if (user) {
+    store.commit(Commit.signIn, user);
+  } else {
+    store.commit(Commit.signOut);
+  }
+});

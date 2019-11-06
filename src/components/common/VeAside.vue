@@ -27,21 +27,32 @@
           <span>Bookmark</span>
         </el-menu-item>
       </el-tooltip>
-      <el-submenu index="4">
+      <el-tooltip
+        v-if="user !== null"
+        content="Sign out"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="sign-out">
+          <i class="el-icon-switch-button"></i>
+          <span>Sign out</span>
+        </el-menu-item>
+      </el-tooltip>
+      <el-submenu v-else index="sign-in">
         <template slot="title">
           <i class="el-icon-connection"></i>
           <span>Sign in</span>
         </template>
         <el-menu-item-group>
           <span slot="title">Sign in</span>
-          <el-menu-item index="login-google">
-            <el-button class="login-btn">
+          <el-menu-item index="sign-in-google">
+            <el-button class="sign-in-btn">
               <el-row :gutter="20">
                 <el-col :span="2">
-                  <img class="login-logo" src="@/assets/google.png" />
+                  <img class="sign-in-logo" src="@/assets/google.png" />
                 </el-col>
                 <el-col :span="20">
-                  <span class="login-text">Sign in With Google</span>
+                  <span class="sign-in-text">Sign in With Google</span>
                 </el-col>
                 <el-col :span="2"></el-col>
               </el-row>
@@ -56,6 +67,7 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { RouterName } from "@/router";
+import firebase, { auth, AuthProvider, User } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
@@ -67,6 +79,12 @@ export default class VeAside extends Vue {
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
+
+  private provider: AuthProvider = new firebase.auth.GoogleAuthProvider();
+
+  get user(): User | null {
+    return this.$store.state.user;
+  }
 
   private onSelect(key: string) {
     log.debug(`VeAside onSelect: ${key}`);
@@ -86,8 +104,15 @@ export default class VeAside extends Vue {
           name: RouterName.Bookmark
         });
         break;
-      case "login-google":
-        log.debug("login call");
+      case "sign-in-google":
+        auth.signInWithPopup(this.provider).catch(err => {
+          log.error(err.message);
+        });
+        break;
+      case "sign-out":
+        auth.signOut().catch(err => {
+          log.error(err.message);
+        });
         break;
     }
   }
@@ -99,15 +124,15 @@ export default class VeAside extends Vue {
   height: 100vh;
   border: 0;
 }
-.login-btn {
+.sign-in-btn {
   width: 200px;
 
-  .login-logo {
+  .sign-in-logo {
     width: 14px;
     height: 14px;
   }
 
-  .login-text {
+  .sign-in-text {
     font-size: 14px;
   }
 }
