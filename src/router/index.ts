@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import { signIn } from "./Guard";
 import Debug from "@/components/Debug.vue";
 import Home from "@/components/Home.vue";
 import Notebook from "@/components/Notebook.vue";
@@ -28,12 +29,14 @@ export const routes = [
   {
     path: "/notebook",
     name: RouterName.Notebook,
-    component: Notebook
+    component: Notebook,
+    beforeEnter: signIn
   },
   {
     path: "/bookmark",
     name: RouterName.Bookmark,
-    component: Bookmark
+    component: Bookmark,
+    beforeEnter: signIn
   },
   {
     path: "*",

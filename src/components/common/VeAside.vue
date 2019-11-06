@@ -84,9 +84,12 @@ export default class VeAside extends Vue {
   }
 
   private setActive() {
-    if (this.$route.name) {
-      this.active = this.$route.name;
-    }
+    this.active = "";
+    this.$nextTick(() => {
+      if (this.$route.name) {
+        this.active = this.$route.name;
+      }
+    });
   }
 
   private onSelect(key: string) {
@@ -101,16 +104,20 @@ export default class VeAside extends Vue {
         break;
       case RouterName.Notebook:
         if (this.$route.name !== RouterName.Notebook) {
-          this.$router.push({
-            name: RouterName.Notebook
-          });
+          this.$router
+            .push({
+              name: RouterName.Notebook
+            })
+            .catch(() => this.setActive());
         }
         break;
       case RouterName.Bookmark:
         if (this.$route.name !== RouterName.Bookmark) {
-          this.$router.push({
-            name: RouterName.Bookmark
-          });
+          this.$router
+            .push({
+              name: RouterName.Bookmark
+            })
+            .catch(() => this.setActive());
         }
         break;
       case "sign-in-google":
@@ -118,10 +125,16 @@ export default class VeAside extends Vue {
           .signInWithPopup(this.provider)
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());
+        this.setActive();
         break;
       case "sign-out":
         auth
           .signOut()
+          .then(() => {
+            this.$router.push({
+              name: RouterName.Home
+            });
+          })
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());
         break;
