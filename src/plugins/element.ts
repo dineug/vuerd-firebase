@@ -10,9 +10,13 @@ import {
   Col,
   Row,
   Submenu,
-  MenuItemGroup
+  MenuItemGroup,
+  Message,
+  Notification
 } from "element-ui";
+// @ts-ignore
 import lang from "element-ui/lib/locale/lang/ko";
+// @ts-ignore
 import locale from "element-ui/lib/locale";
 
 locale.use(lang);
@@ -32,3 +36,6 @@ const components = [
 ];
 
 components.forEach(component => Vue.use(component));
+
+Vue.prototype.$message = Message;
+Vue.prototype.$notify = Notification;

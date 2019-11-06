@@ -5,7 +5,7 @@ import router from "./router";
 import store from "./store";
 import "./plugins/fragment";
 import "./plugins/vuerd-core";
-import "./plugins/element.js";
+import "./plugins/element";
 
 Vue.config.productionTip = false;
 

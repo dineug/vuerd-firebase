@@ -10,19 +10,19 @@
       @select="onSelect"
     >
       <el-tooltip content="Home" placement="left" :open-delay="openDelay">
-        <el-menu-item index="1">
+        <el-menu-item index="Home">
           <i class="el-icon-menu"></i>
           <span>Home</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip content="Notebook" placement="left" :open-delay="openDelay">
-        <el-menu-item index="2">
+        <el-menu-item index="Notebook">
           <i class="el-icon-notebook-1"></i>
           <span>Notebook</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip content="Bookmark" placement="left" :open-delay="openDelay">
-        <el-menu-item index="3">
+        <el-menu-item index="Bookmark">
           <i class="el-icon-collection-tag"></i>
           <span>Bookmark</span>
         </el-menu-item>
@@ -72,49 +72,64 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class VeAside extends Vue {
-  @Prop({ type: String, default: "1" })
-  private active!: string;
-
   private openDelay: number = 0;
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
-
+  private active: string = RouterName.Home;
   private provider: AuthProvider = new firebase.auth.GoogleAuthProvider();
 
   get user(): User | null {
     return this.$store.state.user;
   }
 
+  private setActive() {
+    if (this.$route.name) {
+      this.active = this.$route.name;
+    }
+  }
+
   private onSelect(key: string) {
     log.debug(`VeAside onSelect: ${key}`);
     switch (key) {
-      case "1":
-        this.$router.push({
-          name: RouterName.Home
-        });
+      case RouterName.Home:
+        if (this.$route.name !== RouterName.Home) {
+          this.$router.push({
+            name: RouterName.Home
+          });
+        }
         break;
-      case "2":
-        this.$router.push({
-          name: RouterName.Notebook
-        });
+      case RouterName.Notebook:
+        if (this.$route.name !== RouterName.Notebook) {
+          this.$router.push({
+            name: RouterName.Notebook
+          });
+        }
         break;
-      case "3":
-        this.$router.push({
-          name: RouterName.Bookmark
-        });
+      case RouterName.Bookmark:
+        if (this.$route.name !== RouterName.Bookmark) {
+          this.$router.push({
+            name: RouterName.Bookmark
+          });
+        }
         break;
       case "sign-in-google":
-        auth.signInWithPopup(this.provider).catch(err => {
-          log.error(err.message);
-        });
+        auth
+          .signInWithPopup(this.provider)
+          .catch(err => this.$message.error(err.message))
+          .finally(() => this.setActive());
         break;
       case "sign-out":
-        auth.signOut().catch(err => {
-          log.error(err.message);
-        });
+        auth
+          .signOut()
+          .catch(err => this.$message.error(err.message))
+          .finally(() => this.setActive());
         break;
     }
+  }
+
+  private created() {
+    this.setActive();
   }
 }
 </script>

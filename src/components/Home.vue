@@ -1,21 +1,13 @@
 <template>
   <el-container>
-    <ve-aside active="1" />
-    <el-container>
-      <el-main>Home</el-main>
-    </el-container>
+    <el-main>Home</el-main>
   </el-container>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import VeAside from "./common/VeAside.vue";
 
-@Component({
-  components: {
-    VeAside
-  }
-})
+@Component
 export default class Home extends Vue {}
 </script>
 

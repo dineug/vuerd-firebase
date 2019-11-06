@@ -1,39 +1,31 @@
 <template>
   <el-container>
-    <ve-aside active="4" />
-    <el-container>
-      <el-main class="sign-in-main">
-        <el-row class="sign-in-content">
-          <el-col>
-            <el-row class="sign-in-row" type="flex" justify="center">
-              <el-button class="sign-in-btn">
-                <el-row :gutter="20">
-                  <el-col :span="2">
-                    <img class="sign-in-logo" src="@/assets/google.png" />
-                  </el-col>
-                  <el-col :span="20">
-                    <span class="sign-in-text">Sign in With Google</span>
-                  </el-col>
-                  <el-col :span="2"></el-col>
-                </el-row>
-              </el-button>
-            </el-row>
-          </el-col>
-        </el-row>
-      </el-main>
-    </el-container>
+    <el-main class="sign-in-main">
+      <el-row class="sign-in-content">
+        <el-col>
+          <el-row class="sign-in-row" type="flex" justify="center">
+            <el-button class="sign-in-btn">
+              <el-row :gutter="20">
+                <el-col :span="2">
+                  <img class="sign-in-logo" src="@/assets/google.png" />
+                </el-col>
+                <el-col :span="20">
+                  <span class="sign-in-text">Sign in With Google</span>
+                </el-col>
+                <el-col :span="2"></el-col>
+              </el-row>
+            </el-button>
+          </el-row>
+        </el-col>
+      </el-row>
+    </el-main>
   </el-container>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import VeAside from "./common/VeAside.vue";
 
-@Component({
-  components: {
-    VeAside
-  }
-})
+@Component
 export default class SignIn extends Vue {}
 </script>
 
