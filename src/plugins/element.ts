@@ -11,6 +11,8 @@ import {
   Row,
   Submenu,
   MenuItemGroup,
+  Card,
+  Image,
   Message,
   Notification
 } from "element-ui";
@@ -32,7 +34,9 @@ const components = [
   Col,
   Row,
   Submenu,
-  MenuItemGroup
+  MenuItemGroup,
+  Card,
+  Image
 ];
 
 components.forEach(component => Vue.use(component));

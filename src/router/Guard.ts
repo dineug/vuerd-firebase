@@ -1,6 +1,6 @@
 import { Route, RawLocation } from "vue-router";
-import store from "@/store";
 import { RouterName } from "@/router";
+import store from "@/store";
 
 export function signIn(
   to: Route,

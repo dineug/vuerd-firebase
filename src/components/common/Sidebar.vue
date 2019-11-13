@@ -71,7 +71,7 @@ import firebase, { auth, AuthProvider, User } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class VeAside extends Vue {
+export default class Sidebar extends Vue {
   private openDelay: number = 0;
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
@@ -93,7 +93,7 @@ export default class VeAside extends Vue {
   }
 
   private onSelect(key: string) {
-    log.debug(`VeAside onSelect: ${key}`);
+    log.debug(`Sidebar onSelect: ${key}`);
     switch (key) {
       case RouterName.Home:
         if (this.$route.name !== RouterName.Home) {
@@ -148,9 +148,14 @@ export default class VeAside extends Vue {
 </script>
 
 <style scoped lang="scss">
+.el-aside {
+  width: 64px;
+}
 .aside-menu {
+  width: 64px;
   height: 100vh;
   border: 0;
+  position: fixed;
 }
 .sign-in-btn {
   width: 200px;

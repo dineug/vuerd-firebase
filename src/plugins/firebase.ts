@@ -24,6 +24,10 @@ export type DocumentReference = firebase.firestore.DocumentReference;
 export type DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 export type User = firebase.User;
 export type AuthProvider = firebase.auth.EmailAuthProvider;
+export interface Paging {
+  limit?: number;
+  last?: DocumentSnapshot | null;
+}
 
 auth.onAuthStateChanged((user: User | null) => {
   if (user) {
