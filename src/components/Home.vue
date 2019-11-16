@@ -9,8 +9,7 @@
 </template>
 
 <script lang="ts">
-import log from "@/ts/Logger";
-import { list, NotebookModel } from "@/api/NotebookAPI";
+import { list, NotebookModel, add } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NotebookCard from "./Notebook/NotebookCard.vue";
@@ -37,9 +36,9 @@ export default class Home extends Vue {
             this.paging = null;
           } else if (this.paging) {
             this.paging.last = querySnapshot.docs[len - 1];
-            querySnapshot.docs.forEach(query => {
-              const data = query.data() as NotebookModel;
-              data.id = query.id;
+            querySnapshot.forEach(doc => {
+              const data = doc.data() as NotebookModel;
+              data.id = doc.id;
               this.notebooks.push(data);
             });
           }
@@ -74,7 +73,7 @@ export default class Home extends Vue {
   text-align: center;
 
   .card {
-    width: 300px;
+    width: $size-card-width;
     display: inline-block;
     padding: 6px;
   }

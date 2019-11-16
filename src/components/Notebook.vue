@@ -1,14 +1,100 @@
 <template>
   <el-container>
-    <el-main>Notebook</el-main>
+    <el-main class="main">
+      <div class="card" v-for="notebook in notebooks" :key="notebook.id">
+        <notebook-card
+          :notebook="notebook"
+          @bookmark="onBookmark"
+          @document="onDocument"
+          @editor="onEditor"
+        />
+      </div>
+    </el-main>
   </el-container>
 </template>
 
 <script lang="ts">
+import { myList, NotebookModel } from "@/api/NotebookAPI";
+import { Paging } from "@/plugins/firebase";
+import { RouterName } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import NotebookCard from "./Notebook/NotebookCard.vue";
 
-@Component
-export default class Notebook extends Vue {}
+@Component({
+  components: {
+    NotebookCard
+  }
+})
+export default class Notebook extends Vue {
+  private notebooks: NotebookModel[] = [];
+  private paging: Paging | null = {
+    last: null
+  };
+  private listProcess: boolean = false;
+
+  private getNotebooks() {
+    if (!this.listProcess && this.paging) {
+      this.listProcess = true;
+      myList(this.paging)
+        .then(querySnapshot => {
+          const len = querySnapshot.docs.length;
+          if (len === 0) {
+            this.paging = null;
+          } else if (this.paging) {
+            this.paging.last = querySnapshot.docs[len - 1];
+            querySnapshot.forEach(doc => {
+              const data = doc.data() as NotebookModel;
+              data.id = doc.id;
+              this.notebooks.push(data);
+            });
+          }
+        })
+        .finally(() => (this.listProcess = false));
+    }
+  }
+
+  private onBookmark() {}
+
+  private onDocument() {}
+
+  private onEditor(notebook: NotebookModel) {
+    this.$router.push({
+      name: RouterName.Editor,
+      params: {
+        id: notebook.id
+      }
+    });
+  }
+
+  private onScroll() {
+    const scrollHeight = document.documentElement.scrollHeight;
+    const scrollTop = document.documentElement.scrollTop;
+    const innerHeight = window.innerHeight;
+    const currentScroll = scrollTop + innerHeight;
+    if (currentScroll + 400 >= scrollHeight) {
+      this.getNotebooks();
+    }
+  }
+
+  private created() {
+    this.getNotebooks();
+    window.addEventListener("scroll", this.onScroll);
+  }
+
+  private destroyed() {
+    window.removeEventListener("scroll", this.onScroll);
+  }
+}
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.main {
+  text-align: center;
+
+  .card {
+    width: $size-card-width;
+    display: inline-block;
+    padding: 6px;
+  }
+}
+</style>

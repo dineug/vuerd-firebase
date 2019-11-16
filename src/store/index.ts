@@ -6,16 +6,21 @@ Vue.use(Vuex);
 
 export interface State {
   user: User | null;
+  layout: Layout;
 }
+
+export type Layout = "base" | "editor";
 
 export const enum Commit {
   signIn = "signIn",
-  signOut = "signOut"
+  signOut = "signOut",
+  layout = "layout"
 }
 
 export default new Vuex.Store<State>({
   state: {
-    user: null
+    user: null,
+    layout: "base"
   },
   mutations: {
     signIn(state: State, user: User) {
@@ -23,6 +28,9 @@ export default new Vuex.Store<State>({
     },
     signOut(state: State) {
       state.user = null;
+    },
+    layout(state: State, layout: Layout) {
+      state.layout = layout;
     }
   },
   actions: {},

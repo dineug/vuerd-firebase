@@ -8,18 +8,16 @@ import {
 import store from "@/store";
 import moment from "moment";
 
-export const enum Role {
-  owner = "owner",
-  writer = "writer",
-  reader = "reader"
-}
+export type Role = "owner" | "writer" | "reader";
 
 export interface Notebook {
   roles: { [key: string]: Role };
+  members: string[];
   published: boolean;
   title: string;
-  image: string;
-  tree: Tree;
+  image?: string;
+  tree?: Tree;
+  updatedAt: number;
   createdAt: number;
 }
 
@@ -34,45 +32,85 @@ export interface Tree {
   value?: string;
 }
 
+export interface TreeNode {
+  open?: boolean;
+  value?: string;
+  updatedAt: number;
+  createdAt: number;
+}
+
 export interface NotebookAdd {
   published: boolean;
   title: string;
 }
 
-export function add(notebookAdd: NotebookAdd): Promise<DocumentReference> {
+export async function add(
+  notebookAdd: NotebookAdd
+): Promise<DocumentReference> {
   if (!store.state.user) {
     throw new Error("not found uid");
   }
   const notebook = notebookAdd as Notebook;
   notebook.roles = {};
-  notebook.roles[store.state.user.uid] = Role.owner;
-  notebook.tree = {
-    name: "unnamed",
-    open: true,
-    children: []
-  };
+  notebook.roles[store.state.user.uid] = "owner";
+  notebook.members = [store.state.user.uid];
+  notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
-  return db.collection("notebooks").add(notebook);
+  const docRef = await db.collection("notebooks").add(notebook);
+  await db
+    .collection("notebooks")
+    .doc(docRef.id)
+    .collection("trees")
+    .doc("unnamed")
+    .set({
+      open: true,
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    });
+  return docRef;
 }
 
 export function list(paging: Paging): Promise<QuerySnapshot> {
   if (!paging.limit) {
     paging.limit = 20;
   }
-  if (paging.last) {
-    return db
-      .collection("notebooks")
-      .where("published", "==", true)
-      .orderBy("createdAt", "desc")
-      .startAfter(paging.last)
-      .limit(paging.limit)
-      .get();
-  } else {
-    return db
-      .collection("notebooks")
-      .where("published", "==", true)
-      .orderBy("createdAt", "desc")
-      .limit(paging.limit)
-      .get();
+  if (!paging.orderBy) {
+    paging.orderBy = "updatedAt";
   }
+  if (!paging.sort) {
+    paging.sort = "desc";
+  }
+  let ref = db
+    .collection("notebooks")
+    .where("published", "==", true)
+    .orderBy(paging.orderBy, paging.sort)
+    .limit(paging.limit);
+  if (paging.last) {
+    ref = ref.startAfter(paging.last);
+  }
+  return ref.get();
+}
+
+export function myList(paging: Paging): Promise<QuerySnapshot> {
+  if (!store.state.user) {
+    throw new Error("not found uid");
+  }
+  if (!paging.limit) {
+    paging.limit = 20;
+  }
+  if (!paging.orderBy) {
+    paging.orderBy = "updatedAt";
+  }
+  if (!paging.sort) {
+    paging.sort = "desc";
+  }
+  let ref = db
+    .collection("notebooks")
+    .where("members", "array-contains", store.state.user.uid)
+    .orderBy(paging.orderBy, paging.sort)
+    .limit(paging.limit);
+  if (paging.last) {
+    ref = ref.startAfter(paging.last);
+  }
+  return ref.get();
 }

@@ -27,7 +27,11 @@ export type AuthProvider = firebase.auth.EmailAuthProvider;
 export interface Paging {
   limit?: number;
   last?: DocumentSnapshot | null;
+  sort?: Sort;
+  orderBy?: OrderBy;
 }
+export type Sort = "asc" | "desc";
+export type OrderBy = "createdAt" | "updatedAt" | "title";
 
 auth.onAuthStateChanged((user: User | null) => {
   if (user) {

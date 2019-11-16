@@ -4,8 +4,14 @@
     <div style="padding: 10px;">
       <span>{{ notebook.title }}</span>
       <div class="btn-box">
-        <el-button icon="el-icon-view" circle />
-        <el-button icon="el-icon-star-on" circle />
+        <el-button icon="el-icon-star-on" circle @click="onClick('bookmark')" />
+        <el-button icon="el-icon-view" circle @click="onClick('document')" />
+        <el-button
+          v-if="edit"
+          icon="el-icon-edit"
+          circle
+          @click="onClick('editor')"
+        />
       </div>
     </div>
   </el-card>
@@ -16,12 +22,33 @@ import { NotebookModel } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 const IMAGE =
-  "https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png";
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89B8AAqkB05ycXjIAAAAASUVORK5CYII=";
+
+const enum Action {
+  bookmark = "bookmark",
+  document = "document",
+  editor = "editor"
+}
 
 @Component
 export default class NotebookCard extends Vue {
   @Prop({ type: Object, default: () => ({}) })
   private notebook!: NotebookModel;
+
+  get edit(): boolean {
+    let result = false;
+    if (this.$store.state.user !== null) {
+      const role = this.notebook.roles[this.$store.state.user.uid];
+      if (role === "owner" || role === "writer") {
+        result = true;
+      }
+    }
+    return result;
+  }
+
+  private onClick(action: Action) {
+    this.$emit(action, this.notebook);
+  }
 
   private created() {
     if (!this.notebook.image) {
@@ -39,5 +66,6 @@ export default class NotebookCard extends Vue {
 .btn-box {
   display: flex;
   justify-content: flex-end;
+  margin-top: 5px;
 }
 </style>

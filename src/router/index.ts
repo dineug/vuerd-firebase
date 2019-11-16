@@ -5,13 +5,15 @@ import Debug from "@/components/Debug.vue";
 import Home from "@/components/Home.vue";
 import Notebook from "@/components/Notebook.vue";
 import Bookmark from "@/components/Bookmark.vue";
+import Editor from "@/components/Editor.vue";
 
 Vue.use(VueRouter);
 
 export const enum RouterName {
   Home = "Home",
   Notebook = "Notebook",
-  Bookmark = "Bookmark"
+  Bookmark = "Bookmark",
+  Editor = "Editor"
 }
 
 export const routes = [
@@ -36,6 +38,12 @@ export const routes = [
     path: "/bookmark",
     name: RouterName.Bookmark,
     component: Bookmark,
+    beforeEnter: signIn
+  },
+  {
+    path: "/editor/:id",
+    name: RouterName.Editor,
+    component: Editor,
     beforeEnter: signIn
   },
   {

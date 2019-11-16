@@ -1,8 +1,10 @@
 <template>
-  <el-container class="app">
-    <sidebar v-if="aside" />
-    <router-view />
-  </el-container>
+  <div class="app">
+    <el-container :class="{ 'workspace-editor': layout === 'editor' }">
+      <sidebar v-if="layout === 'base'" />
+      <router-view />
+    </el-container>
+  </div>
 </template>
 
 <script lang="ts">
@@ -15,7 +17,9 @@ import Sidebar from "./components/common/Sidebar.vue";
   }
 })
 export default class App extends Vue {
-  private aside: boolean = true;
+  get layout(): string {
+    return this.$store.state.layout;
+  }
 }
 </script>
 
@@ -23,5 +27,9 @@ export default class App extends Vue {
 .app {
   font-family: "Noto Sans", "Noto Sans KR", "Noto Sans SC", "Noto Sans HK",
     "Noto Sans JP", "Noto Sans TC", sans-serif;
+
+  .workspace-editor {
+    display: block;
+  }
 }
 </style>
