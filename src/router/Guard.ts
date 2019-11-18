@@ -1,6 +1,6 @@
 import { Route, RawLocation } from "vue-router";
 import { RouterName } from "@/router";
-import store from "@/store";
+import store, { Commit } from "@/store";
 
 export function signIn(
   to: Route,
@@ -10,6 +10,7 @@ export function signIn(
   if (store.state.user) {
     next();
   } else {
+    store.commit(Commit.referer, to.path);
     next({
       name: RouterName.Home
     });

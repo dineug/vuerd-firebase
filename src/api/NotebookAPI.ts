@@ -2,7 +2,7 @@ import {
   db,
   QuerySnapshot,
   DocumentReference,
-  DocumentSnapshot,
+  QueryDocumentSnapshot,
   Paging
 } from "@/plugins/firebase";
 import store from "@/store";
@@ -16,7 +16,6 @@ export interface Notebook {
   published: boolean;
   title: string;
   image?: string;
-  tree?: Tree;
   updatedAt: number;
   createdAt: number;
 }
@@ -25,18 +24,27 @@ export interface NotebookModel extends Notebook {
   id: string;
 }
 
-export interface Tree {
-  name: string;
-  open?: boolean;
-  children?: Tree[];
-  value?: string;
-}
+export class NotebookModelImpl implements NotebookModel {
+  public id: string;
+  public roles: { [p: string]: Role };
+  public members: string[];
+  public published: boolean;
+  public title: string;
+  public image: string;
+  public updatedAt: number;
+  public createdAt: number;
 
-export interface TreeNode {
-  open?: boolean;
-  value?: string;
-  updatedAt: number;
-  createdAt: number;
+  constructor(doc: QueryDocumentSnapshot) {
+    this.id = doc.id;
+    const { roles, members, published, title, image, updatedAt, createdAt } = doc.data();
+    this.roles = roles;
+    this.members = members;
+    this.published = published;
+    this.title = title;
+    this.image = image;
+    this.updatedAt = updatedAt;
+    this.createdAt = createdAt;
+  }
 }
 
 export interface NotebookAdd {

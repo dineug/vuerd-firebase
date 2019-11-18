@@ -21,12 +21,6 @@
           <span>Notebook</span>
         </el-menu-item>
       </el-tooltip>
-      <el-tooltip content="Bookmark" placement="left" :open-delay="openDelay">
-        <el-menu-item index="Bookmark">
-          <i class="el-icon-collection-tag"></i>
-          <span>Bookmark</span>
-        </el-menu-item>
-      </el-tooltip>
       <el-tooltip
         v-if="user !== null"
         content="Sign out"
@@ -111,15 +105,6 @@ export default class Sidebar extends Vue {
             .catch(() => this.setActive());
         }
         break;
-      case RouterName.Bookmark:
-        if (this.$route.name !== RouterName.Bookmark) {
-          this.$router
-            .push({
-              name: RouterName.Bookmark
-            })
-            .catch(() => this.setActive());
-        }
-        break;
       case "sign-in-google":
         auth
           .signInWithPopup(this.provider)
@@ -131,9 +116,11 @@ export default class Sidebar extends Vue {
         auth
           .signOut()
           .then(() => {
-            this.$router.push({
-              name: RouterName.Home
-            });
+            if (this.$route.name !== RouterName.Home) {
+              this.$router.push({
+                name: RouterName.Home
+              });
+            }
           })
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());

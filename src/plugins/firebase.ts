@@ -2,6 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import store, { Commit } from "@/store";
+import router from "@/router";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbknapvaSLGiJkzPmwO-lg8NNgKOUlrOM",
@@ -22,6 +23,7 @@ export const auth = firebaseApp.auth();
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
 export type DocumentSnapshot = firebase.firestore.DocumentSnapshot;
+export type QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 export type User = firebase.User;
 export type AuthProvider = firebase.auth.EmailAuthProvider;
 export interface Paging {
@@ -36,6 +38,7 @@ export type OrderBy = "createdAt" | "updatedAt" | "title";
 auth.onAuthStateChanged((user: User | null) => {
   if (user) {
     store.commit(Commit.signIn, user);
+    router.push(store.state.referer);
   } else {
     store.commit(Commit.signOut);
   }

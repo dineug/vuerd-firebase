@@ -1,27 +1,32 @@
 <template>
   <el-container>
-    <el-main class="main">
-      <div class="card" v-for="notebook in notebooks" :key="notebook.id">
-        <notebook-card
-          :notebook="notebook"
-          @bookmark="onBookmark"
-          @document="onDocument"
-          @editor="onEditor"
-        />
-      </div>
-    </el-main>
+    <sidebar />
+    <el-container>
+      <el-main class="main">
+        <div class="card" v-for="notebook in notebooks" :key="notebook.id">
+          <notebook-card
+            :notebook="notebook"
+            @bookmark="onBookmark"
+            @document="onDocument"
+            @editor="onEditor"
+          />
+        </div>
+      </el-main>
+    </el-container>
   </el-container>
 </template>
 
 <script lang="ts">
-import { myList, NotebookModel } from "@/api/NotebookAPI";
+import { myList, NotebookModel, NotebookModelImpl } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { RouterName } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
 
 @Component({
   components: {
+    Sidebar,
     NotebookCard
   }
 })
@@ -42,11 +47,9 @@ export default class Notebook extends Vue {
             this.paging = null;
           } else if (this.paging) {
             this.paging.last = querySnapshot.docs[len - 1];
-            querySnapshot.forEach(doc => {
-              const data = doc.data() as NotebookModel;
-              data.id = doc.id;
-              this.notebooks.push(data);
-            });
+            querySnapshot.forEach(doc =>
+              this.notebooks.push(new NotebookModelImpl(doc))
+            );
           }
         })
         .finally(() => (this.listProcess = false));

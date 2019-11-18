@@ -4,13 +4,18 @@
     <div style="padding: 10px;">
       <span>{{ notebook.title }}</span>
       <div class="btn-box">
-        <el-button icon="el-icon-star-on" circle @click="onClick('bookmark')" />
         <el-button icon="el-icon-view" circle @click="onClick('document')" />
         <el-button
           v-if="edit"
           icon="el-icon-edit"
           circle
           @click="onClick('editor')"
+        />
+        <el-button
+          v-if="edit"
+          icon="el-icon-s-tools"
+          circle
+          @click="onClick('setting')"
         />
       </div>
     </div>
@@ -25,9 +30,9 @@ const IMAGE =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89B8AAqkB05ycXjIAAAAASUVORK5CYII=";
 
 const enum Action {
-  bookmark = "bookmark",
   document = "document",
-  editor = "editor"
+  editor = "editor",
+  setting = "setting"
 }
 
 @Component

@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 export interface State {
   user: User | null;
-  layout: Layout;
+  referer: string;
+  notebookId: string | null;
 }
 
 export type Layout = "base" | "editor";
@@ -14,13 +15,15 @@ export type Layout = "base" | "editor";
 export const enum Commit {
   signIn = "signIn",
   signOut = "signOut",
-  layout = "layout"
+  referer = "referer",
+  setNotebookId = "setNotebookId"
 }
 
 export default new Vuex.Store<State>({
   state: {
     user: null,
-    layout: "base"
+    referer: "/",
+    notebookId: null
   },
   mutations: {
     signIn(state: State, user: User) {
@@ -29,8 +32,11 @@ export default new Vuex.Store<State>({
     signOut(state: State) {
       state.user = null;
     },
-    layout(state: State, layout: Layout) {
-      state.layout = layout;
+    referer(state: State, referer: string) {
+      state.referer = referer;
+    },
+    setNotebookId(state: State, notebookId: string) {
+      state.notebookId = notebookId;
     }
   },
   actions: {},

@@ -10,7 +10,7 @@ export interface Editor {
   themeName: string;
 }
 
-export function saveConfigEditor(editor: Editor): Promise<void> {
+export function saveEditor(editor: Editor): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found uid");
   }
@@ -22,7 +22,7 @@ export function saveConfigEditor(editor: Editor): Promise<void> {
     .set(editor);
 }
 
-export function findByConfigEditor(): Promise<DocumentSnapshot> {
+export function findEditorBy(): Promise<DocumentSnapshot> {
   if (!store.state.user) {
     throw new Error("not found uid");
   }

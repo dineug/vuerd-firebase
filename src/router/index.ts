@@ -4,7 +4,6 @@ import { signIn } from "./Guard";
 import Debug from "@/components/Debug.vue";
 import Home from "@/components/Home.vue";
 import Notebook from "@/components/Notebook.vue";
-import Bookmark from "@/components/Bookmark.vue";
 import Editor from "@/components/Editor.vue";
 
 Vue.use(VueRouter);
@@ -32,12 +31,6 @@ export const routes = [
     path: "/notebook",
     name: RouterName.Notebook,
     component: Notebook,
-    beforeEnter: signIn
-  },
-  {
-    path: "/bookmark",
-    name: RouterName.Bookmark,
-    component: Bookmark,
     beforeEnter: signIn
   },
   {
