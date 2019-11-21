@@ -36,7 +36,15 @@ export class NotebookModelImpl implements NotebookModel {
 
   constructor(doc: QueryDocumentSnapshot) {
     this.id = doc.id;
-    const { roles, members, published, title, image, updatedAt, createdAt } = doc.data();
+    const {
+      roles,
+      members,
+      published,
+      title,
+      image,
+      updatedAt,
+      createdAt
+    } = doc.data();
     this.roles = roles;
     this.members = members;
     this.published = published;

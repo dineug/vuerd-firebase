@@ -35,13 +35,6 @@ export interface TreeNodeAdd {
   value?: string;
 }
 
-export interface Tree {
-  name: string;
-  open?: boolean;
-  children?: Tree[];
-  value?: string;
-}
-
 export function list(notebookId: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found uid");

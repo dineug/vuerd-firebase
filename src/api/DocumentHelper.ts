@@ -16,23 +16,15 @@ export function convertTree(treeList: TreeNodeModel[]): Tree {
   return tree;
 }
 
-export function createTree(tree: Tree, paths: string[], value?: string) {
+function createTree(tree: Tree, paths: string[], value?: string) {
   if (tree.children) {
     const name = paths.pop();
     if (name) {
       let node = findTreeBy(tree.children, name);
-      if (paths.length === 0) {
-        if (node === null && value !== undefined) {
-          tree.children.push({
-            name
-          });
-        } else {
-          tree.children.push({
-            name,
-            open: true,
-            children: []
-          });
-        }
+      if (paths.length === 0 && node === null && value !== undefined) {
+        tree.children.push({
+          name
+        });
       } else {
         if (node === null) {
           node = {
@@ -59,4 +51,19 @@ export function findTreeBy(children: Tree[], path: string): Tree | null {
     }
   }
   return result;
+}
+
+export function findTreeNodeByPath(
+  treeList: TreeNodeModel[],
+  path: string
+): TreeNodeModel | null {
+  path = path.replace(/\//g, ":");
+  let treeNode: TreeNodeModel | null = null;
+  for (const node of treeList) {
+    if (node.path === path) {
+      treeNode = node;
+      break;
+    }
+  }
+  return treeNode;
 }
