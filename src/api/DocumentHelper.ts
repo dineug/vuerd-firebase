@@ -72,17 +72,17 @@ export function findPathByPaths(
   treeList: TreeNodeModel[],
   paths: string[]
 ): string[] {
-  const deletePaths: string[] = [];
+  const childrenPaths: string[] = [];
   paths.forEach(path => {
     path = path.replace(/\//g, ":");
     treeList.forEach(tree => {
       if (
         (tree.path === path || tree.path.indexOf(`${path}:`) === 0) &&
-        deletePaths.indexOf(tree.path) === -1
+        childrenPaths.indexOf(tree.path) === -1
       ) {
-        deletePaths.push(tree.path);
+        childrenPaths.push(tree.path);
       }
     });
   });
-  return deletePaths;
+  return childrenPaths;
 }

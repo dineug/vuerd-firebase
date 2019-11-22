@@ -23,7 +23,7 @@
     "vue-fragment": "^1.5.1",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.6",
-    "vuerd-core": "^0.3.5",
+    "vuerd-core": "^0.3.6",
     "vuerd-plugin-erd": "^0.2.4",
     "vuerd-plugin-tui.editor": "^0.2.2",
     "vuex": "^3.0.1"

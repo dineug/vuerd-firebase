@@ -7,6 +7,7 @@ import {
 } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
+import { getTreeDocRef } from "./DocumentAPI";
 
 export type Role = "owner" | "writer" | "reader";
 
@@ -73,16 +74,11 @@ export async function add(
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await db.collection("notebooks").add(notebook);
-  await db
-    .collection("notebooks")
-    .doc(docRef.id)
-    .collection("trees")
-    .doc("unnamed")
-    .set({
-      open: true,
-      updatedAt: moment().unix(),
-      createdAt: moment().unix()
-    });
+  await getTreeDocRef(docRef.id, "unnamed").set({
+    name: "unnamed",
+    updatedAt: moment().unix(),
+    createdAt: moment().unix()
+  });
   return docRef;
 }
 

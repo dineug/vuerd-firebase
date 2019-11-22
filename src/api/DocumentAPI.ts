@@ -1,8 +1,13 @@
-import { db, QuerySnapshot, QueryDocumentSnapshot } from "@/plugins/firebase";
+import {
+  db,
+  QuerySnapshot,
+  QueryDocumentSnapshot,
+  DocumentReference
+} from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
 import { TreeSave } from "vuerd-core";
-import { findTreeNodeByPath } from "./DocumentHelper";
+import { findTreeNodeByPath, findPathByPaths } from "./DocumentHelper";
 
 export interface TreeNode {
   name: string;
@@ -32,11 +37,6 @@ export class TreeNodeModelImpl implements TreeNodeModel {
   }
 }
 
-export interface TreeNodeAdd {
-  name: string;
-  value?: string;
-}
-
 export function list(notebookId: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found uid");
@@ -48,42 +48,6 @@ export function list(notebookId: string): Promise<QuerySnapshot> {
     .get();
 }
 
-export function add(
-  notebookId: string,
-  path: string,
-  treeAdd: TreeNodeAdd
-): Promise<void> {
-  if (!store.state.user) {
-    throw new Error("not found uid");
-  }
-  const tree = treeAdd as TreeNode;
-  tree.updatedAt = moment().unix();
-  tree.createdAt = moment().unix();
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("trees")
-    .doc(path)
-    .set(tree);
-}
-
-export function modify(
-  notebookId: string,
-  path: string,
-  tree: TreeNode
-): Promise<void> {
-  if (!store.state.user) {
-    throw new Error("not found uid");
-  }
-  tree.updatedAt = moment().unix();
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("trees")
-    .doc(path)
-    .set(tree);
-}
-
 export function removeBatch(
   notebookId: string,
   paths: string[]
@@ -92,15 +56,20 @@ export function removeBatch(
     throw new Error("not found uid");
   }
   const batch = db.batch();
+  let createRoot = false;
   paths.forEach(path => {
-    batch.delete(
-      db
-        .collection("notebooks")
-        .doc(notebookId)
-        .collection("trees")
-        .doc(path)
-    );
+    if (path.indexOf(":") === -1) {
+      createRoot = true;
+    }
+    batch.delete(getTreeDocRef(notebookId, path));
   });
+  if (createRoot) {
+    batch.set(getTreeDocRef(notebookId, "unnamed"), {
+      name: "unnamed",
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    });
+  }
   return batch.commit();
 }
 
@@ -114,55 +83,62 @@ export function saveBatch(
   const batch = db.batch();
   treeSaves.forEach(treeSave => {
     treeSave.path = treeSave.path.replace(/\//g, ":");
-    let treeNode = findTreeNodeByPath(store.state.treeList, treeSave.path);
     if (treeSave.oldPath) {
       treeSave.oldPath = treeSave.oldPath.replace(/\//g, ":");
-      treeNode = findTreeNodeByPath(store.state.treeList, treeSave.oldPath);
-    }
-    if (treeNode) {
-      if (treeSave.oldPath) {
-        batch.delete(
-          db
-            .collection("notebooks")
-            .doc(notebookId)
-            .collection("trees")
-            .doc(treeSave.oldPath)
-        );
+      const paths = findPathByPaths(store.state.treeList, [treeSave.oldPath]);
+      for (const path of paths) {
+        batch.delete(getTreeDocRef(notebookId, path));
+        const treeNode = findTreeNodeByPath(store.state.treeList, path);
+        if (treeNode) {
+          const data: TreeNode = {
+            name: treeNode.name,
+            updatedAt: moment().unix(),
+            createdAt: treeNode.createdAt
+          };
+          if (treeNode.value !== undefined) {
+            data.value = treeNode.value;
+          }
+          if (treeNode.path === treeSave.oldPath) {
+            data.name = treeSave.name;
+            if (treeSave.value !== undefined) {
+              data.value = treeSave.value;
+            }
+          }
+          batch.set(
+            getTreeDocRef(
+              notebookId,
+              path.replace(treeSave.oldPath, treeSave.path)
+            ),
+            data
+          );
+        }
       }
-      const data: TreeNode = {
-        name: treeSave.name,
-        updatedAt: moment().unix(),
-        createdAt: treeNode.createdAt
-      };
-      if (treeSave.value) {
-        data.value = treeSave.value;
-      }
-      batch.set(
-        db
-          .collection("notebooks")
-          .doc(notebookId)
-          .collection("trees")
-          .doc(treeSave.path),
-        data
-      );
     } else {
+      const treeNode = findTreeNodeByPath(store.state.treeList, treeSave.path);
       const data: TreeNode = {
         name: treeSave.name,
         updatedAt: moment().unix(),
         createdAt: moment().unix()
       };
-      if (treeSave.value) {
+      if (treeSave.value !== undefined) {
         data.value = treeSave.value;
       }
-      batch.set(
-        db
-          .collection("notebooks")
-          .doc(notebookId)
-          .collection("trees")
-          .doc(treeSave.path),
-        data
-      );
+      if (treeNode) {
+        data.createdAt = treeNode.createdAt;
+      }
+      batch.set(getTreeDocRef(notebookId, treeSave.path), data);
     }
   });
   return batch.commit();
+}
+
+export function getTreeDocRef(
+  notebookId: string,
+  path: string
+): DocumentReference {
+  return db
+    .collection("notebooks")
+    .doc(notebookId)
+    .collection("trees")
+    .doc(path);
 }
