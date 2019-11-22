@@ -114,13 +114,13 @@ export function saveBatch(
   const batch = db.batch();
   treeSaves.forEach(treeSave => {
     treeSave.path = treeSave.path.replace(/\//g, ":");
+    let treeNode = findTreeNodeByPath(store.state.treeList, treeSave.path);
     if (treeSave.oldPath) {
       treeSave.oldPath = treeSave.oldPath.replace(/\//g, ":");
-      const treeNode = findTreeNodeByPath(
-        store.state.treeList,
-        treeSave.oldPath
-      );
-      if (treeNode) {
+      treeNode = findTreeNodeByPath(store.state.treeList, treeSave.oldPath);
+    }
+    if (treeNode) {
+      if (treeSave.oldPath) {
         batch.delete(
           db
             .collection("notebooks")
@@ -128,60 +128,40 @@ export function saveBatch(
             .collection("trees")
             .doc(treeSave.oldPath)
         );
-        const data: TreeNode = {
-          name: treeSave.name,
-          updatedAt: moment().unix(),
-          createdAt: treeNode.createdAt
-        };
-        if (treeSave.value) {
-          data.value = treeSave.value;
-        }
-        batch.set(
-          db
-            .collection("notebooks")
-            .doc(notebookId)
-            .collection("trees")
-            .doc(treeSave.path),
-          data
-        );
       }
+      const data: TreeNode = {
+        name: treeSave.name,
+        updatedAt: moment().unix(),
+        createdAt: treeNode.createdAt
+      };
+      if (treeSave.value) {
+        data.value = treeSave.value;
+      }
+      batch.set(
+        db
+          .collection("notebooks")
+          .doc(notebookId)
+          .collection("trees")
+          .doc(treeSave.path),
+        data
+      );
     } else {
-      const treeNode = findTreeNodeByPath(store.state.treeList, treeSave.path);
-      if (treeNode) {
-        const data: TreeNode = {
-          name: treeSave.name,
-          updatedAt: moment().unix(),
-          createdAt: treeNode.createdAt
-        };
-        if (treeSave.value) {
-          data.value = treeSave.value;
-        }
-        batch.update(
-          db
-            .collection("notebooks")
-            .doc(notebookId)
-            .collection("trees")
-            .doc(treeSave.path),
-          data
-        );
-      } else {
-        const data: TreeNode = {
-          name: treeSave.name,
-          updatedAt: moment().unix(),
-          createdAt: moment().unix()
-        };
-        if (treeSave.value) {
-          data.value = treeSave.value;
-        }
-        batch.set(
-          db
-            .collection("notebooks")
-            .doc(notebookId)
-            .collection("trees")
-            .doc(treeSave.path),
-          data
-        );
+      const data: TreeNode = {
+        name: treeSave.name,
+        updatedAt: moment().unix(),
+        createdAt: moment().unix()
+      };
+      if (treeSave.value) {
+        data.value = treeSave.value;
       }
+      batch.set(
+        db
+          .collection("notebooks")
+          .doc(notebookId)
+          .collection("trees")
+          .doc(treeSave.path),
+        data
+      );
     }
   });
   return batch.commit();
