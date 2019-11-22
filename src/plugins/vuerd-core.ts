@@ -1,7 +1,17 @@
 import Vue from "vue";
 import log from "@/ts/Logger";
-import { list, TreeNodeModel, TreeNodeModelImpl } from "@/api/DocumentAPI";
-import { convertTree, findTreeNodeByPath } from "@/api/DocumentHelper";
+import {
+  list,
+  removeBatch,
+  saveBatch,
+  TreeNodeModel,
+  TreeNodeModelImpl
+} from "@/api/DocumentAPI";
+import {
+  convertTree,
+  findTreeNodeByPath,
+  findPathByPaths
+} from "@/api/DocumentHelper";
 import store, { Commit } from "@/store";
 import VuerdCore, { Command, Tree, TreeMove, TreeSave } from "vuerd-core";
 import ERD from "vuerd-plugin-erd";
@@ -23,10 +33,10 @@ async function findFileByPath(path: string): Promise<string> {
 }
 
 async function findTreeBy(): Promise<Tree> {
+  log.debug(`vuerd-core findTreeBy`);
   if (!store.state.notebookId) {
     throw new Error("not found notebookId");
   }
-  log.debug(`vuerd-core findTreeBy`);
   const querySnapshot = await list(store.state.notebookId);
   const treeList: TreeNodeModel[] = [];
   querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
@@ -36,14 +46,23 @@ async function findTreeBy(): Promise<Tree> {
 
 async function save(treeSaves: TreeSave[]): Promise<void> {
   log.debug(`vuerd-core save`);
-  // data save
-  log.debug(treeSaves);
+  if (!store.state.notebookId) {
+    throw new Error("not found notebookId");
+  }
+  await saveBatch(store.state.notebookId, treeSaves);
+  const querySnapshot = await list(store.state.notebookId);
+  const treeList: TreeNodeModel[] = [];
+  querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
+  store.commit(Commit.setTreeList, treeList);
 }
 
 async function deleteByPaths(paths: string[]): Promise<void> {
   log.debug(`vuerd-core deleteByPaths`);
-  // data delete
-  log.debug(paths);
+  if (!store.state.notebookId) {
+    throw new Error("not found notebookId");
+  }
+  const deletePaths = findPathByPaths(store.state.treeList, paths);
+  return removeBatch(store.state.notebookId, deletePaths);
 }
 
 async function move(treeMove: TreeMove): Promise<void> {

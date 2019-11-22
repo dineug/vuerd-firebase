@@ -67,3 +67,22 @@ export function findTreeNodeByPath(
   }
   return treeNode;
 }
+
+export function findPathByPaths(
+  treeList: TreeNodeModel[],
+  paths: string[]
+): string[] {
+  const deletePaths: string[] = [];
+  paths.forEach(path => {
+    path = path.replace(/\//g, ":");
+    treeList.forEach(tree => {
+      if (
+        (tree.path === path || tree.path.indexOf(`${path}:`) === 0) &&
+        deletePaths.indexOf(tree.path) === -1
+      ) {
+        deletePaths.push(tree.path);
+      }
+    });
+  });
+  return deletePaths;
+}

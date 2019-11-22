@@ -34,9 +34,14 @@ export default class Editor extends Vue {
   }
 
   private created() {
-    log.debug(`Editor created: ${this.$route.params.id}`);
+    log.debug("Editor created", this.$route.params.id);
     this.$store.commit(Commit.setNotebookId, this.$route.params.id);
     this.getConfigEditor();
+  }
+
+  private destroyed() {
+    log.debug("Editor destroyed");
+    this.$store.commit(Commit.setTreeList, []);
   }
 }
 </script>
