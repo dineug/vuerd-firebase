@@ -2,12 +2,18 @@ import {
   db,
   QuerySnapshot,
   QueryDocumentSnapshot,
-  DocumentReference
+  DocumentReference,
+  CollectionReference
 } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
-import { TreeSave } from "vuerd-core";
-import { findTreeNodeByPath, findPathByPaths } from "./DocumentHelper";
+import { TreeMove, TreeSave } from "vuerd-core";
+import {
+  findTreeNodeByPath,
+  findPathByPaths,
+  Move,
+  orderByPathLengthDESC
+} from "./DocumentHelper";
 
 export interface TreeNode {
   name: string;
@@ -37,9 +43,23 @@ export class TreeNodeModelImpl implements TreeNodeModel {
   }
 }
 
+export function getTreesColRef(notebookId: string): CollectionReference {
+  return db
+    .collection("notebooks")
+    .doc(notebookId)
+    .collection("trees");
+}
+
+export function getTreesDocRef(
+  notebookId: string,
+  path: string
+): DocumentReference {
+  return getTreesColRef(notebookId).doc(path);
+}
+
 export function list(notebookId: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return db
     .collection("notebooks")
@@ -53,19 +73,21 @@ export function removeBatch(
   paths: string[]
 ): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   const batch = db.batch();
-  let createRoot = false;
+  let rootCreate = false;
+  let rootName = "unnamed";
   paths.forEach(path => {
     if (path.indexOf(":") === -1) {
-      createRoot = true;
+      rootCreate = true;
+      rootName = path;
     }
-    batch.delete(getTreeDocRef(notebookId, path));
+    batch.delete(getTreesDocRef(notebookId, path));
   });
-  if (createRoot) {
-    batch.set(getTreeDocRef(notebookId, "unnamed"), {
-      name: "unnamed",
+  if (rootCreate) {
+    batch.set(getTreesDocRef(notebookId, rootName), {
+      name: rootName,
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     });
@@ -78,7 +100,7 @@ export function saveBatch(
   treeSaves: TreeSave[]
 ): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   const batch = db.batch();
   treeSaves.forEach(treeSave => {
@@ -87,7 +109,7 @@ export function saveBatch(
       treeSave.oldPath = treeSave.oldPath.replace(/\//g, ":");
       const paths = findPathByPaths(store.state.treeList, [treeSave.oldPath]);
       for (const path of paths) {
-        batch.delete(getTreeDocRef(notebookId, path));
+        batch.delete(getTreesDocRef(notebookId, path));
         const treeNode = findTreeNodeByPath(store.state.treeList, path);
         if (treeNode) {
           const data: TreeNode = {
@@ -105,7 +127,7 @@ export function saveBatch(
             }
           }
           batch.set(
-            getTreeDocRef(
+            getTreesDocRef(
               notebookId,
               path.replace(treeSave.oldPath, treeSave.path)
             ),
@@ -126,19 +148,67 @@ export function saveBatch(
       if (treeNode) {
         data.createdAt = treeNode.createdAt;
       }
-      batch.set(getTreeDocRef(notebookId, treeSave.path), data);
+      batch.set(getTreesDocRef(notebookId, treeSave.path), data);
     }
   });
   return batch.commit();
 }
 
-export function getTreeDocRef(
+export function moveBatch(
   notebookId: string,
-  path: string
-): DocumentReference {
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("trees")
-    .doc(path);
+  treeMove: TreeMove
+): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  const batch = db.batch();
+  const deleteMoves: Move[] = [];
+  const saveTreeList: TreeNodeModel[] = [];
+  treeMove.toPath = treeMove.toPath.replace(/\//g, ":");
+  treeMove.fromPaths.forEach(path => {
+    path = path.replace(/\//g, ":");
+    const tree = findTreeNodeByPath(store.state.treeList, path);
+    if (tree) {
+      deleteMoves.push({
+        path,
+        name: tree.name
+      });
+      tree.path = `${treeMove.toPath}:${tree.name}`;
+      saveTreeList.push(tree);
+    }
+  });
+  deleteMoves.sort(orderByPathLengthDESC);
+  const searchDeleteMoves = [...deleteMoves];
+  searchDeleteMoves.forEach(deleteMove => {
+    const paths = findPathByPaths(store.state.treeList, [deleteMove.path]);
+    paths.forEach(path => {
+      const tree = findTreeNodeByPath(store.state.treeList, path);
+      if (tree) {
+        deleteMoves.push({
+          path,
+          name: tree.name
+        });
+        tree.path = tree.path.replace(
+          deleteMove.path,
+          `${treeMove.toPath}:${deleteMove.name}`
+        );
+        saveTreeList.push(tree);
+      }
+    });
+  });
+  deleteMoves.forEach(deleteMove => {
+    batch.delete(getTreesDocRef(notebookId, deleteMove.path));
+  });
+  saveTreeList.forEach(treeNode => {
+    const data: TreeNode = {
+      name: treeNode.name,
+      updatedAt: moment().unix(),
+      createdAt: treeNode.createdAt
+    };
+    if (treeNode.value !== undefined) {
+      data.value = treeNode.value;
+    }
+    batch.set(getTreesDocRef(notebookId, treeNode.path), data);
+  });
+  return batch.commit();
 }

@@ -20,7 +20,7 @@ function createTree(tree: Tree, paths: string[], value?: string) {
   if (tree.children) {
     const name = paths.pop();
     if (name) {
-      let node = findTreeBy(tree.children, name);
+      let node = findTreeByName(tree.children, name);
       if (paths.length === 0 && node === null && value !== undefined) {
         tree.children.push({
           name
@@ -42,10 +42,10 @@ function createTree(tree: Tree, paths: string[], value?: string) {
   }
 }
 
-export function findTreeBy(children: Tree[], path: string): Tree | null {
+export function findTreeByName(children: Tree[], name: string): Tree | null {
   let result: Tree | null = null;
   for (const node of children) {
-    if (node.name === path) {
+    if (node.name === name) {
       result = node;
       break;
     }
@@ -85,4 +85,13 @@ export function findPathByPaths(
     });
   });
   return childrenPaths;
+}
+
+export interface Move {
+  path: string;
+  name: string;
+}
+
+export function orderByPathLengthDESC(a: Move, b: Move): number {
+  return b.path.length - a.path.length;
 }

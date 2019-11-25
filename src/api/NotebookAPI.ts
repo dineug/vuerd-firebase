@@ -7,7 +7,7 @@ import {
 } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
-import { getTreeDocRef } from "./DocumentAPI";
+import { getTreesDocRef } from "./DocumentAPI";
 
 export type Role = "owner" | "writer" | "reader";
 
@@ -74,7 +74,7 @@ export async function add(
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await db.collection("notebooks").add(notebook);
-  await getTreeDocRef(docRef.id, "unnamed").set({
+  await getTreesDocRef(docRef.id, "unnamed").set({
     name: "unnamed",
     updatedAt: moment().unix(),
     createdAt: moment().unix()
@@ -105,7 +105,7 @@ export function list(paging: Paging): Promise<QuerySnapshot> {
 
 export function myList(paging: Paging): Promise<QuerySnapshot> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   if (!paging.limit) {
     paging.limit = 20;
