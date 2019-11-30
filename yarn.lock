@@ -10839,10 +10839,10 @@ vuerd-core@^0.3.3:
     vue-property-decorator "^8.1.0"
     vuex "^3.0.1"
 
-vuerd-core@^0.3.7:
-  version "0.3.7"
-  resolved "https://registry.yarnpkg.com/vuerd-core/-/vuerd-core-0.3.7.tgz#9e8d232896f06ffa578da38c1226ff59d1f7cd52"
-  integrity sha512-Wt8YRqzqNuA/IIHBV4BpQrafXBpT4GB06uzqsDY+h3uOfZPcezvw0m8082mhzzI3yMtBlkUScl/3vf5VhFWssQ==
+vuerd-core@^0.3.8:
+  version "0.3.8"
+  resolved "https://registry.yarnpkg.com/vuerd-core/-/vuerd-core-0.3.8.tgz#d81a1b45e15ab39a9237db1521da8df3161e6586"
+  integrity sha512-MaY9EwW4JtsnR2fcfupo0eQtWIODGoYQpcmKW24ePO55ged3vZKizBkleLQnfNyRXGC8l4D+IgdQdhxbn6MC2A==
   dependencies:
     "@tweenjs/tween.js" "^18.1.2"
     core-js "^3.1.2"

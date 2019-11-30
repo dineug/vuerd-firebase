@@ -5,10 +5,15 @@
 </template>
 
 <script lang="ts">
+import eventBus from "@/ts/EventBus";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class App extends Vue {}
+export default class App extends Vue {
+  private destroyed() {
+    eventBus.destroyed();
+  }
+}
 </script>
 
 <style lang="scss">

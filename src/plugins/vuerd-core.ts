@@ -1,4 +1,7 @@
 import Vue from "vue";
+import router from "@/router";
+import store, { Commit } from "@/store";
+import eventBus, { Bus } from "@/ts/EventBus";
 import log from "@/ts/Logger";
 import {
   list,
@@ -13,7 +16,6 @@ import {
   findTreeNodeByPath,
   findPathByPaths
 } from "@/api/DocumentHelper";
-import store, { Commit } from "@/store";
 import VuerdCore, { Command, Tree, TreeMove, TreeSave } from "vuerd-core";
 import ERD from "vuerd-plugin-erd";
 import TuiEditor from "vuerd-plugin-tui.editor";
@@ -86,7 +88,28 @@ VuerdCore.use({
       findFileByPath,
       save,
       deleteByPaths,
-      move
+      move,
+      option: {
+        titleBarContextmenu: [
+          {
+            name: "File",
+            children: [
+              {
+                name: "Restart",
+                execute(): void {
+                  eventBus.$emit(Bus.Editor.reload);
+                }
+              },
+              {
+                name: "Exit",
+                execute(): void {
+                  router.back();
+                }
+              }
+            ]
+          }
+        ]
+      }
     });
   }
 });
