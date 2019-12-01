@@ -30,7 +30,7 @@ import { routes } from "@/router";
     NotebookCard
   }
 })
-export default class Home extends Vue {
+export default class Document extends Vue {
   private notebooks: NotebookModel[] = [];
   private paging: Paging | null = {
     last: null
@@ -52,6 +52,7 @@ export default class Home extends Vue {
             );
           }
         })
+        .catch(err => this.$message.error(err.message))
         .finally(() => (this.listProcess = false));
     }
   }

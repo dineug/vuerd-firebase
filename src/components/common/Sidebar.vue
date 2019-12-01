@@ -9,16 +9,43 @@
       :collapse="true"
       @select="onSelect"
     >
-      <el-tooltip content="Home" placement="left" :open-delay="openDelay">
-        <el-menu-item index="Home">
-          <i class="el-icon-menu"></i>
-          <span>Home</span>
+      <el-tooltip content="Document" placement="left" :open-delay="openDelay">
+        <el-menu-item index="Document">
+          <i class="el-icon-document"></i>
+          <span>Document</span>
         </el-menu-item>
       </el-tooltip>
-      <el-tooltip content="Notebook" placement="left" :open-delay="openDelay">
+      <el-tooltip
+        v-if="user !== null"
+        content="Notebook"
+        placement="left"
+        :open-delay="openDelay"
+      >
         <el-menu-item index="Notebook">
           <i class="el-icon-notebook-1"></i>
           <span>Notebook</span>
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip
+        v-if="user !== null"
+        content="New Notebook"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="New Notebook">
+          <i class="el-icon-document-add"></i>
+          <span>New Notebook</span>
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip
+        v-if="user !== null"
+        content="Setting"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="Setting">
+          <i class="el-icon-setting"></i>
+          <span>Setting</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
@@ -28,13 +55,13 @@
         :open-delay="openDelay"
       >
         <el-menu-item index="sign-out">
-          <i class="el-icon-switch-button"></i>
+          <font-awesome-icon class="font-awesome" icon="sign-out-alt" />
           <span>Sign out</span>
         </el-menu-item>
       </el-tooltip>
       <el-submenu v-else index="sign-in">
         <template slot="title">
-          <i class="el-icon-connection"></i>
+          <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
           <span>Sign in</span>
         </template>
         <el-menu-item-group>
@@ -55,23 +82,29 @@
         </el-menu-item-group>
       </el-submenu>
     </el-menu>
+    <new-notebook />
   </el-aside>
 </template>
 
 <script lang="ts">
 import log from "@/ts/Logger";
 import { routes } from "@/router";
-import firebase, { auth, AuthProvider, User } from "@/plugins/firebase";
+import firebase, { auth, User } from "@/plugins/firebase";
+import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import NewNotebook from "./NewNotebook.vue";
 
-@Component
+@Component({
+  components: {
+    NewNotebook
+  }
+})
 export default class Sidebar extends Vue {
   private openDelay: number = 0;
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
-  private active: string = routes.Home.name;
-  private provider: AuthProvider = new firebase.auth.GoogleAuthProvider();
+  private active: string = routes.Document.name;
 
   get user(): User | null {
     return this.$store.state.user;
@@ -89,9 +122,9 @@ export default class Sidebar extends Vue {
   private onSelect(key: string) {
     log.debug(`Sidebar onSelect: ${key}`);
     switch (key) {
-      case routes.Home.name:
-        if (this.$route.name !== routes.Home.name) {
-          this.$router.push(routes.Home);
+      case routes.Document.name:
+        if (this.$route.name !== routes.Document.name) {
+          this.$router.push(routes.Document);
         }
         break;
       case routes.Notebook.name:
@@ -101,7 +134,7 @@ export default class Sidebar extends Vue {
         break;
       case "sign-in-google":
         auth
-          .signInWithPopup(this.provider)
+          .signInWithPopup(new firebase.auth.GoogleAuthProvider())
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());
         this.setActive();
@@ -110,12 +143,19 @@ export default class Sidebar extends Vue {
         auth
           .signOut()
           .then(() => {
-            if (this.$route.name !== routes.Home.name) {
-              this.$router.push(routes.Home);
+            if (this.$route.name !== routes.Document.name) {
+              this.$router.push(routes.Document);
             }
           })
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());
+        break;
+      case "Setting":
+        alert("Setting!");
+        break;
+      case "New Notebook":
+        eventBus.$emit(Bus.NewNotebook.drawerStart);
+        this.setActive();
         break;
     }
   }
@@ -135,6 +175,13 @@ export default class Sidebar extends Vue {
   height: 100vh;
   border: 0;
   position: fixed;
+}
+.el-submenu,
+.el-menu-item {
+  text-align: center;
+}
+.font-awesome {
+  color: #909399;
 }
 .sign-in-btn {
   width: 200px;

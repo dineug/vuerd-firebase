@@ -1,17 +1,17 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import { signIn } from "./Guard";
-import Home from "@/components/Home.vue";
+import Document from "@/components/Document.vue";
 import Notebook from "@/components/Notebook.vue";
 import Editor from "@/components/Editor.vue";
 
 Vue.use(VueRouter);
 
 export const routes = {
-  Home: {
+  Document: {
     path: "/",
-    name: Home.name,
-    component: Home
+    name: Document.name,
+    component: Document
   },
   Notebook: {
     path: "/notebook",

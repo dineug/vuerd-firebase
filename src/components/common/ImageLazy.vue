@@ -14,7 +14,8 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-const SIZE = 250;
+const SIZE_WIDTH = 250;
+const SIZE_HEIGHT = 200;
 
 @Component
 export default class ImageLazy extends Vue {
@@ -52,11 +53,11 @@ export default class ImageLazy extends Vue {
     if (img && img.naturalWidth && img.naturalHeight) {
       this.horizontal = img.naturalWidth <= img.naturalHeight;
       if (this.horizontal) {
-        this.height = (SIZE / img.naturalWidth) * img.naturalHeight;
-        this.top = (SIZE - this.height) / 2;
+        this.height = (SIZE_WIDTH / img.naturalWidth) * img.naturalHeight;
+        this.top = (SIZE_HEIGHT - this.height) / 2;
       } else {
-        this.width = (SIZE / img.naturalHeight) * img.naturalWidth;
-        this.left = (SIZE - this.width) / 2;
+        this.width = (SIZE_HEIGHT / img.naturalHeight) * img.naturalWidth;
+        this.left = (SIZE_WIDTH - this.width) / 2;
       }
     }
   }
@@ -67,7 +68,7 @@ export default class ImageLazy extends Vue {
 .image-lazy {
   margin-bottom: 5px;
   width: 100%;
-  height: 250px;
+  height: 200px;
   position: relative;
   overflow: hidden;
 

@@ -62,8 +62,14 @@ enum Editor {
   reload = "Editor.reload"
 }
 
+enum NewNotebook {
+  drawerStart = "NewNotebook.drawerStart",
+  drawerEnd = "NewNotebook.drawerEnd"
+}
+
 export const Bus = {
-  Editor
+  Editor,
+  NewNotebook
 };
 
 export default new EventBus();

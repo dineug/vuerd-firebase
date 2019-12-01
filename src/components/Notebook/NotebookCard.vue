@@ -33,6 +33,8 @@ const enum Action {
   setting = "setting"
 }
 
+const IMAGE = require("@/assets/images/milky-way-3602131_1920.jpg");
+
 @Component({
   components: {
     ImageLazy
@@ -55,6 +57,12 @@ export default class NotebookCard extends Vue {
 
   private onClick(action: Action) {
     this.$emit(action, this.notebook);
+  }
+
+  private created() {
+    if (!this.notebook.image) {
+      this.notebook.image = IMAGE;
+    }
   }
 }
 </script>

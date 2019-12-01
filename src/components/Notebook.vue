@@ -52,6 +52,7 @@ export default class Notebook extends Vue {
             );
           }
         })
+        .catch(err => this.$message.error(err.message))
         .finally(() => (this.listProcess = false));
     }
   }

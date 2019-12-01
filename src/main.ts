@@ -6,6 +6,7 @@ import store from "./store";
 import "./plugins/fragment";
 import "./plugins/vuerd-core";
 import "./plugins/element";
+import "./plugins/fontawesome";
 
 Vue.config.productionTip = false;
 

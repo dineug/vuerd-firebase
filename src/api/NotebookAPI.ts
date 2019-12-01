@@ -17,6 +17,7 @@ export interface Notebook {
   published: boolean;
   title: string;
   image?: string;
+  hashTags: string[];
   updatedAt: number;
   createdAt: number;
 }
@@ -32,6 +33,7 @@ export class NotebookModelImpl implements NotebookModel {
   public published: boolean;
   public title: string;
   public image: string;
+  public hashTags: string[];
   public updatedAt: number;
   public createdAt: number;
 
@@ -43,6 +45,7 @@ export class NotebookModelImpl implements NotebookModel {
       published,
       title,
       image,
+      hashTags,
       updatedAt,
       createdAt
     } = doc.data();
@@ -51,6 +54,7 @@ export class NotebookModelImpl implements NotebookModel {
     this.published = published;
     this.title = title;
     this.image = image;
+    this.hashTags = hashTags;
     this.updatedAt = updatedAt;
     this.createdAt = createdAt;
   }
@@ -71,6 +75,7 @@ export async function add(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
+  notebook.hashTags = [];
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await db.collection("notebooks").add(notebook);

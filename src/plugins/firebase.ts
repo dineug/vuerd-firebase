@@ -19,6 +19,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 export default firebase;
 export const db = firebaseApp.firestore();
 export const auth = firebaseApp.auth();
+auth.languageCode = "ko";
 
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
