@@ -19,10 +19,10 @@
 <script lang="ts">
 import { list, NotebookModel, NotebookModelImpl } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
+import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
-import { routes } from "@/router";
 
 @Component({
   components: {

@@ -150,8 +150,10 @@ export default class Sidebar extends Vue {
           .catch(err => this.$message.error(err.message))
           .finally(() => this.setActive());
         break;
-      case "Setting":
-        alert("Setting!");
+      case routes.Setting.name:
+        if (this.$route.name !== routes.Setting.name) {
+          this.$router.push(routes.Setting);
+        }
         break;
       case "New Notebook":
         eventBus.$emit(Bus.NewNotebook.drawerStart);
