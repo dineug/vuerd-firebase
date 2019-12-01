@@ -75,7 +75,7 @@ export async function add(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
-  notebook.hashTags = [];
+  notebook.hashTags = ["vuejs"];
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await db.collection("notebooks").add(notebook);
