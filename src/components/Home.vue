@@ -4,7 +4,12 @@
     <el-container>
       <el-main class="main">
         <div class="card" v-for="notebook in notebooks" :key="notebook.id">
-          <notebook-card :notebook="notebook" />
+          <notebook-card
+            :notebook="notebook"
+            @document="onDocument"
+            @editor="onEditor"
+            @setting="onSetting"
+          />
         </div>
       </el-main>
     </el-container>
@@ -17,6 +22,7 @@ import { Paging } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
+import { routes } from "@/router";
 
 @Component({
   components: {
@@ -50,6 +56,19 @@ export default class Home extends Vue {
     }
   }
 
+  private onDocument(notebook: NotebookModel) {}
+
+  private onEditor(notebook: NotebookModel) {
+    this.$router.push({
+      name: routes.Editor.name,
+      params: {
+        id: notebook.id
+      }
+    });
+  }
+
+  private onSetting(notebook: NotebookModel) {}
+
   private onScroll() {
     const scrollHeight = document.documentElement.scrollHeight;
     const scrollTop = document.documentElement.scrollTop;
@@ -73,8 +92,6 @@ export default class Home extends Vue {
 
 <style scoped lang="scss">
 .main {
-  text-align: center;
-
   .card {
     width: $size-card-width;
     display: inline-block;

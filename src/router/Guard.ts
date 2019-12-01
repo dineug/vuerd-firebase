@@ -1,5 +1,5 @@
 import { Route, RawLocation } from "vue-router";
-import { RouterName } from "@/router";
+import { routes } from "@/router";
 import store, { Commit } from "@/store";
 
 export function signIn(
@@ -11,8 +11,6 @@ export function signIn(
     next();
   } else {
     store.commit(Commit.referer, to.path);
-    next({
-      name: RouterName.Home
-    });
+    next(routes.Home);
   }
 }

@@ -6,9 +6,9 @@
         <div class="card" v-for="notebook in notebooks" :key="notebook.id">
           <notebook-card
             :notebook="notebook"
-            @bookmark="onBookmark"
             @document="onDocument"
             @editor="onEditor"
+            @setting="onSetting"
           />
         </div>
       </el-main>
@@ -19,7 +19,7 @@
 <script lang="ts">
 import { myList, NotebookModel, NotebookModelImpl } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
-import { RouterName } from "@/router";
+import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
@@ -56,18 +56,18 @@ export default class Notebook extends Vue {
     }
   }
 
-  private onBookmark() {}
-
-  private onDocument() {}
+  private onDocument(notebook: NotebookModel) {}
 
   private onEditor(notebook: NotebookModel) {
     this.$router.push({
-      name: RouterName.Editor,
+      name: routes.Editor.name,
       params: {
         id: notebook.id
       }
     });
   }
+
+  private onSetting(notebook: NotebookModel) {}
 
   private onScroll() {
     const scrollHeight = document.documentElement.scrollHeight;
@@ -92,8 +92,6 @@ export default class Notebook extends Vue {
 
 <style scoped lang="scss">
 .main {
-  text-align: center;
-
   .card {
     width: $size-card-width;
     display: inline-block;

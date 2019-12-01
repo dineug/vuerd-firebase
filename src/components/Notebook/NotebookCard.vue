@@ -1,6 +1,6 @@
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover">
-    <el-image class="card-image" :src="notebook.image" lazy />
+    <image-lazy :src="notebook.image" />
     <div style="padding: 10px;">
       <span>{{ notebook.title }}</span>
       <div class="btn-box">
@@ -25,9 +25,7 @@
 <script lang="ts">
 import { NotebookModel } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
-
-const IMAGE =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89B8AAqkB05ycXjIAAAAASUVORK5CYII=";
+import ImageLazy from "@/components/common/ImageLazy.vue";
 
 const enum Action {
   document = "document",
@@ -35,7 +33,11 @@ const enum Action {
   setting = "setting"
 }
 
-@Component
+@Component({
+  components: {
+    ImageLazy
+  }
+})
 export default class NotebookCard extends Vue {
   @Prop({ type: Object, default: () => ({}) })
   private notebook!: NotebookModel;
@@ -54,20 +56,10 @@ export default class NotebookCard extends Vue {
   private onClick(action: Action) {
     this.$emit(action, this.notebook);
   }
-
-  private created() {
-    if (!this.notebook.image) {
-      this.notebook.image = IMAGE;
-    }
-  }
 }
 </script>
 
 <style scoped lang="scss">
-.card-image {
-  width: 100%;
-  margin-bottom: 5px;
-}
 .btn-box {
   display: flex;
   justify-content: flex-end;

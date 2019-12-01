@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import { RouterName } from "@/router";
+import { routes } from "@/router";
 import firebase, { auth, AuthProvider, User } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -70,7 +70,7 @@ export default class Sidebar extends Vue {
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
-  private active: string = RouterName.Home;
+  private active: string = routes.Home.name;
   private provider: AuthProvider = new firebase.auth.GoogleAuthProvider();
 
   get user(): User | null {
@@ -89,20 +89,14 @@ export default class Sidebar extends Vue {
   private onSelect(key: string) {
     log.debug(`Sidebar onSelect: ${key}`);
     switch (key) {
-      case RouterName.Home:
-        if (this.$route.name !== RouterName.Home) {
-          this.$router.push({
-            name: RouterName.Home
-          });
+      case routes.Home.name:
+        if (this.$route.name !== routes.Home.name) {
+          this.$router.push(routes.Home);
         }
         break;
-      case RouterName.Notebook:
-        if (this.$route.name !== RouterName.Notebook) {
-          this.$router
-            .push({
-              name: RouterName.Notebook
-            })
-            .catch(() => this.setActive());
+      case routes.Notebook.name:
+        if (this.$route.name !== routes.Notebook.name) {
+          this.$router.push(routes.Notebook).catch(() => this.setActive());
         }
         break;
       case "sign-in-google":
@@ -116,10 +110,8 @@ export default class Sidebar extends Vue {
         auth
           .signOut()
           .then(() => {
-            if (this.$route.name !== RouterName.Home) {
-              this.$router.push({
-                name: RouterName.Home
-              });
+            if (this.$route.name !== routes.Home.name) {
+              this.$router.push(routes.Home);
             }
           })
           .catch(err => this.$message.error(err.message))

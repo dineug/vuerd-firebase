@@ -142,11 +142,14 @@ export function saveBatch(
         updatedAt: moment().unix(),
         createdAt: moment().unix()
       };
-      if (treeSave.value !== undefined) {
-        data.value = treeSave.value;
-      }
       if (treeNode) {
         data.createdAt = treeNode.createdAt;
+        if (treeNode.value !== undefined) {
+          data.value = treeNode.value;
+        }
+      }
+      if (treeSave.value !== undefined) {
+        data.value = treeSave.value;
       }
       batch.set(getTreesDocRef(notebookId, treeSave.path), data);
     }
