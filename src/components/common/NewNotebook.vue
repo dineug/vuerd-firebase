@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import log from "@/ts/Logger";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { add } from "@/api/NotebookAPI";
 import { routes } from "@/router";
@@ -40,6 +41,9 @@ import { autocomplete } from "@/api/TagAPI";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 // @ts-ignore
 import VueTagsInput from "@johmun/vue-tags-input";
+
+import { Subject, Subscription } from "rxjs";
+import { debounceTime, filter, distinctUntilChanged } from "rxjs/operators";
 
 interface Tag {
   text: string;
@@ -54,6 +58,9 @@ interface Tag {
 export default class NewNotebook extends Vue {
   private drawer: boolean = false;
 
+  private autocomplete$: Subject<string> = new Subject();
+  private subAutocomplete!: Subscription;
+
   private title: string = "";
   private published: boolean = false;
   private tag: string = "";
@@ -62,17 +69,7 @@ export default class NewNotebook extends Vue {
 
   @Watch("tag")
   private watchTag() {
-    if (this.tag.length >= 2) {
-      window.console.log(this.tag);
-      autocomplete(this.tag).then(querySnapshot => {
-        this.autocompleteItems = querySnapshot.docs.map(
-          doc =>
-            ({
-              text: doc.id
-            } as Tag)
-        );
-      });
-    }
+    this.autocomplete$.next(this.tag);
   }
 
   private reset() {
@@ -92,6 +89,18 @@ export default class NewNotebook extends Vue {
       result = true;
     }
     return result;
+  }
+
+  private onAutocomplete(keyword: string) {
+    log.debug(`NewNotebook onAutocomplete: ${keyword}`);
+    autocomplete(keyword).then(querySnapshot => {
+      this.autocompleteItems = querySnapshot.docs.map(
+        doc =>
+          ({
+            text: doc.id
+          } as Tag)
+      );
+    });
   }
 
   private onChangeTags(newTags: Tag[]) {
@@ -137,11 +146,19 @@ export default class NewNotebook extends Vue {
   private created() {
     eventBus.$on(Bus.NewNotebook.drawerStart, this.onDrawerStart);
     eventBus.$on(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
+    this.subAutocomplete = this.autocomplete$
+      .pipe(
+        filter(keyword => keyword.length >= 2),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe(this.onAutocomplete);
   }
 
   private destroyed() {
     eventBus.$off(Bus.NewNotebook.drawerStart, this.onDrawerStart);
     eventBus.$off(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
+    this.subAutocomplete.unsubscribe();
   }
 }
 </script>
