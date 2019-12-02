@@ -3,8 +3,8 @@ const admin = require("firebase-admin");
 admin.initializeApp();
 const db = admin.firestore();
 
-function getHashTagsDocRef(hashTag) {
-  return db.doc(`hashTags/${hashTag}`);
+function getTagsDocRef(tag) {
+  return db.doc(`tags/${tag}`);
 }
 
 exports.createNotebookHashTag = functions.firestore
@@ -12,8 +12,8 @@ exports.createNotebookHashTag = functions.firestore
   .onCreate(async (snapshot, context) => {
     const newNoteBook = snapshot.data();
     const batch = db.batch();
-    for (const hashTag of newNoteBook.hashTags) {
-      const doc = await getHashTagsDocRef(hashTag).get();
+    for (const tag of newNoteBook.tags) {
+      const doc = await getTagsDocRef(tag).get();
       const data = doc.data();
       if (data) {
         batch.update(doc.ref, {
@@ -21,6 +21,7 @@ exports.createNotebookHashTag = functions.firestore
         });
       } else {
         batch.set(doc.ref, {
+          name: tag,
           count: 1
         });
       }
@@ -36,18 +37,18 @@ exports.updateNotebookHashTag = functions.firestore
     const batch = db.batch();
     const minus = [];
     const plus = [];
-    afterNoteBook.hashTags.forEach(after => {
-      if (!beforeNoteBook.hashTags.some(before => after === before)) {
+    afterNoteBook.tags.forEach(after => {
+      if (!beforeNoteBook.tags.some(before => after === before)) {
         minus.push(after);
       }
     });
-    beforeNoteBook.hashTags.forEach(before => {
-      if (!afterNoteBook.hashTags.some(after => after === before)) {
+    beforeNoteBook.tags.forEach(before => {
+      if (!afterNoteBook.tags.some(after => after === before)) {
         plus.push(before);
       }
     });
-    for (const hashTag of minus) {
-      const doc = await getHashTagsDocRef(hashTag).get();
+    for (const tag of minus) {
+      const doc = await getTagsDocRef(tag).get();
       const data = doc.data();
       if (data) {
         if (data.count <= 1) {
@@ -59,8 +60,8 @@ exports.updateNotebookHashTag = functions.firestore
         }
       }
     }
-    for (const hashTag of plus) {
-      const doc = await getHashTagsDocRef(hashTag).get();
+    for (const tag of plus) {
+      const doc = await getTagsDocRef(tag).get();
       const data = doc.data();
       if (data) {
         batch.update(doc.ref, {
@@ -68,6 +69,7 @@ exports.updateNotebookHashTag = functions.firestore
         });
       } else {
         batch.set(doc.ref, {
+          name: tag,
           count: 1
         });
       }
@@ -80,8 +82,8 @@ exports.deleteNotebookHashTag = functions.firestore
   .onDelete(async (snapshot, context) => {
     const noteBook = snapshot.data();
     const batch = db.batch();
-    for (const hashTag of noteBook.hashTags) {
-      const doc = await getHashTagsDocRef(hashTag).get();
+    for (const tag of noteBook.tags) {
+      const doc = await getTagsDocRef(tag).get();
       const data = doc.data();
       if (data) {
         if (data.count <= 1) {

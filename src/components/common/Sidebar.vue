@@ -92,7 +92,7 @@ import { routes } from "@/router";
 import firebase, { auth, User } from "@/plugins/firebase";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import NewNotebook from "./NewNotebook.vue";
+import NewNotebook from "@/components/common/NewNotebook.vue";
 
 @Component({
   components: {

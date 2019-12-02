@@ -3,11 +3,16 @@ import {
   QuerySnapshot,
   DocumentReference,
   QueryDocumentSnapshot,
-  Paging
+  Paging,
+  CollectionReference
 } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
 import { getTreesDocRef } from "./DocumentAPI";
+
+export function getNotebooksColRef(): CollectionReference {
+  return db.collection("notebooks");
+}
 
 export type Role = "owner" | "writer" | "reader";
 
@@ -17,7 +22,7 @@ export interface Notebook {
   published: boolean;
   title: string;
   image?: string;
-  hashTags: string[];
+  tags: string[];
   updatedAt: number;
   createdAt: number;
 }
@@ -33,7 +38,7 @@ export class NotebookModelImpl implements NotebookModel {
   public published: boolean;
   public title: string;
   public image: string;
-  public hashTags: string[];
+  public tags: string[];
   public updatedAt: number;
   public createdAt: number;
 
@@ -45,7 +50,7 @@ export class NotebookModelImpl implements NotebookModel {
       published,
       title,
       image,
-      hashTags,
+      tags,
       updatedAt,
       createdAt
     } = doc.data();
@@ -54,7 +59,7 @@ export class NotebookModelImpl implements NotebookModel {
     this.published = published;
     this.title = title;
     this.image = image;
-    this.hashTags = hashTags;
+    this.tags = tags;
     this.updatedAt = updatedAt;
     this.createdAt = createdAt;
   }
@@ -63,6 +68,7 @@ export class NotebookModelImpl implements NotebookModel {
 export interface NotebookAdd {
   published: boolean;
   title: string;
+  tags: string[];
 }
 
 export async function add(
@@ -75,10 +81,9 @@ export async function add(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
-  notebook.hashTags = [];
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
-  const docRef = await db.collection("notebooks").add(notebook);
+  const docRef = await getNotebooksColRef().add(notebook);
   await getTreesDocRef(docRef.id, "unnamed").set({
     name: "unnamed",
     updatedAt: moment().unix(),
@@ -97,8 +102,7 @@ export function list(paging: Paging): Promise<QuerySnapshot> {
   if (!paging.sort) {
     paging.sort = "desc";
   }
-  let ref = db
-    .collection("notebooks")
+  let ref = getNotebooksColRef()
     .where("published", "==", true)
     .orderBy(paging.orderBy, paging.sort)
     .limit(paging.limit);
@@ -121,8 +125,7 @@ export function myList(paging: Paging): Promise<QuerySnapshot> {
   if (!paging.sort) {
     paging.sort = "desc";
   }
-  let ref = db
-    .collection("notebooks")
+  let ref = getNotebooksColRef()
     .where("members", "array-contains", store.state.user.uid)
     .orderBy(paging.orderBy, paging.sort)
     .limit(paging.limit);

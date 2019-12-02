@@ -14,6 +14,16 @@
       <el-form-item label="Published">
         <el-switch v-model="published" />
       </el-form-item>
+      <el-form-item label="tag">
+        <vue-tags-input
+          class="tag-box"
+          v-model="tag"
+          :tags="tags"
+          :autocomplete-items="autocompleteItems"
+          allow-edit-tags
+          @tags-changed="onChangeTags"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onCreate">Create</el-button>
         <el-button @click="onDrawerEnd">Cancel</el-button>
@@ -26,18 +36,51 @@
 import eventBus, { Bus } from "@/ts/EventBus";
 import { add } from "@/api/NotebookAPI";
 import { routes } from "@/router";
+import { autocomplete } from "@/api/TagAPI";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
+// @ts-ignore
+import VueTagsInput from "@johmun/vue-tags-input";
 
-@Component
+interface Tag {
+  text: string;
+  tiClasses?: string[];
+}
+
+@Component({
+  components: {
+    VueTagsInput
+  }
+})
 export default class NewNotebook extends Vue {
   private drawer: boolean = false;
 
   private title: string = "";
   private published: boolean = false;
+  private tag: string = "";
+  private tags: Tag[] = [];
+  private autocompleteItems: Tag[] = [];
+
+  @Watch("tag")
+  private watchTag() {
+    if (this.tag.length >= 2) {
+      window.console.log(this.tag);
+      autocomplete(this.tag).then(querySnapshot => {
+        this.autocompleteItems = querySnapshot.docs.map(
+          doc =>
+            ({
+              text: doc.id
+            } as Tag)
+        );
+      });
+    }
+  }
 
   private reset() {
     this.title = "";
     this.published = false;
+    this.tag = "";
+    this.tags = [];
+    this.autocompleteItems = [];
   }
 
   private valid(): boolean {
@@ -51,6 +94,11 @@ export default class NewNotebook extends Vue {
     return result;
   }
 
+  private onChangeTags(newTags: Tag[]) {
+    this.tags = newTags;
+    this.autocompleteItems = [];
+  }
+
   private onCreate() {
     if (this.valid()) {
       const loading = this.$loading({
@@ -61,7 +109,8 @@ export default class NewNotebook extends Vue {
       });
       add({
         title: this.title,
-        published: this.published
+        published: this.published,
+        tags: this.tags.map(tag => tag.text)
       })
         .then(docRef => {
           this.$router.push({
@@ -97,4 +146,11 @@ export default class NewNotebook extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.tag-box {
+  & /deep/ .ti-tag,
+  & /deep/ .ti-selected-item {
+    background-color: $color-tag;
+  }
+}
+</style>
