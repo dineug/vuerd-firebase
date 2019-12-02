@@ -92,7 +92,7 @@ export default class NewNotebook extends Vue {
   }
 
   private onAutocomplete(keyword: string) {
-    log.debug(`NewNotebook onAutocomplete: ${keyword}`);
+    log.debug("NewNotebook onAutocomplete", keyword);
     autocomplete(keyword).then(querySnapshot => {
       this.autocompleteItems = querySnapshot.docs.map(
         doc =>
@@ -149,7 +149,7 @@ export default class NewNotebook extends Vue {
     this.subAutocomplete = this.autocomplete$
       .pipe(
         filter(keyword => keyword.length >= 2),
-        debounceTime(500),
+        debounceTime(300),
         distinctUntilChanged()
       )
       .subscribe(this.onAutocomplete);

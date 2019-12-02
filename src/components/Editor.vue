@@ -21,13 +21,7 @@ export default class Editor extends Vue {
   private getConfigEditor() {
     findEditorBy().then(doc => {
       const editor = doc.data() as ConfigEditor;
-      if (editor) {
-        this.themeName = editor.themeName;
-      } else {
-        saveEditor({
-          themeName: "VSCode"
-        });
-      }
+      this.themeName = editor.themeName;
     });
   }
 

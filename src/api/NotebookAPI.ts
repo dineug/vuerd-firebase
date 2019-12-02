@@ -9,12 +9,28 @@ import {
 import store from "@/store";
 import moment from "moment";
 import { getTreesDocRef } from "./DocumentAPI";
+import { findUserBy, User } from "./UserAPI";
 
 export function getNotebooksColRef(): CollectionReference {
   return db.collection("notebooks");
 }
 
+export function getMembersColRef(notebookId: string): CollectionReference {
+  return db
+    .collection("notebooks")
+    .doc(notebookId)
+    .collection("members");
+}
+
+export function getMembersDocRef(
+  notebookId: string,
+  uid: string
+): DocumentReference {
+  return getMembersColRef(notebookId).doc(uid);
+}
+
 export type Role = "owner" | "writer" | "reader";
+export type Status = "invitation" | "completion";
 
 export interface Notebook {
   roles: { [key: string]: Role };
@@ -25,6 +41,14 @@ export interface Notebook {
   tags: string[];
   updatedAt: number;
   createdAt: number;
+}
+
+export interface Members {
+  name: string | null;
+  nickname: string | null;
+  email: string | null;
+  role: Role;
+  status: Status;
 }
 
 export interface NotebookModel extends Notebook {
@@ -89,6 +113,15 @@ export async function add(
     updatedAt: moment().unix(),
     createdAt: moment().unix()
   });
+  const docUser = await findUserBy();
+  const user = docUser.data() as User;
+  await getMembersDocRef(docRef.id, store.state.user.uid).set({
+    name: user.name,
+    nickname: user.nickname,
+    email: user.email,
+    role: "owner",
+    status: "completion"
+  } as Members);
   return docRef;
 }
 
