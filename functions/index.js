@@ -5,6 +5,7 @@ const notebookMember = require("./service/notebookMember");
 
 exports.createUser = user.createUser;
 exports.deleteUser = user.deleteUser;
+exports.updateUser = user.updateUser;
 exports.createNotebookTag = notebook.createNotebookTag;
 exports.updateNotebookTag = notebook.updateNotebookTag;
 exports.deleteNotebookTag = notebook.deleteNotebookTag;

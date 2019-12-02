@@ -1,4 +1,4 @@
-import { TreeNodeModel } from "./DocumentAPI";
+import { TreeNodeModel } from "./TreeAPI";
 import { Tree } from "vuerd-core";
 
 export function convertTree(treeList: TreeNodeModel[]): Tree {

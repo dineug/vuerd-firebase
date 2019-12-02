@@ -8,7 +8,7 @@ import {
 } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
-import { getTreesDocRef } from "./DocumentAPI";
+import { getTreesDocRef } from "./TreeAPI";
 import { findUserBy, User } from "./UserAPI";
 
 export function getNotebooksColRef(): CollectionReference {
@@ -30,25 +30,27 @@ export function getMembersDocRef(
 }
 
 export type Role = "owner" | "writer" | "reader";
-export type Status = "invitation" | "completion";
+export type Status = "invitation" | "accept";
 
 export interface Notebook {
   roles: { [key: string]: Role };
   members: string[];
   published: boolean;
   title: string;
-  image?: string;
+  image: string | null;
   tags: string[];
   updatedAt: number;
   createdAt: number;
 }
 
-export interface Members {
+export interface Member {
   name: string | null;
   nickname: string | null;
   email: string | null;
+  image: string | null;
   role: Role;
   status: Status;
+  createdAt: number;
 }
 
 export interface NotebookModel extends Notebook {
@@ -61,7 +63,7 @@ export class NotebookModelImpl implements NotebookModel {
   public members: string[];
   public published: boolean;
   public title: string;
-  public image: string;
+  public image: string | null;
   public tags: string[];
   public updatedAt: number;
   public createdAt: number;
@@ -95,7 +97,7 @@ export interface NotebookAdd {
   tags: string[];
 }
 
-export async function add(
+export async function save(
   notebookAdd: NotebookAdd
 ): Promise<DocumentReference> {
   if (!store.state.user) {
@@ -105,6 +107,7 @@ export async function add(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
+  notebook.image = null;
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await getNotebooksColRef().add(notebook);
@@ -116,16 +119,18 @@ export async function add(
   const docUser = await findUserBy();
   const user = docUser.data() as User;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({
-    name: user.name,
+    name: store.state.user.displayName,
     nickname: user.nickname,
-    email: user.email,
+    email: store.state.user.email,
+    image: user.image,
     role: "owner",
-    status: "completion"
-  } as Members);
+    status: "accept",
+    createdAt: moment().unix()
+  } as Member);
   return docRef;
 }
 
-export function list(paging: Paging): Promise<QuerySnapshot> {
+export function findByPaging(paging: Paging): Promise<QuerySnapshot> {
   if (!paging.limit) {
     paging.limit = 20;
   }
@@ -145,7 +150,7 @@ export function list(paging: Paging): Promise<QuerySnapshot> {
   return ref.get();
 }
 
-export function myList(paging: Paging): Promise<QuerySnapshot> {
+export function findByPagingAndMember(paging: Paging): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }

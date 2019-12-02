@@ -35,7 +35,7 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import eventBus, { Bus } from "@/ts/EventBus";
-import { add } from "@/api/NotebookAPI";
+import { save } from "@/api/NotebookAPI";
 import { routes } from "@/router";
 import { autocomplete } from "@/api/TagAPI";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
@@ -116,7 +116,7 @@ export default class NewNotebook extends Vue {
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
       });
-      add({
+      save({
         title: this.title,
         published: this.published,
         tags: this.tags.map(tag => tag.text)

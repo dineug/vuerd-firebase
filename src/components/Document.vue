@@ -17,7 +17,11 @@
 </template>
 
 <script lang="ts">
-import { list, NotebookModel, NotebookModelImpl } from "@/api/NotebookAPI";
+import {
+  findByPaging,
+  NotebookModel,
+  NotebookModelImpl
+} from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -40,7 +44,7 @@ export default class Document extends Vue {
   private getNotebooks() {
     if (!this.listProcess && this.paging) {
       this.listProcess = true;
-      list(this.paging)
+      findByPaging(this.paging)
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {

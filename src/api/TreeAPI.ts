@@ -13,7 +13,21 @@ import {
   findPathByPaths,
   Move,
   orderByPathLengthDESC
-} from "./DocumentHelper";
+} from "./TreeHelper";
+
+export function getTreesColRef(notebookId: string): CollectionReference {
+  return db
+    .collection("notebooks")
+    .doc(notebookId)
+    .collection("trees");
+}
+
+export function getTreesDocRef(
+  notebookId: string,
+  path: string
+): DocumentReference {
+  return getTreesColRef(notebookId).doc(path);
+}
 
 export interface TreeNode {
   name: string;
@@ -43,21 +57,7 @@ export class TreeNodeModelImpl implements TreeNodeModel {
   }
 }
 
-export function getTreesColRef(notebookId: string): CollectionReference {
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("trees");
-}
-
-export function getTreesDocRef(
-  notebookId: string,
-  path: string
-): DocumentReference {
-  return getTreesColRef(notebookId).doc(path);
-}
-
-export function list(notebookId: string): Promise<QuerySnapshot> {
+export function findAllBy(notebookId: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
@@ -68,7 +68,7 @@ export function list(notebookId: string): Promise<QuerySnapshot> {
     .get();
 }
 
-export function removeBatch(
+export function deleteByBatch(
   notebookId: string,
   paths: string[]
 ): Promise<void> {

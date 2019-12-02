@@ -6,12 +6,6 @@ import {
 } from "@/plugins/firebase";
 import store from "@/store";
 
-export interface User {
-  name: string | null;
-  nickname: string | null;
-  email: string | null;
-}
-
 export function getUsersColRef(): CollectionReference {
   return db.collection("users");
 }
@@ -20,16 +14,39 @@ export function getUsersDocRef(uid: string): DocumentReference {
   return getUsersColRef().doc(uid);
 }
 
-export function getConfigColRef(uid: string): CollectionReference {
-  return getUsersDocRef(uid).collection("config");
+export function getConfigDocRef(uid: string, id: string): DocumentReference {
+  return getUsersDocRef(uid)
+    .collection("config")
+    .doc(id);
 }
 
-export function getConfigDocRef(uid: string, id: string): DocumentReference {
-  return getConfigColRef(uid).doc(id);
+export function getNotificationColRef(uid: string) {
+  return getUsersDocRef(uid).collection("notification");
+}
+
+export type Action = "invitation" | "notification";
+export type Language = "ko" | "en";
+
+export interface User {
+  name: string | null;
+  nickname: string | null;
+  email: string | null;
+  image: string | null;
+  notification: number;
+  language: Language;
+  published: boolean;
 }
 
 export interface Editor {
   themeName: string;
+}
+
+export interface Notification {
+  message: string;
+  action: Action;
+  read: boolean;
+  key: string | null;
+  createdAt: number;
 }
 
 export function saveEditor(editor: Editor): Promise<void> {

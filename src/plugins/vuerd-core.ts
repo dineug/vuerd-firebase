@@ -4,18 +4,18 @@ import store, { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
 import log from "@/ts/Logger";
 import {
-  list,
-  removeBatch,
+  findAllBy,
+  deleteByBatch,
   saveBatch,
   moveBatch,
   TreeNodeModel,
   TreeNodeModelImpl
-} from "@/api/DocumentAPI";
+} from "@/api/TreeAPI";
 import {
   convertTree,
   findTreeNodeByPath,
   findPathByPaths
-} from "@/api/DocumentHelper";
+} from "@/api/TreeHelper";
 import VuerdCore, { Command, Tree, TreeMove, TreeSave } from "vuerd-core";
 import ERD from "vuerd-plugin-erd";
 import TuiEditor from "vuerd-plugin-tui.editor";
@@ -27,7 +27,7 @@ async function getTreeList(): Promise<TreeNodeModel[]> {
   if (!store.state.notebookId) {
     throw new Error("not found notebookId");
   }
-  const querySnapshot = await list(store.state.notebookId);
+  const querySnapshot = await findAllBy(store.state.notebookId);
   const treeList: TreeNodeModel[] = [];
   querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
   store.commit(Commit.setTreeList, treeList);
@@ -67,7 +67,7 @@ async function deleteByPaths(paths: string[]): Promise<void> {
     throw new Error("not found notebookId");
   }
   const deletePaths = findPathByPaths(store.state.treeList, paths);
-  await removeBatch(store.state.notebookId, deletePaths);
+  await deleteByBatch(store.state.notebookId, deletePaths);
   getTreeList();
 }
 

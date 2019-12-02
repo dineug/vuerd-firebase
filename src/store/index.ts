@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { User } from "@/plugins/firebase";
-import { TreeNodeModel } from "@/api/DocumentAPI";
+import { TreeNodeModel } from "@/api/TreeAPI";
 
 Vue.use(Vuex);
 
