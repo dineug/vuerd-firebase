@@ -37,6 +37,14 @@ export interface User {
   published: boolean;
 }
 
+export interface UserModify {
+  name: string;
+  nickname: string;
+  image: string | null;
+  language: Language;
+  published: boolean;
+}
+
 export interface Editor {
   themeName: string;
 }
@@ -48,8 +56,6 @@ export interface Notification {
   key: string | null;
   createdAt: number;
 }
-
-
 
 export function editorSave(editor: Editor): Promise<void> {
   if (!store.state.user) {
@@ -77,4 +83,11 @@ export function userSave(user: User): Promise<void> {
     throw new Error("not found uid");
   }
   return getUsersDocRef(store.state.user.uid).set(user);
+}
+
+export function userUpdate(userModify: UserModify): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found uid");
+  }
+  return getUsersDocRef(store.state.user.uid).update(userModify);
 }

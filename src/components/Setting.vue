@@ -3,7 +3,7 @@
     <sidebar />
     <el-container>
       <el-main class="main">
-        <el-form style="padding: 0 20px;" label-width="90px">
+        <el-form style="padding: 20px;" label-width="90px">
           <el-form-item label="Name">
             <el-input
               clearable
@@ -25,23 +25,19 @@
             />
           </el-form-item>
           <el-form-item label="Email">
-            <el-input
-              clearable
-              show-word-limit
-              maxlength="30"
-              placeholder="email"
-              v-model="info.email"
-              ref="email"
-            />
+            {{ info.email }}
           </el-form-item>
           <el-form-item label="Language">
-            <language-select :value="info.language" @change="onChangeLanguage" />
+            <language-select
+              :value="info.language"
+              @change="onChangeLanguage"
+            />
           </el-form-item>
           <el-form-item label="Published">
             <el-switch v-model="info.published" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">Save</el-button>
+            <el-button type="primary" @click="onUpdate">Update</el-button>
           </el-form-item>
         </el-form>
       </el-main>
@@ -50,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { User, Language, userSave, findUserBy } from "@/api/UserAPI";
+import { User, Language, userUpdate, findUserBy } from "@/api/UserAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
@@ -63,24 +59,60 @@ import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
 })
 export default class Setting extends Vue {
   private info: User = {
-    name: "",
-    nickname: "",
-    email: "",
-    image: "",
+    name: null,
+    nickname: null,
+    email: null,
+    image: null,
     language: "en",
     published: false,
     notification: 0
   };
 
+  private valid(): boolean {
+    let result = false;
+    if (this.info.name && this.info.name.trim() === "") {
+      this.$message.warning("Please enter a name");
+      (this.$refs.name as HTMLInputElement).focus();
+    } else if (this.info.nickname && this.info.nickname.trim() === "") {
+      this.$message.warning("Please enter a nickname");
+      (this.$refs.nickname as HTMLInputElement).focus();
+    } else {
+      result = true;
+    }
+    return result;
+  }
+
   private onChangeLanguage(language: Language) {
     this.info.language = language;
+  }
+
+  private onUpdate() {
+    if (this.valid()) {
+      if (this.info.name && this.info.nickname) {
+        const loading = this.$loading({
+          lock: true,
+          text: "Updating",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)"
+        });
+        userUpdate({
+          name: this.info.name,
+          nickname: this.info.nickname,
+          image: this.info.image,
+          language: this.info.language,
+          published: this.info.published
+        })
+          .catch(err => this.$message.error(err.message))
+          .finally(() => loading.close());
+      }
+    }
   }
 
   private created() {
     findUserBy().then(doc => {
       const info = doc.data() as User | undefined;
       if (info) {
-       this.info = info;
+        this.info = info;
       }
     });
   }
