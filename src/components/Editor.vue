@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import {
-  saveEditor,
+  editorSave,
   findEditorBy,
   Editor as ConfigEditor
 } from "@/api/UserAPI";
@@ -20,13 +20,15 @@ export default class Editor extends Vue {
 
   private getConfigEditor() {
     findEditorBy().then(doc => {
-      const editor = doc.data() as ConfigEditor;
-      this.themeName = editor.themeName;
+      const editor = doc.data() as ConfigEditor | undefined;
+      if (editor) {
+        this.themeName = editor.themeName;
+      }
     });
   }
 
   private onChangeTheme(themeName: string) {
-    saveEditor({ themeName });
+    editorSave({ themeName });
   }
 
   private onReload() {

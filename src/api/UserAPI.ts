@@ -49,7 +49,9 @@ export interface Notification {
   createdAt: number;
 }
 
-export function saveEditor(editor: Editor): Promise<void> {
+
+
+export function editorSave(editor: Editor): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found uid");
   }
@@ -70,7 +72,7 @@ export function findUserBy(): Promise<DocumentSnapshot> {
   return getUsersDocRef(store.state.user.uid).get();
 }
 
-export function saveUser(user: User): Promise<void> {
+export function userSave(user: User): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found uid");
   }

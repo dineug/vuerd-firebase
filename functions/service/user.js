@@ -12,7 +12,7 @@ exports.createUser = functions.auth.user().onCreate((user, context) => {
     name: user.displayName,
     nickname: user.displayName,
     notification: 0,
-    image: null,
+    image: user.photoURL ? user.photoURL : null,
     language: "en",
     published: false
   });
@@ -37,7 +37,7 @@ exports.updateUser = functions.firestore
           email: beforeData.email,
           name: beforeData.name,
           nickname: beforeData.nickname,
-          image: beforeData.image,
+          image: beforeData.image
         });
       } else {
         getInvitationDocRef(context.params.userId).delete();

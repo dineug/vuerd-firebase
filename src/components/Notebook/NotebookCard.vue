@@ -25,7 +25,7 @@
 <script lang="ts">
 import { NotebookModel } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import ImageLazy from "@/components/common/ImageLazy.vue";
+import ImageLazy from "@/components/Notebook/ImageLazy.vue";
 
 const enum Action {
   document = "document",

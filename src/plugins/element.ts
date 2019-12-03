@@ -21,6 +21,8 @@ import {
   RadioGroup,
   Input,
   Switch,
+  Select,
+  Option,
   Loading,
   Message,
   MessageBox,
@@ -55,6 +57,8 @@ const components = [
   RadioGroup,
   Input,
   Switch,
+  Select,
+  Option,
   Loading
 ];
 

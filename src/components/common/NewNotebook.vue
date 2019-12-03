@@ -14,7 +14,7 @@
       <el-form-item label="Published">
         <el-switch v-model="published" />
       </el-form-item>
-      <el-form-item label="tag">
+      <el-form-item label="Tag">
         <vue-tags-input
           class="tag-box"
           v-model="tag"

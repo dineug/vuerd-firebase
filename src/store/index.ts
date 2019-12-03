@@ -44,6 +44,5 @@ export default new Vuex.Store<State>({
       state.treeList = treeList;
     }
   },
-  actions: {},
-  modules: {}
+  actions: {}
 });

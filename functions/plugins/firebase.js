@@ -4,7 +4,7 @@ admin.initializeApp();
 const db = admin.firestore();
 
 module.exports = {
-  functions,
+  functions: functions.region("asia-northeast1"),
   admin,
   db
 };
