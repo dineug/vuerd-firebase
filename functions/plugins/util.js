@@ -19,7 +19,7 @@ function getNotificationColRef(uid) {
 }
 
 function getInvitationDocRef(uid) {
-  db.collection("invitation").doc(uid);
+  return db.collection("invitation").doc(uid);
 }
 
 module.exports = {

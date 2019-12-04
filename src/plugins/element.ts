@@ -1,6 +1,7 @@
 import Vue from "vue";
 import {
   Button,
+  ButtonGroup,
   Aside,
   Container,
   Main,
@@ -23,6 +24,7 @@ import {
   Switch,
   Select,
   Option,
+  Avatar,
   Loading,
   Message,
   MessageBox,
@@ -37,6 +39,7 @@ locale.use(lang);
 
 const components = [
   Button,
+  ButtonGroup,
   Aside,
   Container,
   Main,
@@ -59,6 +62,7 @@ const components = [
   Switch,
   Select,
   Option,
+  Avatar,
   Loading
 ];
 
