@@ -1221,6 +1221,67 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
+"@sentry/browser@^5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.10.0.tgz#2952e85cd11de7e4eac6178b7bdd68187fd552df"
+  integrity sha512-E3vat2B94MfmGJ3xS202xClCaxcSO67h4tMCpyk13xPzZxIbftJ4dpDmXNlvrxzv9URCQPDOA6v8ZbvGHxJ1xQ==
+  dependencies:
+    "@sentry/core" "5.10.0"
+    "@sentry/types" "5.10.0"
+    "@sentry/utils" "5.10.0"
+    tslib "^1.9.3"
+
+"@sentry/core@5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.10.0.tgz#9f65ce9077e980a370bd5410f6464f01962a8f67"
+  integrity sha512-sPtgZIRFDKgIvmASi5/kLn+bTRuqhj/NkBlY2SkVgCKfo4Plu1uLJt4zEFF7UC3+MP+2PQA4F6gnAwWIqisbXQ==
+  dependencies:
+    "@sentry/hub" "5.10.0"
+    "@sentry/minimal" "5.10.0"
+    "@sentry/types" "5.10.0"
+    "@sentry/utils" "5.10.0"
+    tslib "^1.9.3"
+
+"@sentry/hub@5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.10.0.tgz#7f64f7d86a754e5aaba4d4ac0f8b39a54e24deaa"
+  integrity sha512-GJjsmu6oI02uL+HnO504XvExhsD6TW7qwOKuIdy27Apq9d/+ZGsjnMigI9bR9UT3JqVQr3OzreDC4LBCGehTqw==
+  dependencies:
+    "@sentry/types" "5.10.0"
+    "@sentry/utils" "5.10.0"
+    tslib "^1.9.3"
+
+"@sentry/integrations@^5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-5.10.0.tgz#bea123a6aee70dcce9fbce5bc899985c6190df9f"
+  integrity sha512-v0DpalikhIdSq7PGwrArMO1G32gjCVPgdy8ZxnqMe+aF3UHdt+1mT92ua4Ro8SeYeDwAU/xmOEojCVmnzYALMA==
+  dependencies:
+    "@sentry/types" "5.10.0"
+    "@sentry/utils" "5.10.0"
+    tslib "^1.9.3"
+
+"@sentry/minimal@5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.10.0.tgz#8bf22cfd362da2679afe29495d3bdb7ed712d22b"
+  integrity sha512-ZZd+IJewSZDuxKKQgzLdSKGNDsDIL6IW/9jGHY+uX1D9t7NnZIBmfpaIUsMPe1rJxag+fEk0FJH+g/z4uIZI2w==
+  dependencies:
+    "@sentry/hub" "5.10.0"
+    "@sentry/types" "5.10.0"
+    tslib "^1.9.3"
+
+"@sentry/types@5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.10.0.tgz#4f0ba31b6e4d5371112c38279f11f66c73b43746"
+  integrity sha512-TW20GzkCWsP6uAxR2JIpIkiitCKyIOfkyDsKBeLqYj4SaZjfvBPnzgNCcYR0L0UsP1/Es6oHooZfIGSkp6GGxQ==
+
+"@sentry/utils@5.10.0":
+  version "5.10.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.10.0.tgz#98ee0db868438c4572b0bad03231ab2e888c134d"
+  integrity sha512-wcxwqtAomr1O65aXx41oHsgl/AGJTJ9C4c03FAMg9wHWEfzEby0el6BZCMq3IAG09zY7vY43zhEFWFghI5u2eg==
+  dependencies:
+    "@sentry/types" "5.10.0"
+    tslib "^1.9.3"
+
 "@soda/friendly-errors-webpack-plugin@^1.7.1":
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/@soda/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-1.7.1.tgz#706f64bcb4a8b9642b48ae3ace444c70334d615d"
@@ -10365,7 +10426,7 @@ tsconfig@^7.0.0:
     strip-bom "^3.0.0"
     strip-json-comments "^2.0.0"
 
-tslib@1.10.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0:
+tslib@1.10.0, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
   integrity sha512-qOebF53frne81cf0S9B41ByenJ3/IuH8yJKngAX35CmiZySA0khhkovshKK+jGCaMnVomla7gVlIcc3EvKPbTQ==

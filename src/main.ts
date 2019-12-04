@@ -8,6 +8,7 @@ import "./plugins/fragment";
 import "./plugins/vuerd-core";
 import "./plugins/element";
 import "./plugins/fontawesome";
+import "./plugins/sentry";
 
 Vue.config.productionTip = false;
 
