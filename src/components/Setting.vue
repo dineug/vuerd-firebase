@@ -70,10 +70,10 @@ import {
   User,
   UserModify,
   Language,
-  userUpdate,
-  findUserBy
+  userUpdate
 } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
+import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
@@ -104,6 +104,22 @@ export default class Setting extends Vue {
     published: false,
     notification: 0
   };
+
+  private onSetInfo() {
+    const info = this.$store.state.info as User | null;
+    if (info) {
+      this.info = {
+        name: info.name,
+        nickname: info.nickname,
+        email: info.email,
+        image: info.image,
+        language: info.language,
+        published: info.published,
+        notification: info.notification
+      };
+      this.previewImage = info.image;
+    }
+  }
 
   private valid(): boolean {
     let result = false;
@@ -202,18 +218,17 @@ export default class Setting extends Vue {
     this.inputFile.setAttribute("type", "file");
     this.inputFile.setAttribute("accept", ".png,.jpg,.jpeg");
     this.inputFile.addEventListener("change", this.onChangeFile);
-
-    findUserBy().then(doc => {
-      const info = doc.data() as User | undefined;
-      if (info) {
-        this.info = info;
-        this.previewImage = info.image;
-      }
-    });
+    this.onSetInfo();
+    eventBus.$on(Bus.Setting.setInfo, this.onSetInfo);
   }
 
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
+    eventBus.$off(Bus.Setting.setInfo, this.onSetInfo);
+    const info = this.$store.state.info as User | null;
+    if (info) {
+      this.$i18n.locale = info.language;
+    }
   }
 }
 </script>

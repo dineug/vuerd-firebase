@@ -67,9 +67,14 @@ enum NewNotebook {
   drawerEnd = "NewNotebook.drawerEnd"
 }
 
+enum Setting {
+  setInfo = "Setting.setInfo"
+}
+
 export const Bus = {
   Editor,
-  NewNotebook
+  NewNotebook,
+  Setting
 };
 
 export default new EventBus();
