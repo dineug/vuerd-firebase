@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { User } from "@/plugins/firebase";
 import { TreeNodeModel } from "@/api/TreeAPI";
+import { User as UserInfo, findUserBy } from "@/api/UserAPI";
+import i18n from "@/plugins/vue-i18n";
 
 Vue.use(Vuex);
 
@@ -17,7 +19,8 @@ export const enum Commit {
   signOut = "signOut",
   referer = "referer",
   setNotebookId = "setNotebookId",
-  setTreeList = "setTreeList"
+  setTreeList = "setTreeList",
+  setLocale = "setLocale"
 }
 
 export default new Vuex.Store<State>({
@@ -30,6 +33,12 @@ export default new Vuex.Store<State>({
   mutations: {
     signIn(state: State, user: User) {
       state.user = user;
+      findUserBy().then(doc => {
+        const info = doc.data() as UserInfo | undefined;
+        if (info) {
+          i18n.locale = info.language;
+        }
+      });
     },
     signOut(state: State) {
       state.user = null;

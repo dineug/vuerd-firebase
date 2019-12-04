@@ -2,7 +2,7 @@ import { storage } from "@/plugins/firebase";
 import store from "@/store";
 import { uuid } from "@/ts/util";
 
-const enum FileType {
+export const enum FileType {
   jpg = "image/jpeg",
   png = "image/png"
 }

@@ -11,6 +11,6 @@ export function signIn(
     next();
   } else {
     store.commit(Commit.referer, to.path);
-    next(routes.Document);
+    next(routes.Notebook);
   }
 }

@@ -9,63 +9,67 @@
       :collapse="true"
       @select="onSelect"
     >
-      <el-tooltip content="Document" placement="left" :open-delay="openDelay">
-        <el-menu-item index="Document">
-          <i class="el-icon-document"></i>
-          <span>Document</span>
-        </el-menu-item>
-      </el-tooltip>
       <el-tooltip
-        v-if="user !== null"
-        content="Notebook"
+        :content="$t('Sidebar.notebook')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="Notebook">
-          <i class="el-icon-notebook-1"></i>
-          <span>Notebook</span>
+          <i class="el-icon-notebook-2"></i>
+          <span>{{ $t("Sidebar.notebook") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        content="New Notebook"
+        :content="$t('Sidebar.myNotebook')"
         placement="left"
         :open-delay="openDelay"
       >
-        <el-menu-item index="New Notebook">
-          <i class="el-icon-document-add"></i>
-          <span>New Notebook</span>
+        <el-menu-item index="MyNotebook">
+          <i class="el-icon-notebook-1"></i>
+          <span>{{ $t("Sidebar.myNotebook") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        content="Setting"
+        :content="$t('Sidebar.newNotebook')"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="new-notebook">
+          <i class="el-icon-document-add"></i>
+          <span>{{ $t("Sidebar.newNotebook") }}</span>
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip
+        v-if="user !== null"
+        :content="$t('Sidebar.setting')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="Setting">
           <i class="el-icon-setting"></i>
-          <span>Setting</span>
+          <span>{{ $t("Sidebar.setting") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        content="Sign out"
+        :content="$t('Sidebar.signOut')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="sign-out">
           <font-awesome-icon class="font-awesome" icon="sign-out-alt" />
-          <span>Sign out</span>
+          <span>{{ $t("Sidebar.signOut") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-submenu v-else index="sign-in">
         <template slot="title">
           <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
-          <span>Sign in</span>
+          <span>{{ $t("Sidebar.signIn") }}</span>
         </template>
         <el-menu-item-group>
-          <span slot="title">Sign in</span>
+          <span slot="title">{{ $t("Sidebar.signIn") }}</span>
           <el-menu-item index="sign-in-google">
             <el-button class="sign-in-btn">
               <el-row :gutter="20">
@@ -73,7 +77,9 @@
                   <img class="sign-in-logo" src="@/assets/google.png" />
                 </el-col>
                 <el-col :span="20">
-                  <span class="sign-in-text">Sign in With Google</span>
+                  <span class="sign-in-text">{{
+                    $t("Sidebar.signInGoogle")
+                  }}</span>
                 </el-col>
                 <el-col :span="2"></el-col>
               </el-row>
@@ -104,7 +110,7 @@ export default class Sidebar extends Vue {
   private backgroundColor: string = "#282828";
   private textColor: string = "#fff";
   private activeTextColor: string = "#ffc107";
-  private active: string = routes.Document.name;
+  private active: string = routes.Notebook.name;
 
   get user(): User | null {
     return this.$store.state.user;
@@ -122,14 +128,14 @@ export default class Sidebar extends Vue {
   private onSelect(key: string) {
     log.debug(`Sidebar onSelect: ${key}`);
     switch (key) {
-      case routes.Document.name:
-        if (this.$route.name !== routes.Document.name) {
-          this.$router.push(routes.Document);
-        }
-        break;
       case routes.Notebook.name:
         if (this.$route.name !== routes.Notebook.name) {
-          this.$router.push(routes.Notebook).catch(() => this.setActive());
+          this.$router.push(routes.Notebook);
+        }
+        break;
+      case routes.MyNotebook.name:
+        if (this.$route.name !== routes.MyNotebook.name) {
+          this.$router.push(routes.MyNotebook).catch(() => this.setActive());
         }
         break;
       case "sign-in-google":
@@ -143,8 +149,8 @@ export default class Sidebar extends Vue {
         auth
           .signOut()
           .then(() => {
-            if (this.$route.name !== routes.Document.name) {
-              this.$router.push(routes.Document);
+            if (this.$route.name !== routes.Notebook.name) {
+              this.$router.push(routes.Notebook);
             }
           })
           .catch(err => this.$message.error(err.message))
@@ -155,7 +161,7 @@ export default class Sidebar extends Vue {
           this.$router.push(routes.Setting);
         }
         break;
-      case "New Notebook":
+      case "new-notebook":
         eventBus.$emit(Bus.NewNotebook.drawerStart);
         this.setActive();
         break;

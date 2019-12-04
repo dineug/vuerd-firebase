@@ -3,8 +3,8 @@
     <sidebar />
     <el-container>
       <el-main class="main">
-        <el-form style="padding: 20px;" label-width="90px">
-          <el-form-item label="Picture">
+        <el-form style="padding: 20px;" label-width="120px">
+          <el-form-item :label="$t('Setting.picture')">
             <el-avatar :src="previewImage" :size="100" />
             <el-button-group>
               <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
@@ -19,7 +19,7 @@
               />
             </el-button-group>
           </el-form-item>
-          <el-form-item label="Name">
+          <el-form-item :label="$t('Setting.name')">
             <el-input
               clearable
               show-word-limit
@@ -29,7 +29,7 @@
               ref="name"
             />
           </el-form-item>
-          <el-form-item label="Nickname">
+          <el-form-item :label="$t('Setting.nickname')">
             <el-input
               clearable
               show-word-limit
@@ -39,20 +39,22 @@
               ref="nickname"
             />
           </el-form-item>
-          <el-form-item label="Email">
+          <el-form-item :label="$t('Setting.email')">
             {{ info.email }}
           </el-form-item>
-          <el-form-item label="Language">
+          <el-form-item :label="$t('Setting.language')">
             <language-select
               :value="info.language"
               @change="onChangeLanguage"
             />
           </el-form-item>
-          <el-form-item label="Published">
+          <el-form-item :label="$t('Setting.invitation')">
             <el-switch v-model="info.published" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onUpdate">Update</el-button>
+            <el-button type="primary" @click="onUpdate">{{
+              $t("Setting.update")
+            }}</el-button>
           </el-form-item>
         </el-form>
       </el-main>
@@ -69,7 +71,7 @@ import {
   userUpdate,
   findUserBy
 } from "@/api/UserAPI";
-import { upload } from "@/api/storageAPI";
+import { upload, FileType } from "@/api/storageAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
@@ -104,10 +106,10 @@ export default class Setting extends Vue {
   private valid(): boolean {
     let result = false;
     if (this.info.name && this.info.name.trim() === "") {
-      this.$message.warning("Please enter a name");
+      this.$message.warning(this.$t("Setting.valid.name") as string);
       (this.$refs.name as HTMLInputElement).focus();
     } else if (this.info.nickname && this.info.nickname.trim() === "") {
-      this.$message.warning("Please enter a nickname");
+      this.$message.warning(this.$t("Setting.valid.nickname") as string);
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {
       result = true;
@@ -119,12 +121,12 @@ export default class Setting extends Vue {
     let result = false;
     if (this.inputFile.files) {
       const file = this.inputFile.files[0];
-      const isJPG = file.type === "image/jpeg";
-      const isPNG = file.type === "image/png";
+      const isJPG = file.type === FileType.jpg;
+      const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning("Picture must be JPG, PNG format!");
+        this.$message.warning(this.$t("Setting.valid.imageType") as string);
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning("Picture size can not exceed 2MB!");
+        this.$message.warning(this.$t("Setting.valid.imageSize") as string);
       } else {
         result = true;
       }
@@ -134,6 +136,7 @@ export default class Setting extends Vue {
 
   private onChangeLanguage(language: Language) {
     this.info.language = language;
+    this.$i18n.locale = language;
   }
 
   private onPicture(action: PictureAction) {
@@ -169,7 +172,7 @@ export default class Setting extends Vue {
       if (this.info.name && this.info.nickname) {
         const loading = this.$loading({
           lock: true,
-          text: "Updating",
+          text: this.$t("Setting.updating") as string,
           spinner: "el-icon-loading",
           background: "rgba(0, 0, 0, 0.7)"
         });

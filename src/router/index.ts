@@ -1,23 +1,23 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import { signIn } from "./Guard";
-import Document from "@/components/Document.vue";
 import Notebook from "@/components/Notebook.vue";
+import MyNotebook from "@/components/MyNotebook.vue";
 import Editor from "@/components/Editor.vue";
 import Setting from "@/components/Setting.vue";
 
 Vue.use(VueRouter);
 
 export const routes = {
-  Document: {
-    path: "/",
-    name: Document.name,
-    component: Document
-  },
   Notebook: {
-    path: "/notebook",
+    path: "/",
     name: Notebook.name,
-    component: Notebook,
+    component: Notebook
+  },
+  MyNotebook: {
+    path: "/notebook/me",
+    name: MyNotebook.name,
+    component: MyNotebook,
     beforeEnter: signIn
   },
   Editor: {

@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import {
-  findByPaging,
+  findByPagingAndMember,
   NotebookModel,
   NotebookModelImpl
 } from "@/api/NotebookAPI";
@@ -34,7 +34,7 @@ import NotebookCard from "./Notebook/NotebookCard.vue";
     NotebookCard
   }
 })
-export default class Document extends Vue {
+export default class MyNotebook extends Vue {
   private notebooks: NotebookModel[] = [];
   private paging: Paging | null = {
     last: null
@@ -44,7 +44,7 @@ export default class Document extends Vue {
   private getNotebooks() {
     if (!this.listProcess && this.paging) {
       this.listProcess = true;
-      findByPaging(this.paging)
+      findByPagingAndMember(this.paging)
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {

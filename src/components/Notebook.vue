@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import {
-  findByPagingAndMember,
+  findByPaging,
   NotebookModel,
   NotebookModelImpl
 } from "@/api/NotebookAPI";
@@ -44,7 +44,7 @@ export default class Notebook extends Vue {
   private getNotebooks() {
     if (!this.listProcess && this.paging) {
       this.listProcess = true;
-      findByPagingAndMember(this.paging)
+      findByPaging(this.paging)
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {

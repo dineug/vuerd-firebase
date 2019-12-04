@@ -1,7 +1,7 @@
 <template>
-  <el-drawer title="New Notebook" :visible.sync="drawer" size="50%">
+  <el-drawer :title="$t('NewNotebook.newNotebook')" :visible.sync="drawer" size="50%">
     <el-form style="padding: 0 20px;" label-width="90px">
-      <el-form-item label="Title">
+      <el-form-item :label="$t('NewNotebook.title')">
         <el-input
           v-model="title"
           placeholder="Notebook Title"
@@ -11,10 +11,10 @@
           ref="title"
         />
       </el-form-item>
-      <el-form-item label="Published">
+      <el-form-item :label="$t('NewNotebook.published')">
         <el-switch v-model="published" />
       </el-form-item>
-      <el-form-item label="Tag">
+      <el-form-item :label="$t('NewNotebook.tag')">
         <vue-tags-input
           class="tag-box"
           v-model="tag"
@@ -25,8 +25,8 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onCreate">Create</el-button>
-        <el-button @click="onDrawerEnd">Cancel</el-button>
+        <el-button type="primary" @click="onCreate">{{ $t('NewNotebook.create') }}</el-button>
+        <el-button @click="onDrawerEnd">{{ $t('NewNotebook.cancel') }}</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
@@ -83,7 +83,7 @@ export default class NewNotebook extends Vue {
   private valid(): boolean {
     let result = false;
     if (this.title.trim() === "") {
-      this.$message.warning("Please enter a title");
+      this.$message.warning(this.$t("NewNotebook.valid.title") as string);
       (this.$refs.title as HTMLInputElement).focus();
     } else {
       result = true;
@@ -112,7 +112,7 @@ export default class NewNotebook extends Vue {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
-        text: "Creating",
+        text: this.$t("NewNotebook.creating") as string,
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
       });
