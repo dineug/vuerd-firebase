@@ -1,8 +1,13 @@
 <template>
-  <el-drawer :title="$t('NewNotebook.newNotebook')" :visible.sync="drawer" size="50%">
+  <el-drawer
+    :title="$t('NewNotebook.newNotebook')"
+    :visible.sync="drawer"
+    size="630px"
+  >
     <el-form style="padding: 0 20px;" label-width="90px">
       <el-form-item :label="$t('NewNotebook.title')">
         <el-input
+          style="width: 450px;"
           v-model="title"
           placeholder="Notebook Title"
           clearable
@@ -25,8 +30,12 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onCreate">{{ $t('NewNotebook.create') }}</el-button>
-        <el-button @click="onDrawerEnd">{{ $t('NewNotebook.cancel') }}</el-button>
+        <el-button type="primary" @click="onCreate">{{
+          $t("NewNotebook.create")
+        }}</el-button>
+        <el-button @click="onDrawerEnd">{{
+          $t("NewNotebook.cancel")
+        }}</el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
@@ -137,6 +146,9 @@ export default class NewNotebook extends Vue {
   private onDrawerStart() {
     this.reset();
     this.drawer = true;
+    this.$nextTick(() => {
+      (this.$refs.title as HTMLInputElement).focus();
+    });
   }
 
   private onDrawerEnd() {

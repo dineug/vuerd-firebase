@@ -19,8 +19,7 @@ export const enum Commit {
   signOut = "signOut",
   referer = "referer",
   setNotebookId = "setNotebookId",
-  setTreeList = "setTreeList",
-  setLocale = "setLocale"
+  setTreeList = "setTreeList"
 }
 
 export default new Vuex.Store<State>({

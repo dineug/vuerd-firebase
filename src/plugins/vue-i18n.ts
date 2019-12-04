@@ -51,12 +51,12 @@ const messages = {
       setting: "설정",
       signOut: "로그아웃",
       signIn: "로그인",
-      signGoogle: "구글 로그인",
+      signInGoogle: "Google 로그인",
     },
     NewNotebook: {
       newNotebook: "새 노트북",
       title: "제목",
-      published: "발행",
+      published: "공개여부",
       tag: "태그",
       create: "생성",
       cancel: "취소",
@@ -71,7 +71,7 @@ const messages = {
       nickname: "닉네임",
       email: "이메일",
       language: "언어",
-      invitation: "초대가능 상태",
+      invitation: "초대가능 여부",
       update: "수정",
       updating: "수정중...",
       valid: {

@@ -15,7 +15,7 @@ export const routes = {
     component: Notebook
   },
   MyNotebook: {
-    path: "/notebook/me",
+    path: "/notebooks/me",
     name: MyNotebook.name,
     component: MyNotebook,
     beforeEnter: signIn

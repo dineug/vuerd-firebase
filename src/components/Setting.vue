@@ -21,6 +21,7 @@
           </el-form-item>
           <el-form-item :label="$t('Setting.name')">
             <el-input
+              style="width: 450px;"
               clearable
               show-word-limit
               maxlength="30"
@@ -31,6 +32,7 @@
           </el-form-item>
           <el-form-item :label="$t('Setting.nickname')">
             <el-input
+              style="width: 450px;"
               clearable
               show-word-limit
               maxlength="30"
@@ -105,10 +107,10 @@ export default class Setting extends Vue {
 
   private valid(): boolean {
     let result = false;
-    if (this.info.name && this.info.name.trim() === "") {
+    if (this.info.name === null || this.info.name.trim() === "") {
       this.$message.warning(this.$t("Setting.valid.name") as string);
       (this.$refs.name as HTMLInputElement).focus();
-    } else if (this.info.nickname && this.info.nickname.trim() === "") {
+    } else if (this.info.nickname === null || this.info.nickname.trim() === "") {
       this.$message.warning(this.$t("Setting.valid.nickname") as string);
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {
@@ -187,10 +189,11 @@ export default class Setting extends Vue {
           if (this.file) {
             user.image = await upload(this.file);
           }
-          userUpdate(user).finally(() => loading.close());
+          await userUpdate(user);
         } catch (err) {
           this.$message.error(err.message);
         }
+        loading.close();
       }
     }
   }
