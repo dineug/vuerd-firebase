@@ -33,12 +33,12 @@ exports.updateNotebookTag = functions.firestore
     const plus = [];
     afterNoteBook.tags.forEach(after => {
       if (!beforeNoteBook.tags.some(before => after === before)) {
-        minus.push(after);
+        plus.push(after);
       }
     });
     beforeNoteBook.tags.forEach(before => {
       if (!afterNoteBook.tags.some(after => after === before)) {
-        plus.push(before);
+        minus.push(before);
       }
     });
     for (const tag of minus) {

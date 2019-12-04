@@ -32,12 +32,12 @@ exports.updateUser = functions.firestore
     const afterData = change.after.data();
     const beforeData = change.before.data();
     if (afterData.published !== beforeData.published) {
-      if (beforeData.published) {
+      if (afterData.published) {
         getInvitationDocRef(context.params.userId).set({
-          email: beforeData.email,
-          name: beforeData.name,
-          nickname: beforeData.nickname,
-          image: beforeData.image
+          email: afterData.email,
+          name: afterData.name,
+          nickname: afterData.nickname,
+          image: afterData.image
         });
       } else {
         getInvitationDocRef(context.params.userId).delete();

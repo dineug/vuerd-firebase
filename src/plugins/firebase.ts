@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
+import "firebase/storage";
 import store, { Commit } from "@/store";
 import router from "@/router";
 
@@ -19,6 +20,7 @@ const firebaseApp = firebase.initializeApp(firebaseConfig);
 export default firebase;
 export const db = firebaseApp.firestore();
 export const auth = firebaseApp.auth();
+export const storage = firebaseApp.storage();
 
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
