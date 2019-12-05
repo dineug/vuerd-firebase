@@ -33,7 +33,8 @@ const enum Action {
   setting = "setting"
 }
 
-const IMAGE = require("@/assets/images/milky-way-3602131_1920.jpg");
+const IMAGE =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 
 @Component({
   components: {

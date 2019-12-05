@@ -66,12 +66,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import {
-  User,
-  UserModify,
-  Language,
-  userUpdate
-} from "@/api/UserAPI";
+import { User, UserModify, Language, userUpdate } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -126,7 +121,10 @@ export default class Setting extends Vue {
     if (this.info.name === null || this.info.name.trim() === "") {
       this.$message.warning(this.$t("Setting.valid.name") as string);
       (this.$refs.name as HTMLInputElement).focus();
-    } else if (this.info.nickname === null || this.info.nickname.trim() === "") {
+    } else if (
+      this.info.nickname === null ||
+      this.info.nickname.trim() === ""
+    ) {
       this.$message.warning(this.$t("Setting.valid.nickname") as string);
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {

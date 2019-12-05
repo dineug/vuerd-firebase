@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import { signIn } from "./Guard";
-import Notebook from "@/components/Notebook.vue";
-import MyNotebook from "@/components/MyNotebook.vue";
-import Editor from "@/components/Editor.vue";
-import Setting from "@/components/Setting.vue";
+const Notebook = () => import("@/components/Notebook.vue");
+const MyNotebook = () => import("@/components/MyNotebook.vue");
+const Editor = () => import("@/components/Editor.vue");
+const Setting = () => import("@/components/Setting.vue");
 
 Vue.use(VueRouter);
 

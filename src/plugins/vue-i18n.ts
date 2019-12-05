@@ -12,7 +12,7 @@ const messages = {
       setting: "Setting",
       signOut: "Sign out",
       signIn: "Sign in",
-      signInGoogle: "Sign in With Google",
+      signInGoogle: "Sign in With Google"
     },
     NewNotebook: {
       newNotebook: "New Notebook",
@@ -39,7 +39,7 @@ const messages = {
         name: "Please enter a name",
         nickname: "Please enter a nickname",
         imageType: "Picture must be JPG, PNG format",
-        imageSize: "Picture size can not exceed 2MB",
+        imageSize: "Picture size can not exceed 2MB"
       }
     }
   },
@@ -51,7 +51,7 @@ const messages = {
       setting: "설정",
       signOut: "로그아웃",
       signIn: "로그인",
-      signInGoogle: "Google 로그인",
+      signInGoogle: "Google 로그인"
     },
     NewNotebook: {
       newNotebook: "새 노트북",
@@ -78,7 +78,7 @@ const messages = {
         name: "이름을 입력해주세요",
         nickname: "닉네임을 입력해주세요",
         imageType: "사진은 JPG, PNG 형식만 가능합니다",
-        imageSize: "사진 크기는 2MB를 초과할 수 없습니다",
+        imageSize: "사진 크기는 2MB를 초과할 수 없습니다"
       }
     }
   }

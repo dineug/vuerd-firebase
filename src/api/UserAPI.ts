@@ -85,6 +85,29 @@ export function userSave(user: User): Promise<void> {
   return getUsersDocRef(store.state.user.uid).set(user);
 }
 
+export async function signIn(): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found uid");
+  }
+  const doc = await findUserBy();
+  if (doc.data() === undefined) {
+    const batch = db.batch();
+    batch.set(getUsersDocRef(store.state.user.uid), {
+      email: store.state.user.email,
+      name: store.state.user.displayName,
+      nickname: store.state.user.displayName,
+      notification: 0,
+      image: store.state.user.photoURL ? store.state.user.photoURL : null,
+      language: "en",
+      published: false
+    });
+    batch.set(getConfigDocRef(store.state.user.uid, "editor"), {
+      themeName: "VSCode"
+    });
+    await batch.commit();
+  }
+}
+
 export function userUpdate(userModify: UserModify): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found uid");

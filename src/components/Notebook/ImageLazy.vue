@@ -16,14 +16,12 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 const SIZE_WIDTH = 250;
 const SIZE_HEIGHT = 200;
+const IMAGE =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 
 @Component
 export default class ImageLazy extends Vue {
-  @Prop({
-    type: String,
-    default:
-      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mO89B8AAqkB05ycXjIAAAAASUVORK5CYII="
-  })
+  @Prop({ type: String, default: IMAGE })
   private src!: string;
 
   private horizontal: boolean = true;

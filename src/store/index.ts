@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { User } from "@/plugins/firebase";
 import { TreeNodeModel } from "@/api/TreeAPI";
-import { User as UserInfo, getUsersDocRef } from "@/api/UserAPI";
+import { User as UserInfo, getUsersDocRef, signIn } from "@/api/UserAPI";
 import i18n from "@/plugins/vue-i18n";
 import eventBus, { Bus } from "@/ts/EventBus";
 
@@ -24,7 +24,7 @@ export const enum Commit {
   setTreeList = "setTreeList"
 }
 
-let unsubscribe: { (): void; (): void; } | null = null;
+let unsubscribe: { (): void; (): void } | null = null;
 
 export default new Vuex.Store<State>({
   state: {
@@ -37,6 +37,7 @@ export default new Vuex.Store<State>({
   mutations: {
     signIn(state: State, user: User) {
       state.user = user;
+      signIn();
       unsubscribe = getUsersDocRef(user.uid).onSnapshot(doc => {
         const info = doc.data() as UserInfo | undefined;
         if (info) {

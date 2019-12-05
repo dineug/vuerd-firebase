@@ -5,25 +5,11 @@ const {
   getInvitationDocRef
 } = require("../plugins/util");
 
-exports.createUser = functions.auth.user().onCreate((user, context) => {
-  const batch = db.batch();
-  batch.set(getUsersDocRef(user.uid), {
-    email: user.email,
-    name: user.displayName,
-    nickname: user.displayName,
-    notification: 0,
-    image: user.photoURL ? user.photoURL : null,
-    language: "en",
-    published: false
-  });
-  batch.set(getConfigDocRef(user.uid, "editor"), {
-    themeName: "VSCode"
-  });
-  batch.commit();
-});
-
 exports.deleteUser = functions.auth.user().onDelete((user, context) => {
-  getUsersDocRef(user.uid).delete();
+  const batch = db.batch();
+  batch.delete(getConfigDocRef(user.uid, "editor"));
+  batch.delete(getUsersDocRef(user.uid));
+  batch.commit();
 });
 
 exports.updateUser = functions.firestore
