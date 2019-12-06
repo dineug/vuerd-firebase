@@ -2,15 +2,15 @@
   <el-container>
     <sidebar />
     <el-container>
-      <el-main class="main">
-        <div class="card" v-for="notebook in notebooks" :key="notebook.id">
-          <notebook-card
-            :notebook="notebook"
-            @document="onDocument"
-            @editor="onEditor"
-            @setting="onSetting"
-          />
-        </div>
+      <el-main>
+        <notebook-card
+          v-for="notebook in notebooks"
+          :key="notebook.id"
+          :notebook="notebook"
+          @document="onDocument"
+          @editor="onEditor"
+          @setting="onSetting"
+        />
       </el-main>
     </el-container>
   </el-container>
@@ -95,12 +95,4 @@ export default class Notebook extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.main {
-  .card {
-    width: $size-card-width;
-    display: inline-block;
-    padding: 6px;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

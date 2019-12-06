@@ -25,6 +25,7 @@ import {
   Select,
   Option,
   Avatar,
+  Tag,
   Loading,
   Message,
   MessageBox,
@@ -63,6 +64,7 @@ const components = [
   Select,
   Option,
   Avatar,
+  Tag,
   Loading
 ];
 

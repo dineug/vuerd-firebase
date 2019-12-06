@@ -222,6 +222,7 @@ export default class Setting extends Vue {
 
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
+    this.inputFile.remove();
     eventBus.$off(Bus.Setting.setInfo, this.onSetInfo);
     const info = this.$store.state.info as User | null;
     if (info) {

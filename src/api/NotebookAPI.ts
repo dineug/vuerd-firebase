@@ -95,6 +95,7 @@ export interface NotebookAdd {
   published: boolean;
   title: string;
   tags: string[];
+  image: string | null;
 }
 
 export async function save(
@@ -107,7 +108,6 @@ export async function save(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
-  notebook.image = null;
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await getNotebooksColRef().add(notebook);

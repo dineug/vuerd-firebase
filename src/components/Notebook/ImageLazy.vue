@@ -1,5 +1,5 @@
 <template>
-  <div class="image-lazy">
+  <div class="image-lazy" :style="imageLazyStyle">
     <el-image
       class="image-box"
       :style="imageStyle"
@@ -14,8 +14,6 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-const SIZE_WIDTH = 250;
-const SIZE_HEIGHT = 200;
 const IMAGE =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 
@@ -23,23 +21,34 @@ const IMAGE =
 export default class ImageLazy extends Vue {
   @Prop({ type: String, default: IMAGE })
   private src!: string;
+  @Prop({ type: Number, default: 300 })
+  private width!: number;
+  @Prop({ type: Number, default: 225 })
+  private height!: number;
 
   private horizontal: boolean = true;
-  private width: number = 0;
-  private height: number = 0;
+  private currentWidth: number = 0;
+  private currentHeight: number = 0;
   private top: number = 0;
   private left: number = 0;
+
+  get imageLazyStyle(): string {
+    return `
+    width: ${this.width}px;
+    height: ${this.height}px;
+    `;
+  }
 
   get imageStyle(): string {
     if (this.horizontal) {
       return `
       width: 100%;
-      height: ${this.height}px;
+      height: ${this.currentHeight}px;
       top: ${this.top}px;
       `;
     }
     return `
-    width: ${this.width}px;
+    width: ${this.currentWidth}px;
     height: 100%;
     left: ${this.left}px;
     `;
@@ -51,11 +60,13 @@ export default class ImageLazy extends Vue {
     if (img && img.naturalWidth && img.naturalHeight) {
       this.horizontal = img.naturalWidth <= img.naturalHeight;
       if (this.horizontal) {
-        this.height = (SIZE_WIDTH / img.naturalWidth) * img.naturalHeight;
-        this.top = (SIZE_HEIGHT - this.height) / 2;
+        this.currentHeight =
+          (this.width / img.naturalWidth) * img.naturalHeight;
+        this.top = (this.height - this.currentHeight) / 2;
       } else {
-        this.width = (SIZE_HEIGHT / img.naturalHeight) * img.naturalWidth;
-        this.left = (SIZE_WIDTH - this.width) / 2;
+        this.currentWidth =
+          (this.height / img.naturalHeight) * img.naturalWidth;
+        this.left = (this.width - this.currentWidth) / 2;
       }
     }
   }
@@ -64,9 +75,6 @@ export default class ImageLazy extends Vue {
 
 <style scoped lang="scss">
 .image-lazy {
-  margin-bottom: 5px;
-  width: 100%;
-  height: 200px;
   position: relative;
   overflow: hidden;
 

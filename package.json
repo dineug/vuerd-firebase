@@ -30,9 +30,9 @@
     "vue-i18n": "^8.15.1",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.6",
-    "vuerd-core": "^0.4.1",
-    "vuerd-plugin-erd": "^0.2.4",
-    "vuerd-plugin-tui.editor": "^0.2.2",
+    "vuerd-core": "^0.4.2",
+    "vuerd-plugin-erd": "^0.2.5",
+    "vuerd-plugin-tui.editor": "^0.2.3",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
