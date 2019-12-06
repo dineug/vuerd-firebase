@@ -16,10 +16,8 @@
         />
       </el-button-group>
     </div>
-    <div style="padding: 10px;">
-      <div>
-        <span>{{ notebook.title }}</span>
-      </div>
+    <div class="content-box scrollbar" :style="contentBoxStyle">
+      <div class="title-box">{{ notebook.title }}</div>
       <div class="tag-box">
         <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
       </div>
@@ -40,6 +38,10 @@ const enum Action {
 
 const IMAGE =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
+const CARD_HEIGHT = 400;
+const IMAGE_HEIGHT = 225;
+const BUTTON_HEIGHT = 40;
+const CONTENT_HEIGHT = CARD_HEIGHT - IMAGE_HEIGHT;
 
 @Component({
   components: {
@@ -61,14 +63,15 @@ export default class NotebookCard extends Vue {
     return result;
   }
 
-  private onClick(action: Action) {
-    this.$emit(action, this.notebook);
+  get contentBoxStyle(): string {
+    if (this.notebook.image) {
+      return `height: ${CONTENT_HEIGHT}px;`;
+    }
+    return `height: ${CARD_HEIGHT - BUTTON_HEIGHT}px;`;
   }
 
-  private created() {
-    if (!this.notebook.image) {
-      this.notebook.image = IMAGE;
-    }
+  private onClick(action: Action) {
+    this.$emit(action, this.notebook);
   }
 }
 </script>
@@ -92,12 +95,22 @@ export default class NotebookCard extends Vue {
     }
   }
 
-  .tag-box {
-    .el-tag {
-      color: white;
-      background-color: $color-tag;
-      border: none;
-      margin: 2px;
+  .content-box {
+    box-sizing: border-box;
+    padding: 10px;
+    overflow-y: scroll;
+
+    .title-box {
+      word-wrap: break-word;
+    }
+
+    .tag-box {
+      .el-tag {
+        color: white;
+        background-color: $color-tag;
+        border: none;
+        margin: 2px;
+      }
     }
   }
 }
