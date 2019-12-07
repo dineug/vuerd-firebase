@@ -34,7 +34,8 @@ export default class App extends Vue {
     & /deep/ .ti-selected-item {
       background-color: $color-tag;
     }
-    & /deep/ .duplication {
+    & /deep/ .duplication.ti-tag,
+    & /deep/ .duplication.ti-selected-item {
       background-color: $color-tag-duplication;
       text-decoration: line-through;
     }

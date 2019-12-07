@@ -8,9 +8,9 @@ exports.createNotebookMember = functions.firestore
     const newMember = snapshot.data();
     if (newMember.status === "invitation") {
       const batch = db.batch();
-      const fromDoc = await getUsersDocRef(context.auth.uid).get();
+      const fromDoc = await getUsersDocRef(newMember.fromId).get();
       const fromData = fromDoc.data();
-      batch.set(getNotificationColRef(context.params.memberId), {
+      batch.set(getNotificationColRef(context.params.memberId).doc(), {
         message: `${fromData.email} has invited you`,
         action: "invitation",
         read: false,

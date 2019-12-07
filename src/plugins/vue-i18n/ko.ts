@@ -10,26 +10,28 @@ export default {
   title: "제목",
   published: "공개여부",
   tag: "태그",
-  create: "생성",
-  cancel: "취소",
   name: "이름",
   nickname: "닉네임",
   email: "이메일",
   language: "언어",
-  invitation: "초대가능 여부",
+  create: "생성",
+  cancel: "취소",
   update: "수정",
+  delete: "삭제",
   updated: "수정 완료",
   deleted: "삭제 완료",
-  delete: "삭제",
+  ok: "확인",
   memberInvitation: "사용자 초대",
   member: "구성원",
   role: "권한",
   invitationStatus: "초대 상태",
-  ok: "확인",
+  invitationActive: "초대가능 여부",
+  invitation: "초대",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",
     nickname: "닉네임을 입력해주세요",
+    member: "구성원을 입력해주세요",
     imageType: "사진은 JPG, PNG 형식만 가능합니다",
     imageSize: "사진 크기는 2MB를 초과할 수 없습니다"
   },
@@ -39,6 +41,7 @@ export default {
   },
   loading: {
     creating: "생성중...",
-    updating: "수정중..."
+    updating: "수정중...",
+    inviting: "초대중..."
   }
 };

@@ -22,7 +22,7 @@ function getFileName(file: File): string {
 
 export async function upload(file: File): Promise<string> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   const ref = storage.ref(`${store.state.user.uid}/${getFileName(file)}`);
   const snapshot = await ref.put(file);

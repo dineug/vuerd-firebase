@@ -10,7 +10,7 @@
         <el-button icon="el-icon-view" @click="onClick('document')" />
         <el-button v-if="edit" icon="el-icon-edit" @click="onClick('editor')" />
         <el-button
-          v-if="edit"
+          v-if="setting"
           icon="el-icon-s-tools"
           @click="onClick('setting')"
         />
@@ -57,6 +57,14 @@ export default class NotebookCard extends Vue {
       if (role === "owner" || role === "writer") {
         result = true;
       }
+    }
+    return result;
+  }
+
+  get setting(): boolean {
+    let result = false;
+    if (this.$store.state.user !== null) {
+      result = !!this.notebook.roles[this.$store.state.user.uid];
     }
     return result;
   }

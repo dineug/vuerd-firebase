@@ -1,5 +1,10 @@
 <template>
-  <el-select :value="value" placeholder="role" @change="onChange">
+  <el-select
+    :value="value"
+    placeholder="role"
+    :disabled="disabled"
+    @change="onChange"
+  >
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -22,6 +27,8 @@ interface Option {
 export default class RoleSelect extends Vue {
   @Prop({ type: String, default: "owner" })
   private value!: string;
+  @Prop({ type: Boolean, default: false })
+  private disabled!: boolean;
 
   private options: Option[] = [
     {

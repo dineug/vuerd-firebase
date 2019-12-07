@@ -50,7 +50,7 @@
               @change="onChangeLanguage"
             />
           </el-form-item>
-          <el-form-item :label="$t('invitation')">
+          <el-form-item :label="$t('invitationActive')">
             <el-switch v-model="info.published" />
           </el-form-item>
           <el-form-item>
@@ -119,12 +119,14 @@ export default class Setting extends Vue {
   private valid(): boolean {
     let result = false;
     if (this.info.name === null || this.info.name.trim() === "") {
+      this.info.name = "";
       this.$message.warning(this.$t("valid.name") as string);
       (this.$refs.name as HTMLInputElement).focus();
     } else if (
       this.info.nickname === null ||
       this.info.nickname.trim() === ""
     ) {
+      this.info.nickname = "";
       this.$message.warning(this.$t("valid.nickname") as string);
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {

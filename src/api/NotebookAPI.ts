@@ -48,6 +48,8 @@ export interface Notebook {
 }
 
 export interface Member {
+  id?: string;
+  fromId: string;
   name: string | null;
   nickname: string | null;
   email: string | null;
@@ -55,6 +57,14 @@ export interface Member {
   role: Role;
   status: Status;
   createdAt: number;
+}
+
+export interface MemberAdd {
+  id: string;
+  name: string | null;
+  nickname: string | null;
+  email: string | null;
+  image: string | null;
 }
 
 export interface NotebookModel extends Notebook {
@@ -106,7 +116,7 @@ export async function save(
   notebookAdd: NotebookAdd
 ): Promise<DocumentReference> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   const notebook = notebookAdd as Notebook;
   notebook.roles = {};
@@ -186,11 +196,39 @@ export function notebookUpdate(
   notebookAdd: NotebookAdd
 ): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getNotebookDocRef(id).update(notebookAdd);
 }
 
 export function findAllMemberBy(id: string): Promise<QuerySnapshot> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
   return getMembersColRef(id).get();
+}
+
+export function memberInvitation(
+  notebookId: string,
+  membersAdd: MemberAdd[]
+): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  const batch = db.batch();
+  for (const member of membersAdd) {
+    if (member.id) {
+      batch.set(getMembersDocRef(notebookId, member.id), {
+        fromId: store.state.user.uid,
+        name: member.name,
+        nickname: member.nickname,
+        email: member.email,
+        image: member.image,
+        role: "reader",
+        status: "invitation",
+        createdAt: moment().unix()
+      } as Member);
+    }
+  }
+  return batch.commit();
 }

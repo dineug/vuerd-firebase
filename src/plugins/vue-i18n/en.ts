@@ -10,26 +10,28 @@ export default {
   title: "Title",
   published: "Published",
   tag: "Tag",
-  create: "Create",
-  cancel: "Cancel",
   name: "Name",
   nickname: "Nickname",
   email: "Email",
   language: "Language",
-  invitation: "Invitation active",
+  create: "Create",
+  cancel: "Cancel",
   update: "Update",
+  delete: "Delete",
   updated: "Update completed",
   deleted: "Delete completed",
-  delete: "Delete",
+  ok: "OK",
   memberInvitation: "Member invitation",
   member: "Member",
   role: "Role",
   invitationStatus: "Invitation status",
-  ok: "OK",
+  invitationActive: "Invitation active",
+  invitation: "Invitation",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",
     nickname: "Please enter a nickname",
+    member: "Please enter a member",
     imageType: "Picture must be JPG, PNG format",
     imageSize: "Picture size can not exceed 2MB"
   },
@@ -39,6 +41,7 @@ export default {
   },
   loading: {
     creating: "Creating...",
-    updating: "Updating..."
+    updating: "Updating...",
+    inviting: "Inviting..."
   }
 };

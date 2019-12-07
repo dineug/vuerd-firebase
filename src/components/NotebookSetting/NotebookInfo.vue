@@ -3,11 +3,20 @@
     <el-form-item :label="$t('picture')">
       <image-lazy :src="previewImage" />
       <el-button-group>
-        <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
-        <el-button icon="el-icon-refresh-left" @click="onPicture('Restore')" />
+        <el-button
+          icon="el-icon-edit"
+          :disabled="readerRole"
+          @click="onPicture('Edit')"
+        />
+        <el-button
+          icon="el-icon-refresh-left"
+          :disabled="readerRole"
+          @click="onPicture('Restore')"
+        />
         <el-button
           type="danger"
           icon="el-icon-delete"
+          :disabled="readerRole"
           @click="onPicture('Clean')"
         />
       </el-button-group>
@@ -15,16 +24,17 @@
     <el-form-item :label="$t('title')">
       <el-input
         style="width: 450px;"
-        v-model="notebook.title"
+        v-model="notebookModify.title"
         placeholder="Notebook Title"
         clearable
         maxlength="100"
         show-word-limit
+        :disabled="readerRole"
         ref="title"
       />
     </el-form-item>
     <el-form-item :label="$t('published')">
-      <el-switch v-model="notebook.published" />
+      <el-switch v-model="notebookModify.published" :disabled="ownerRole" />
     </el-form-item>
     <el-form-item :label="$t('tag')">
       <vue-tags-input
@@ -33,14 +43,15 @@
         :tags="tags"
         :autocomplete-items="autocompleteTags"
         allow-edit-tags
+        :disabled="readerRole"
         @tags-changed="onChangeTags"
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onUpdate">
+      <el-button type="primary" :disabled="readerRole" @click="onUpdate">
         {{ $t("update") }}
       </el-button>
-      <el-button type="danger" @click="onDeleteNotebook">
+      <el-button type="danger" :disabled="ownerRole" @click="onDeleteNotebook">
         {{ $t("delete") }}
       </el-button>
       <el-button @click="onBack">
@@ -52,12 +63,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import {
-  Notebook,
-  NotebookAdd,
-  findById,
-  notebookUpdate
-} from "@/api/NotebookAPI";
+import { Notebook, NotebookAdd, notebookUpdate } from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/TagAPI";
 import { FileType, upload } from "@/api/storageAPI";
 import { IMAGE, MAX_SIZE } from "@/data/image";
@@ -76,6 +82,9 @@ import ImageLazy from "@/components/Notebook/ImageLazy.vue";
   }
 })
 export default class NotebookInfo extends Vue {
+  @Prop({ type: Object })
+  private notebook!: Notebook;
+
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
   private tag: string = "";
@@ -84,46 +93,45 @@ export default class NotebookInfo extends Vue {
   private inputFile: HTMLInputElement = document.createElement("input");
   private previewImage: string = IMAGE;
   private file: File | null = null;
-  private notebook: NotebookAdd = {
+  private notebookModify: NotebookAdd = {
     title: "",
     published: false,
     tags: [],
     image: null
   };
 
+  get ownerRole(): boolean {
+    return this.notebook.roles[this.$store.state.user.uid] !== "owner";
+  }
+
+  get readerRole(): boolean {
+    return this.notebook.roles[this.$store.state.user.uid] === "reader";
+  }
+
   @Watch("tag")
   private watchTag() {
     this.autocompleteTag$.next(this.tag);
   }
 
-  private getNotebook() {
-    findById(this.$route.params.id)
-      .then(doc => {
-        const notebook = doc.data() as Notebook | undefined;
-        if (notebook) {
-          this.notebook = {
-            title: notebook.title,
-            published: notebook.published,
-            tags: notebook.tags,
-            image: notebook.image
-          };
-          this.tags = notebook.tags.map(tag => ({ text: tag }));
-          if (notebook.image) {
-            this.previewImage = notebook.image;
-          } else {
-            this.previewImage = IMAGE;
-          }
-        }
-      })
-      .catch(err => {
-        this.$message.error(err.message);
-        this.$router.back();
-      });
+  private setNotebook() {
+    this.notebookModify = {
+      title: this.notebook.title,
+      published: this.notebook.published,
+      tags: this.notebook.tags,
+      image: this.notebook.image
+    };
+    this.tags = this.notebook.tags.map(tag => ({ text: tag }));
+    if (this.notebook.image) {
+      this.previewImage = this.notebook.image;
+    } else {
+      this.previewImage = IMAGE;
+    }
   }
 
   private valid(): boolean {
     let result = false;
-    if (this.notebook.title.trim() === "") {
+    if (this.notebookModify.title.trim() === "") {
+      this.notebookModify.title = "";
       this.$message.warning(this.$t("valid.title") as string);
       (this.$refs.title as HTMLInputElement).focus();
     } else {
@@ -176,8 +184,8 @@ export default class NotebookInfo extends Vue {
         this.inputFile.click();
         break;
       case PictureAction.Restore:
-        if (this.notebook.image) {
-          this.previewImage = this.notebook.image;
+        if (this.notebookModify.image) {
+          this.previewImage = this.notebookModify.image;
         } else {
           this.previewImage = IMAGE;
         }
@@ -212,13 +220,13 @@ export default class NotebookInfo extends Vue {
       });
       try {
         if (this.file) {
-          this.notebook.image = await upload(this.file);
+          this.notebookModify.image = await upload(this.file);
         }
         if (this.previewImage === IMAGE) {
-          this.notebook.image = null;
+          this.notebookModify.image = null;
         }
-        this.notebook.tags = this.tags.map(tag => tag.text);
-        notebookUpdate(this.$route.params.id, this.notebook);
+        this.notebookModify.tags = this.tags.map(tag => tag.text);
+        notebookUpdate(this.$route.params.id, this.notebookModify);
       } catch (err) {
         this.$message.error(err.message);
       }
@@ -255,7 +263,7 @@ export default class NotebookInfo extends Vue {
         debounceTime(300)
       )
       .subscribe(this.onAutocompleteTag);
-    this.getNotebook();
+    this.setNotebook();
   }
 
   private destroyed() {

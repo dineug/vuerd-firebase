@@ -100,6 +100,7 @@ export default class NewNotebook extends Vue {
   private valid(): boolean {
     let result = false;
     if (this.title.trim() === "") {
+      this.title = "";
       this.$message.warning(this.$t("valid.title") as string);
       (this.$refs.title as HTMLInputElement).focus();
     } else {

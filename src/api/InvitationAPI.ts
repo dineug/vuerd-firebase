@@ -12,6 +12,7 @@ export function autocomplete(keyword: string): Promise<QuerySnapshot> {
 }
 
 export interface Member {
+  id?: string;
   name: string | null;
   nickname: string | null;
   email: string | null;

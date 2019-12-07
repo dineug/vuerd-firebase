@@ -60,35 +60,35 @@ export interface Notification {
 
 export function editorSave(editor: Editor): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getConfigDocRef(store.state.user.uid, "editor").set(editor);
 }
 
 export function findEditorBy(): Promise<DocumentSnapshot> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getConfigDocRef(store.state.user.uid, "editor").get();
 }
 
 export function findUserBy(): Promise<DocumentSnapshot> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getUsersDocRef(store.state.user.uid).get();
 }
 
 export function userSave(user: User): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getUsersDocRef(store.state.user.uid).set(user);
 }
 
 export async function signIn(): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   const doc = await findUserBy();
   if (doc.data() === undefined) {
@@ -113,7 +113,7 @@ export async function signIn(): Promise<void> {
 
 export function userUpdate(userModify: UserModify): Promise<void> {
   if (!store.state.user) {
-    throw new Error("not found uid");
+    throw new Error("not found user");
   }
   return getUsersDocRef(store.state.user.uid).update(userModify);
 }
