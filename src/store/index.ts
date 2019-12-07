@@ -50,6 +50,7 @@ export default new Vuex.Store<State>({
     signOut(state: State) {
       if (unsubscribe !== null) {
         unsubscribe();
+        unsubscribe = null;
       }
       state.user = null;
       state.info = null;

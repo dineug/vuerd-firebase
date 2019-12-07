@@ -66,6 +66,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import { identicon } from "@/ts/util";
 import { User, UserModify, Language, userUpdate } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
@@ -83,7 +84,7 @@ import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
 })
 export default class Setting extends Vue {
   private inputFile: HTMLInputElement = document.createElement("input");
-  private previewImage: string | null = null;
+  private previewImage: string = "";
   private file: File | null = null;
   private info: User = {
     name: null,
@@ -107,7 +108,11 @@ export default class Setting extends Vue {
         published: info.published,
         notification: info.notification
       };
-      this.previewImage = info.image;
+      if (info.image) {
+        this.previewImage = info.image;
+      } else {
+        this.previewImage = identicon(info.email);
+      }
     }
   }
 
@@ -156,12 +161,16 @@ export default class Setting extends Vue {
         this.inputFile.click();
         break;
       case PictureAction.Restore:
-        this.previewImage = this.info.image;
+        if (this.info.image) {
+          this.previewImage = this.info.image;
+        } else {
+          this.previewImage = identicon(this.info.email);
+        }
         this.inputFile.value = "";
         this.file = null;
         break;
       case PictureAction.Clean:
-        this.previewImage = null;
+        this.previewImage = identicon(this.info.email);
         this.inputFile.value = "";
         this.file = null;
         break;
@@ -198,8 +207,8 @@ export default class Setting extends Vue {
           if (this.file) {
             user.image = await upload(this.file);
           }
-          if (this.previewImage === null) {
-            user.image = null;
+          if (this.previewImage === identicon(this.info.email)) {
+            user.image = identicon(this.info.email);
           }
           await userUpdate(user);
         } catch (err) {

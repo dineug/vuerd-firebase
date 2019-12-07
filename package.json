@@ -20,7 +20,7 @@
     "firebase": "^7.2.1",
     "github-markdown-css": "^3.0.1",
     "highlight.js": "^9.15.10",
-    "identicon.js": "^2.3.3",
+    "jdenticon": "^2.2.0",
     "marked": "^0.7.0",
     "moment": "^2.24.0",
     "rxjs": "^6.5.3",

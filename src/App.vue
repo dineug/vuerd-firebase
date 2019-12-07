@@ -25,6 +25,21 @@ export default class App extends Vue {
   font-family: "Noto Sans", "Noto Sans KR", "Noto Sans SC", "Noto Sans HK",
     "Noto Sans JP", "Noto Sans TC", sans-serif;
 
+  .el-avatar {
+    background-color: white;
+  }
+
+  .tag-box {
+    & /deep/ .ti-tag,
+    & /deep/ .ti-selected-item {
+      background-color: $color-tag;
+    }
+    & /deep/ .duplication {
+      background-color: $color-tag-duplication;
+      text-decoration: line-through;
+    }
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: $size-scrollbar;

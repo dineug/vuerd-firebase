@@ -61,7 +61,6 @@ import { IMAGE, MAX_SIZE } from "@/data/image";
 import PictureAction from "@/models/PictureAction";
 import { Tag } from "@/models/vue-tags-input";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
-// @ts-ignore
 import VueTagsInput from "@johmun/vue-tags-input";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
 
@@ -231,11 +230,4 @@ export default class NewNotebook extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.tag-box {
-  & /deep/ .ti-tag,
-  & /deep/ .ti-selected-item {
-    background-color: $color-tag;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

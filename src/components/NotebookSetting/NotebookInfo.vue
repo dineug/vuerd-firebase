@@ -66,7 +66,6 @@ import { Tag } from "@/models/vue-tags-input";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-// @ts-ignore
 import VueTagsInput from "@johmun/vue-tags-input";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
 
@@ -267,11 +266,4 @@ export default class NotebookInfo extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.tag-box {
-  & /deep/ .ti-tag,
-  & /deep/ .ti-selected-item {
-    background-color: $color-tag;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

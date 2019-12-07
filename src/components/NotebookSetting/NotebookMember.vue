@@ -66,7 +66,6 @@ import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
 import { Tag, Validation } from "@/models/vue-tags-input";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-// @ts-ignore
 import VueTagsInput from "@johmun/vue-tags-input";
 import RoleSelect from "@/components/NotebookSetting/RoleSelect.vue";
 
@@ -157,15 +156,4 @@ export default class NotebookMember extends Vue {
 }
 </script>
 
-<style scoped lang="scss">
-.tag-box {
-  & /deep/ .ti-tag,
-  & /deep/ .ti-selected-item {
-    background-color: $color-tag;
-  }
-  & /deep/ .duplication {
-    background-color: $color-tag-duplication;
-    text-decoration: line-through;
-  }
-}
-</style>
+<style scoped lang="scss"></style>

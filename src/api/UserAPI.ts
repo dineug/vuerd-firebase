@@ -5,6 +5,7 @@ import {
   DocumentSnapshot
 } from "@/plugins/firebase";
 import store from "@/store";
+import { identicon } from "@/ts/util";
 
 export function getUsersColRef(): CollectionReference {
   return db.collection("users");
@@ -97,7 +98,9 @@ export async function signIn(): Promise<void> {
       name: store.state.user.displayName,
       nickname: store.state.user.displayName,
       notification: 0,
-      image: store.state.user.photoURL ? store.state.user.photoURL : null,
+      image: store.state.user.photoURL
+        ? store.state.user.photoURL
+        : identicon(store.state.user.email),
       language: "en",
       published: false
     });
