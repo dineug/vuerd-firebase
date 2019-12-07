@@ -1,5 +1,5 @@
 <template>
-  <el-select :value="value" placeholder="language" @change="onChange">
+  <el-select :value="value" placeholder="role" @change="onChange">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -19,18 +19,22 @@ interface Option {
 }
 
 @Component
-export default class LanguageSelect extends Vue {
-  @Prop({ type: String, default: "en" })
+export default class RoleSelect extends Vue {
+  @Prop({ type: String, default: "owner" })
   private value!: string;
 
   private options: Option[] = [
     {
-      label: "English",
-      value: "en"
+      label: "Owner",
+      value: "owner"
     },
     {
-      label: "한국어",
-      value: "ko"
+      label: "Writer",
+      value: "writer"
+    },
+    {
+      label: "Reader",
+      value: "reader"
     }
   ];
 

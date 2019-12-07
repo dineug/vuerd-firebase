@@ -5,6 +5,8 @@ const Notebook = () => import("@/components/Notebook.vue");
 const MyNotebook = () => import("@/components/MyNotebook.vue");
 const Editor = () => import("@/components/Editor.vue");
 const Setting = () => import("@/components/Setting.vue");
+const NotebookSetting = () => import("@/components/NotebookSetting.vue");
+const Document = () => import("@/components/Document.vue");
 
 Vue.use(VueRouter);
 
@@ -20,8 +22,19 @@ export const routes = {
     component: MyNotebook,
     beforeEnter: signIn
   },
+  NotebookSetting: {
+    path: "/notebooks/:id/setting",
+    name: NotebookSetting.name,
+    component: NotebookSetting,
+    beforeEnter: signIn
+  },
+  Document: {
+    path: "/notebooks/:id/document",
+    name: Document.name,
+    component: Document
+  },
   Editor: {
-    path: "/editor/:id",
+    path: "/notebooks/:id/editor",
     name: Editor.name,
     component: Editor,
     beforeEnter: signIn

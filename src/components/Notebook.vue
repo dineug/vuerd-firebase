@@ -61,7 +61,14 @@ export default class Notebook extends Vue {
     }
   }
 
-  private onDocument(notebook: NotebookModel) {}
+  private onDocument(notebook: NotebookModel) {
+    this.$router.push({
+      name: routes.Document.name,
+      params: {
+        id: notebook.id
+      }
+    });
+  }
 
   private onEditor(notebook: NotebookModel) {
     this.$router.push({
@@ -72,7 +79,14 @@ export default class Notebook extends Vue {
     });
   }
 
-  private onSetting(notebook: NotebookModel) {}
+  private onSetting(notebook: NotebookModel) {
+    this.$router.push({
+      name: routes.NotebookSetting.name,
+      params: {
+        id: notebook.id
+      }
+    });
+  }
 
   private onScroll() {
     const scrollHeight = document.documentElement.scrollHeight;

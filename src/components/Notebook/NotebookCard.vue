@@ -36,8 +36,6 @@ const enum Action {
   setting = "setting"
 }
 
-const IMAGE =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 const CARD_HEIGHT = 400;
 const IMAGE_HEIGHT = 225;
 const BUTTON_HEIGHT = 40;

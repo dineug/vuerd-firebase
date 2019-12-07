@@ -12,10 +12,8 @@
 </template>
 
 <script lang="ts">
+import { IMAGE } from "@/data/image";
 import { Component, Prop, Vue } from "vue-property-decorator";
-
-const IMAGE =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 
 @Component
 export default class ImageLazy extends Vue {

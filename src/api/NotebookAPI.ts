@@ -15,6 +15,10 @@ export function getNotebooksColRef(): CollectionReference {
   return db.collection("notebooks");
 }
 
+export function getNotebookDocRef(id: string): DocumentReference {
+  return getNotebooksColRef().doc(id);
+}
+
 export function getMembersColRef(notebookId: string): CollectionReference {
   return db
     .collection("notebooks")
@@ -171,4 +175,22 @@ export function findByPagingAndMember(paging: Paging): Promise<QuerySnapshot> {
     ref = ref.startAfter(paging.last);
   }
   return ref.get();
+}
+
+export function findById(id: string) {
+  return getNotebookDocRef(id).get();
+}
+
+export function notebookUpdate(
+  id: string,
+  notebookAdd: NotebookAdd
+): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found uid");
+  }
+  return getNotebookDocRef(id).update(notebookAdd);
+}
+
+export function findAllMemberBy(id: string): Promise<QuerySnapshot> {
+  return getMembersColRef(id).get();
 }

@@ -1,11 +1,7 @@
 <template>
-  <el-drawer
-    :title="$t('NewNotebook.newNotebook')"
-    :visible.sync="drawer"
-    size="630px"
-  >
-    <el-form style="padding: 0 20px;" label-width="90px">
-      <el-form-item :label="$t('NewNotebook.picture')">
+  <el-drawer :title="$t('newNotebook')" :visible.sync="drawer" size="660px">
+    <el-form style="padding: 0 20px;" label-width="120px">
+      <el-form-item :label="$t('picture')">
         <image-lazy :src="previewImage" />
         <el-button-group>
           <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
@@ -16,7 +12,7 @@
           />
         </el-button-group>
       </el-form-item>
-      <el-form-item :label="$t('NewNotebook.title')">
+      <el-form-item :label="$t('title')">
         <el-input
           style="width: 450px;"
           v-model="title"
@@ -27,26 +23,26 @@
           ref="title"
         />
       </el-form-item>
-      <el-form-item :label="$t('NewNotebook.published')">
+      <el-form-item :label="$t('published')">
         <el-switch v-model="published" />
       </el-form-item>
-      <el-form-item :label="$t('NewNotebook.tag')">
+      <el-form-item :label="$t('tag')">
         <vue-tags-input
           class="tag-box"
           v-model="tag"
           :tags="tags"
-          :autocomplete-items="autocompleteItems"
+          :autocomplete-items="autocompleteTags"
           allow-edit-tags
           @tags-changed="onChangeTags"
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onCreate">{{
-          $t("NewNotebook.create")
-        }}</el-button>
-        <el-button @click="onDrawerEnd">{{
-          $t("NewNotebook.cancel")
-        }}</el-button>
+        <el-button type="primary" @click="onCreate">
+          {{ $t("create") }}
+        </el-button>
+        <el-button @click="onDrawerEnd">
+          {{ $t("cancel") }}
+        </el-button>
       </el-form-item>
     </el-form>
   </el-drawer>
@@ -59,26 +55,15 @@ import { routes } from "@/router";
 import { save, NotebookAdd } from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/TagAPI";
 import { upload, FileType } from "@/api/storageAPI";
+import { Subject, Subscription } from "rxjs";
+import { debounceTime, filter } from "rxjs/operators";
+import { IMAGE, MAX_SIZE } from "@/data/image";
+import PictureAction from "@/models/PictureAction";
+import { Tag } from "@/models/vue-tags-input";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 // @ts-ignore
 import VueTagsInput from "@johmun/vue-tags-input";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
-
-import { Subject, Subscription } from "rxjs";
-import { debounceTime, filter, distinctUntilChanged } from "rxjs/operators";
-
-const IMAGE =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
-const MAX_SIZE = 1024 * 1024 * 2;
-const enum PictureAction {
-  Edit = "Edit",
-  Clean = "Clean"
-}
-
-interface Tag {
-  text: string;
-  tiClasses?: string[];
-}
 
 @Component({
   components: {
@@ -88,20 +73,20 @@ interface Tag {
 })
 export default class NewNotebook extends Vue {
   private drawer: boolean = false;
-  private autocomplete$: Subject<string> = new Subject();
-  private subAutocomplete!: Subscription;
+  private autocompleteTag$: Subject<string> = new Subject();
+  private subAutocompleteTag!: Subscription;
   private title: string = "";
   private published: boolean = false;
   private tag: string = "";
   private tags: Tag[] = [];
-  private autocompleteItems: Tag[] = [];
+  private autocompleteTags: Tag[] = [];
   private inputFile: HTMLInputElement = document.createElement("input");
   private previewImage: string = IMAGE;
   private file: File | null = null;
 
   @Watch("tag")
   private watchTag() {
-    this.autocomplete$.next(this.tag);
+    this.autocompleteTag$.next(this.tag);
   }
 
   private reset() {
@@ -109,14 +94,14 @@ export default class NewNotebook extends Vue {
     this.published = false;
     this.tag = "";
     this.tags = [];
-    this.autocompleteItems = [];
+    this.autocompleteTags = [];
     this.previewImage = IMAGE;
   }
 
   private valid(): boolean {
     let result = false;
     if (this.title.trim() === "") {
-      this.$message.warning(this.$t("NewNotebook.valid.title") as string);
+      this.$message.warning(this.$t("valid.title") as string);
       (this.$refs.title as HTMLInputElement).focus();
     } else {
       result = true;
@@ -131,9 +116,9 @@ export default class NewNotebook extends Vue {
       const isJPG = file.type === FileType.jpg;
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning(this.$t("Setting.valid.imageType") as string);
+        this.$message.warning(this.$t("valid.imageType") as string);
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning(this.$t("Setting.valid.imageSize") as string);
+        this.$message.warning(this.$t("valid.imageSize") as string);
       } else {
         result = true;
       }
@@ -141,10 +126,10 @@ export default class NewNotebook extends Vue {
     return result;
   }
 
-  private onAutocomplete(keyword: string) {
-    log.debug("NewNotebook onAutocomplete", keyword);
+  private onAutocompleteTag(keyword: string) {
+    log.debug("NewNotebook onAutocompleteTag", keyword);
     autocomplete(keyword).then(querySnapshot => {
-      this.autocompleteItems = querySnapshot.docs.map(
+      this.autocompleteTags = querySnapshot.docs.map(
         doc =>
           ({
             text: doc.id
@@ -155,14 +140,14 @@ export default class NewNotebook extends Vue {
 
   private onChangeTags(newTags: Tag[]) {
     this.tags = newTags;
-    this.autocompleteItems = [];
+    this.autocompleteTags = [];
   }
 
   private async onCreate() {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
-        text: this.$t("NewNotebook.creating") as string,
+        text: this.$t("loading.creating") as string,
         spinner: "el-icon-loading",
         background: "rgba(0, 0, 0, 0.7)"
       });
@@ -228,13 +213,12 @@ export default class NewNotebook extends Vue {
     this.inputFile.addEventListener("change", this.onChangeFile);
     eventBus.$on(Bus.NewNotebook.drawerStart, this.onDrawerStart);
     eventBus.$on(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
-    this.subAutocomplete = this.autocomplete$
+    this.subAutocompleteTag = this.autocompleteTag$
       .pipe(
         filter(keyword => keyword.length >= 2),
-        debounceTime(300),
-        distinctUntilChanged()
+        debounceTime(300)
       )
-      .subscribe(this.onAutocomplete);
+      .subscribe(this.onAutocompleteTag);
   }
 
   private destroyed() {
@@ -242,7 +226,7 @@ export default class NewNotebook extends Vue {
     this.inputFile.remove();
     eventBus.$off(Bus.NewNotebook.drawerStart, this.onDrawerStart);
     eventBus.$off(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
-    this.subAutocomplete.unsubscribe();
+    this.subAutocompleteTag.unsubscribe();
   }
 }
 </script>

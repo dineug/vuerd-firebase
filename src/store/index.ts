@@ -24,7 +24,7 @@ export const enum Commit {
   setTreeList = "setTreeList"
 }
 
-let unsubscribe: { (): void; (): void } | null = null;
+export let unsubscribe: { (): void; (): void } | null = null;
 
 export default new Vuex.Store<State>({
   state: {

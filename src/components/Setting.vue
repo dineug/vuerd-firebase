@@ -3,8 +3,8 @@
     <sidebar />
     <el-container>
       <el-main class="main">
-        <el-form style="padding: 20px;" label-width="120px">
-          <el-form-item :label="$t('Setting.picture')">
+        <el-form style="padding: 20px;" label-width="150px">
+          <el-form-item :label="$t('picture')">
             <el-avatar :src="previewImage" :size="100" />
             <el-button-group>
               <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
@@ -19,7 +19,7 @@
               />
             </el-button-group>
           </el-form-item>
-          <el-form-item :label="$t('Setting.name')">
+          <el-form-item :label="$t('name')">
             <el-input
               style="width: 450px;"
               clearable
@@ -30,7 +30,7 @@
               ref="name"
             />
           </el-form-item>
-          <el-form-item :label="$t('Setting.nickname')">
+          <el-form-item :label="$t('nickname')">
             <el-input
               style="width: 450px;"
               clearable
@@ -41,22 +41,22 @@
               ref="nickname"
             />
           </el-form-item>
-          <el-form-item :label="$t('Setting.email')">
+          <el-form-item :label="$t('email')">
             {{ info.email }}
           </el-form-item>
-          <el-form-item :label="$t('Setting.language')">
+          <el-form-item :label="$t('language')">
             <language-select
               :value="info.language"
               @change="onChangeLanguage"
             />
           </el-form-item>
-          <el-form-item :label="$t('Setting.invitation')">
+          <el-form-item :label="$t('invitation')">
             <el-switch v-model="info.published" />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onUpdate">{{
-              $t("Setting.update")
-            }}</el-button>
+            <el-button type="primary" @click="onUpdate">
+              {{ $t("update") }}
+            </el-button>
           </el-form-item>
         </el-form>
       </el-main>
@@ -69,16 +69,11 @@ import log from "@/ts/Logger";
 import { User, UserModify, Language, userUpdate } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
+import { MAX_SIZE } from "@/data/image";
+import PictureAction from "@/models/PictureAction";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
-
-const MAX_SIZE = 1024 * 1024 * 2;
-const enum PictureAction {
-  Edit = "Edit",
-  Restore = "Restore",
-  Clean = "Clean"
-}
 
 @Component({
   components: {
@@ -119,13 +114,13 @@ export default class Setting extends Vue {
   private valid(): boolean {
     let result = false;
     if (this.info.name === null || this.info.name.trim() === "") {
-      this.$message.warning(this.$t("Setting.valid.name") as string);
+      this.$message.warning(this.$t("valid.name") as string);
       (this.$refs.name as HTMLInputElement).focus();
     } else if (
       this.info.nickname === null ||
       this.info.nickname.trim() === ""
     ) {
-      this.$message.warning(this.$t("Setting.valid.nickname") as string);
+      this.$message.warning(this.$t("valid.nickname") as string);
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {
       result = true;
@@ -140,9 +135,9 @@ export default class Setting extends Vue {
       const isJPG = file.type === FileType.jpg;
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning(this.$t("Setting.valid.imageType") as string);
+        this.$message.warning(this.$t("valid.imageType") as string);
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning(this.$t("Setting.valid.imageSize") as string);
+        this.$message.warning(this.$t("valid.imageSize") as string);
       } else {
         result = true;
       }
@@ -188,7 +183,7 @@ export default class Setting extends Vue {
       if (this.info.name && this.info.nickname) {
         const loading = this.$loading({
           lock: true,
-          text: this.$t("Setting.updating") as string,
+          text: this.$t("loading.updating") as string,
           spinner: "el-icon-loading",
           background: "rgba(0, 0, 0, 0.7)"
         });
@@ -203,10 +198,17 @@ export default class Setting extends Vue {
           if (this.file) {
             user.image = await upload(this.file);
           }
+          if (this.previewImage === null) {
+            user.image = null;
+          }
           await userUpdate(user);
         } catch (err) {
           this.$message.error(err.message);
         }
+        this.$message({
+          type: "success",
+          message: this.$t("updated") as string
+        });
         loading.close();
       }
     }

@@ -10,66 +10,66 @@
       @select="onSelect"
     >
       <el-tooltip
-        :content="$t('Sidebar.notebook')"
+        :content="$t('notebook')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="Notebook">
           <i class="el-icon-notebook-2"></i>
-          <span>{{ $t("Sidebar.notebook") }}</span>
+          <span>{{ $t("notebook") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        :content="$t('Sidebar.myNotebook')"
+        :content="$t('myNotebook')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="MyNotebook">
           <i class="el-icon-notebook-1"></i>
-          <span>{{ $t("Sidebar.myNotebook") }}</span>
+          <span>{{ $t("myNotebook") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        :content="$t('Sidebar.newNotebook')"
+        :content="$t('newNotebook')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="new-notebook">
           <i class="el-icon-document-add"></i>
-          <span>{{ $t("Sidebar.newNotebook") }}</span>
+          <span>{{ $t("newNotebook") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        :content="$t('Sidebar.setting')"
+        :content="$t('setting')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="Setting">
           <i class="el-icon-setting"></i>
-          <span>{{ $t("Sidebar.setting") }}</span>
+          <span>{{ $t("setting") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
         v-if="user !== null"
-        :content="$t('Sidebar.signOut')"
+        :content="$t('signOut')"
         placement="left"
         :open-delay="openDelay"
       >
         <el-menu-item index="sign-out">
           <font-awesome-icon class="font-awesome" icon="sign-out-alt" />
-          <span>{{ $t("Sidebar.signOut") }}</span>
+          <span>{{ $t("signOut") }}</span>
         </el-menu-item>
       </el-tooltip>
       <el-submenu v-else index="sign-in">
         <template slot="title">
           <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
-          <span>{{ $t("Sidebar.signIn") }}</span>
+          <span>{{ $t("signIn") }}</span>
         </template>
         <el-menu-item-group>
-          <span slot="title">{{ $t("Sidebar.signIn") }}</span>
+          <span slot="title">{{ $t("signIn") }}</span>
           <el-menu-item index="sign-in-google">
             <el-button class="sign-in-btn">
               <el-row :gutter="20">
@@ -77,9 +77,7 @@
                   <img class="sign-in-logo" src="@/assets/google.png" />
                 </el-col>
                 <el-col :span="20">
-                  <span class="sign-in-text">{{
-                    $t("Sidebar.signInGoogle")
-                  }}</span>
+                  <span class="sign-in-text">{{ $t("signInGoogle") }}</span>
                 </el-col>
                 <el-col :span="2"></el-col>
               </el-row>

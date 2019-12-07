@@ -6,12 +6,16 @@
 
 <script lang="ts">
 import eventBus from "@/ts/EventBus";
+import { unsubscribe } from "@/store";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
 export default class App extends Vue {
   private destroyed() {
     eventBus.destroyed();
+    if (unsubscribe !== null) {
+      unsubscribe();
+    }
   }
 }
 </script>

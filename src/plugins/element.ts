@@ -26,6 +26,8 @@ import {
   Option,
   Avatar,
   Tag,
+  Table,
+  TableColumn,
   Loading,
   Message,
   MessageBox,
@@ -65,6 +67,8 @@ const components = [
   Option,
   Avatar,
   Tag,
+  Table,
+  TableColumn,
   Loading
 ];
 
