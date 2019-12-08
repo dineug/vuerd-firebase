@@ -4,7 +4,6 @@ import {
   DocumentReference,
   CollectionReference
 } from "@/plugins/firebase";
-import log from "@/ts/Logger";
 import store from "@/store";
 import moment from "moment";
 import { TreeMove, TreeSave } from "vuerd-core";
