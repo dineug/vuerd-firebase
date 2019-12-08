@@ -30,13 +30,16 @@ export default {
   invitation: "Invitation",
   notification: "Notification",
   read: "Read",
+  noNotification: "No notification",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",
     nickname: "Please enter a nickname",
     member: "Please enter a member",
     imageType: "Picture must be JPG, PNG format",
-    imageSize: "Picture size can not exceed 2MB"
+    imageSize: "Picture size can not exceed 2MB",
+    memberDelete: "least one member",
+    memberRole: "least one owner"
   },
   confirm: {
     deleteNotebook: "Are you sure you want to delete the notebook?",

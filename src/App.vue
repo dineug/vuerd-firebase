@@ -23,7 +23,7 @@ export default class App extends Vue {
 <style lang="scss">
 body {
   font-family: "Noto Sans", "Noto Sans KR", "Noto Sans SC", "Noto Sans HK",
-  "Noto Sans JP", "Noto Sans TC", sans-serif;
+    "Noto Sans JP", "Noto Sans TC", sans-serif;
 
   /* width */
   ::-webkit-scrollbar {
@@ -75,7 +75,7 @@ body {
 }
 
 .notification-popover {
-  max-height: 200px;
+  height: 400px;
   overflow-y: auto;
 }
 </style>

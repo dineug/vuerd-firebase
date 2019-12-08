@@ -1,6 +1,10 @@
 import { db, QuerySnapshot, CollectionReference } from "@/plugins/firebase";
 import store from "@/store";
-import { getNotificationDocRef } from "@/api/NotificationAPI";
+import { getUsersDocRef } from "@/api/UserAPI";
+import {
+  getNotificationDocRef,
+  getNotificationColRef
+} from "@/api/NotificationAPI";
 import { NotificationModel } from "@/api/NotificationModel";
 import { getMembersDocRef } from "@/api/NotebookAPI";
 
@@ -15,7 +19,7 @@ export function autocomplete(keyword: string): Promise<QuerySnapshot> {
     .get();
 }
 
-export function invitationAccept(
+export async function invitationAccept(
   notification: NotificationModel
 ): Promise<void> {
   if (!store.state.user) {
@@ -30,10 +34,16 @@ export function invitationAccept(
   batch.update(getMembersDocRef(notification.key, store.state.user.uid), {
     status: "accept"
   });
-  return batch.commit();
+  await batch.commit();
+  const querySnapshot = await getNotificationColRef(store.state.user.uid)
+    .where("read", "==", false)
+    .get();
+  return getUsersDocRef(store.state.user.uid).update({
+    notification: querySnapshot.size
+  });
 }
 
-export function invitationCancel(
+export async function invitationCancel(
   notification: NotificationModel
 ): Promise<void> {
   if (!store.state.user) {
@@ -46,5 +56,11 @@ export function invitationCancel(
     read: true
   });
   batch.delete(getMembersDocRef(notification.key, store.state.user.uid));
-  return batch.commit();
+  await batch.commit();
+  const querySnapshot = await getNotificationColRef(store.state.user.uid)
+    .where("read", "==", false)
+    .get();
+  return getUsersDocRef(store.state.user.uid).update({
+    notification: querySnapshot.size
+  });
 }

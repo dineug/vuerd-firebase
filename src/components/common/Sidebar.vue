@@ -62,9 +62,19 @@
           popper-class="notification-popover"
           placement="right"
           @show="onNotification"
+          @hide="onNotificationHide"
         >
-          <el-timeline :reverse="false">
+          <el-timeline>
             <el-timeline-item
+              v-if="notifications.length === 0"
+              key="notification-none"
+            >
+              <el-card>
+                <p>{{ $t("noNotification") }}</p>
+              </el-card>
+            </el-timeline-item>
+            <el-timeline-item
+              v-else
               v-for="notification in notifications"
               :key="notification.id"
               :timestamp="dateMinutesFormat(notification.createdAt)"
@@ -302,6 +312,10 @@ export default class Sidebar extends Vue {
     }
   }
 
+  private onScroll() {
+    this.getNotifications();
+  }
+
   private onNotification() {
     log.debug("Sidebar onNotification");
     this.notifications = [];
@@ -313,6 +327,17 @@ export default class Sidebar extends Vue {
       target: ".notification-popover"
     });
     this.getNotifications();
+    const el = document.querySelector(".notification-popover");
+    if (el) {
+      el.addEventListener("scroll", this.onScroll);
+    }
+  }
+
+  private onNotificationHide() {
+    const el = document.querySelector(".notification-popover");
+    if (el) {
+      el.removeEventListener("scroll", this.onScroll);
+    }
   }
 
   private onInvitationAccept(notification: NotificationModel) {
@@ -324,7 +349,9 @@ export default class Sidebar extends Vue {
       .catch((err: FirestoreError) => {
         this.$message.error(err.message);
         if (err.code === "permission-denied") {
-          notificationReadUpdate(notification).then(() => this.onNotification());
+          notificationReadUpdate(notification).then(() =>
+            this.onNotification()
+          );
         }
       })
       .finally(() => loading.close());
@@ -339,7 +366,9 @@ export default class Sidebar extends Vue {
       .catch((err: FirestoreError) => {
         this.$message.error(err.message);
         if (err.code === "permission-denied") {
-          notificationReadUpdate(notification).then(() => this.onNotification());
+          notificationReadUpdate(notification).then(() =>
+            this.onNotification()
+          );
         }
       })
       .finally(() => loading.close());

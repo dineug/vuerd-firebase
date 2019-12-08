@@ -30,13 +30,16 @@ export default {
   invitation: "초대",
   notification: "알람",
   read: "읽기",
+  noNotification: "알림이 없습니다",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",
     nickname: "닉네임을 입력해주세요",
     member: "구성원을 입력해주세요",
     imageType: "사진은 JPG, PNG 형식만 가능합니다",
-    imageSize: "사진 크기는 2MB를 초과할 수 없습니다"
+    imageSize: "사진 크기는 2MB를 초과할 수 없습니다",
+    memberDelete: "최소 한 명의 구성원이 필요합니다",
+    memberRole: "최소 한 명의 Owner가 필요합니다"
   },
   confirm: {
     deleteNotebook: "노트북을 삭제하시겠습니까?",

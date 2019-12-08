@@ -38,11 +38,19 @@ export function findAllNotificationBy(
   return ref.get();
 }
 
-export function notificationReadUpdate(notification: NotificationModel): Promise<void> {
+export async function notificationReadUpdate(
+  notification: NotificationModel
+): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getNotificationDocRef(store.state.user.uid, notification.id).update({
+  await getNotificationDocRef(store.state.user.uid, notification.id).update({
     read: true
+  });
+  const querySnapshot = await getNotificationColRef(store.state.user.uid)
+    .where("read", "==", false)
+    .get();
+  return getUsersDocRef(store.state.user.uid).update({
+    notification: querySnapshot.size
   });
 }
