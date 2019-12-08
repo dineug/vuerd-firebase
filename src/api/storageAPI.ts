@@ -7,7 +7,7 @@ export const enum FileType {
   png = "image/png"
 }
 
-function getFileName(file: File): string {
+function getFileName(file: File | Blob): string {
   let ext = "";
   switch (file.type) {
     case FileType.jpg:
@@ -20,7 +20,7 @@ function getFileName(file: File): string {
   return `${uuid()}${ext}`;
 }
 
-export async function upload(file: File): Promise<string> {
+export async function upload(file: File | Blob): Promise<string> {
   if (!store.state.user) {
     throw new Error("not found user");
   }

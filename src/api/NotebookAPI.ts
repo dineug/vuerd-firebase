@@ -14,8 +14,9 @@ import {
 } from "./NotebookModel";
 import store from "@/store";
 import moment from "moment";
-import { getTreesDocRef } from "./TreeAPI";
+import { getTreesColRef } from "./TreeAPI";
 import { User } from "./UserModel";
+import { TreeNode } from "./TreeModel";
 import { findUserBy } from "./UserAPI";
 
 export function getNotebooksColRef(): CollectionReference {
@@ -53,11 +54,12 @@ export async function save(
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await getNotebooksColRef().add(notebook);
-  await getTreesDocRef(docRef.id, "unnamed").set({
+  await getTreesColRef(docRef.id).add({
+    path: "unnamed",
     name: "unnamed",
     updatedAt: moment().unix(),
     createdAt: moment().unix()
-  });
+  } as TreeNode);
   const docUser = await findUserBy();
   const user = docUser.data() as User;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({

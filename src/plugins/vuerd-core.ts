@@ -3,14 +3,9 @@ import router from "@/router";
 import store, { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
 import log from "@/ts/Logger";
-import {
-  findAllBy,
-  deleteByBatch,
-  saveBatch,
-  moveBatch,
-  TreeNodeModel,
-  TreeNodeModelImpl
-} from "@/api/TreeAPI";
+import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
+import { upload } from "@/api/storageAPI";
+import { findAllBy, deleteByBatch, saveBatch, moveBatch } from "@/api/TreeAPI";
 import {
   convertTree,
   findTreeNodeByPath,
@@ -115,5 +110,9 @@ VuerdCore.use({
 });
 
 VuerdCore.use(ERD);
-VuerdCore.use(TuiEditor);
+VuerdCore.use(TuiEditor, {
+  imageUpload(blob, callback) {
+    upload(blob).then(string => callback(string));
+  }
+});
 Vue.use(VuerdCore);

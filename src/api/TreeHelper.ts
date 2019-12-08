@@ -1,15 +1,15 @@
-import { TreeNodeModel } from "./TreeAPI";
+import { Move, TreeNodeModel } from "./TreeModel";
 import { Tree } from "vuerd-core";
 
 export function convertTree(treeList: TreeNodeModel[]): Tree {
-  const first = treeList[0].path.split(":");
+  const first = treeList[0].path.split("/");
   const tree: Tree = {
     name: first[0],
     open: true,
     children: []
   };
   treeList.forEach(treeNode => {
-    const paths = treeNode.path.split(":").reverse();
+    const paths = treeNode.path.split("/").reverse();
     paths.pop();
     createTree(tree, paths, treeNode.value);
   });
@@ -57,7 +57,6 @@ export function findTreeNodeByPath(
   treeList: TreeNodeModel[],
   path: string
 ): TreeNodeModel | null {
-  path = path.replace(/\//g, ":");
   let treeNode: TreeNodeModel | null = null;
   for (const node of treeList) {
     if (node.path === path) {
@@ -74,10 +73,9 @@ export function findPathByPaths(
 ): string[] {
   const childrenPaths: string[] = [];
   paths.forEach(path => {
-    path = path.replace(/\//g, ":");
     treeList.forEach(tree => {
       if (
-        (tree.path === path || tree.path.indexOf(`${path}:`) === 0) &&
+        (tree.path === path || tree.path.indexOf(`${path}/`) === 0) &&
         childrenPaths.indexOf(tree.path) === -1
       ) {
         childrenPaths.push(tree.path);
@@ -85,11 +83,6 @@ export function findPathByPaths(
     });
   });
   return childrenPaths;
-}
-
-export interface Move {
-  path: string;
-  name: string;
 }
 
 export function orderByPathLengthDESC(a: Move, b: Move): number {

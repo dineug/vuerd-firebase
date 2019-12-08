@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { User } from "@/plugins/firebase";
-import { TreeNodeModel } from "@/api/TreeAPI";
+import { TreeNodeModel } from "@/api/TreeModel";
 import { User as UserInfo } from "@/api/UserModel";
 import { getUsersDocRef, signIn } from "@/api/UserAPI";
 import i18n from "@/plugins/vue-i18n";
@@ -15,6 +15,7 @@ export interface State {
   referer: string;
   notebookId: string | null;
   treeList: TreeNodeModel[];
+  unsubscribe: { (): void; (): void } | null;
 }
 
 export const enum Commit {
@@ -25,21 +26,20 @@ export const enum Commit {
   setTreeList = "setTreeList"
 }
 
-export let unsubscribe: { (): void; (): void } | null = null;
-
 export default new Vuex.Store<State>({
   state: {
     user: null,
     info: null,
     referer: "/",
     notebookId: null,
-    treeList: []
+    treeList: [],
+    unsubscribe: null
   },
   mutations: {
     signIn(state: State, user: User) {
       state.user = user;
       signIn();
-      unsubscribe = getUsersDocRef(user.uid).onSnapshot(doc => {
+      state.unsubscribe = getUsersDocRef(user.uid).onSnapshot(doc => {
         if (doc.exists) {
           const info = doc.data() as UserInfo;
           state.info = info;
@@ -49,12 +49,14 @@ export default new Vuex.Store<State>({
       });
     },
     signOut(state: State) {
-      if (unsubscribe !== null) {
-        unsubscribe();
-        unsubscribe = null;
+      if (state.unsubscribe !== null) {
+        state.unsubscribe();
+        state.unsubscribe = null;
       }
       state.user = null;
       state.info = null;
+      state.notebookId = null;
+      state.treeList = [];
     },
     referer(state: State, referer: string) {
       state.referer = referer;
