@@ -48,7 +48,11 @@
         </el-table-column>
         <el-table-column :label="$t('role')" width="150">
           <template slot-scope="scope">
-            <role-select :value="scope.row.role" :disabled="ownerRole" />
+            <role-select
+              :value="scope.row.role"
+              :disabled="ownerRole"
+              @change="onChangeRole($event, scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column width="80">
@@ -68,12 +72,22 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import { MemberModel, MemberModelImpl, Notebook } from "@/api/NotebookModel";
+import {
+  MemberModel,
+  MemberModelImpl,
+  NotebookModel,
+  Role
+} from "@/api/NotebookModel";
 import {
   MemberModel as InvitationMemberModel,
   MemberModelImpl as InvitationMemberModelImpl
 } from "@/api/InvitationModel";
-import { findAllMemberBy, memberInvitation } from "@/api/NotebookAPI";
+import {
+  findAllMemberBy,
+  memberInvitation,
+  deleteMemberById,
+  memberRoleUpdate
+} from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/InvitationAPI";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
@@ -81,6 +95,7 @@ import { Tag, Validation } from "@/models/vue-tags-input";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import VueTagsInput from "@johmun/vue-tags-input";
 import RoleSelect from "@/components/NotebookSetting/RoleSelect.vue";
+import ro from "element-ui/src/locale/lang/ro";
 
 @Component({
   components: {
@@ -90,7 +105,7 @@ import RoleSelect from "@/components/NotebookSetting/RoleSelect.vue";
 })
 export default class NotebookMember extends Vue {
   @Prop({ type: Object })
-  private notebook!: Notebook;
+  private notebook!: NotebookModel;
 
   private autocompleteEmail$: Subject<string> = new Subject();
   private subAutocompleteEmail!: Subscription;
@@ -117,6 +132,7 @@ export default class NotebookMember extends Vue {
   }
 
   private getMembers() {
+    log.debug("NotebookMember getMembers");
     findAllMemberBy(this.$route.params.id).then(querySnapshot => {
       this.members = [];
       querySnapshot.docs.forEach(doc => {
@@ -186,12 +202,33 @@ export default class NotebookMember extends Vue {
       type: "warning"
     })
       .then(() => {
-        this.$message({
-          type: "success",
-          message: this.$t("deleted") as string
+        const loading = this.$loading({
+          lock: true,
+          text: this.$t("loading.deleting") as string
         });
+        deleteMemberById(this.notebook.id, member.id)
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: this.$t("deleted") as string
+            });
+            this.getMembers();
+          })
+          .catch(err => this.$message.error(err.message))
+          .finally(() => loading.close());
       })
       .catch(() => {});
+  }
+
+  private onChangeRole(role: Role, member: MemberModel) {
+    log.debug("NotebookMember onChangeRole", role);
+    member.role = role;
+    memberRoleUpdate(this.notebook.id, member.id, role)
+      .then(() => {
+        this.notebook.roles[member.id] = role;
+        this.getMembers();
+      })
+      .catch(err => this.$message.error(err.message));
   }
 
   private onAutocompleteEmail(keyword: string) {

@@ -64,7 +64,7 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { NotebookModel, NotebookAdd } from "@/api/NotebookModel";
-import { notebookUpdate } from "@/api/NotebookAPI";
+import { notebookUpdate, deleteById } from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/TagAPI";
 import { FileType, upload } from "@/api/storageAPI";
 import { IMAGE, MAX_SIZE } from "@/data/image";
@@ -244,10 +244,20 @@ export default class NotebookInfo extends Vue {
       type: "warning"
     })
       .then(() => {
-        this.$message({
-          type: "success",
-          message: this.$t("deleted") as string
+        const loading = this.$loading({
+          lock: true,
+          text: this.$t("loading.deleting") as string
         });
+        deleteById(this.notebook.id)
+          .then(() => {
+            this.$message({
+              type: "success",
+              message: this.$t("deleted") as string
+            });
+            this.$router.back();
+          })
+          .catch(err => this.$message.error(err.message))
+          .finally(() => loading.close());
       })
       .catch(() => {});
   }

@@ -26,11 +26,16 @@ function getNotebooksDocRef(id) {
   return db.collection("notebooks").doc(id);
 }
 
+function getMembersDocRef(notebookId, uid) {
+  return getNotebooksDocRef(notebookId).collection("members").doc(uid);
+}
+
 module.exports = {
   getTagsDocRef,
   getUsersDocRef,
   getConfigDocRef,
   getNotificationColRef,
   getInvitationDocRef,
-  getNotebooksDocRef
+  getNotebooksDocRef,
+  getMembersDocRef
 };

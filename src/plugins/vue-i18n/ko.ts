@@ -45,6 +45,7 @@ export default {
   loading: {
     creating: "생성중...",
     updating: "수정중...",
+    deleting: "삭제중...",
     inviting: "초대중..."
   }
 };

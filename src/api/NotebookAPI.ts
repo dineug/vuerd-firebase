@@ -5,7 +5,13 @@ import {
   Paging,
   CollectionReference
 } from "@/plugins/firebase";
-import { Notebook, NotebookAdd, Member, MemberAdd } from "./NotebookModel";
+import {
+  Notebook,
+  NotebookAdd,
+  Member,
+  MemberAdd,
+  Role
+} from "./NotebookModel";
 import store from "@/store";
 import moment from "moment";
 import { getTreesDocRef } from "./TreeAPI";
@@ -151,4 +157,34 @@ export function memberInvitation(
     } as Member);
   }
   return batch.commit();
+}
+
+export function deleteById(notebookId: string): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getNotebookDocRef(notebookId).delete();
+}
+
+export function deleteMemberById(
+  notebookId: string,
+  memberId: string
+): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getMembersDocRef(notebookId, memberId).delete();
+}
+
+export function memberRoleUpdate(
+  notebookId: string,
+  memberId: string,
+  role: Role
+): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getMembersDocRef(notebookId, memberId).update({
+    role
+  });
 }

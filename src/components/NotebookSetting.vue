@@ -48,6 +48,10 @@ export default class NotebookSetting extends Vue {
       });
   }
 
+  private onNotebookReload() {
+    this.getNotebook();
+  }
+
   private created() {
     this.getNotebook();
   }

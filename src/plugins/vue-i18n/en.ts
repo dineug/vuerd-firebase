@@ -45,6 +45,7 @@ export default {
   loading: {
     creating: "Creating...",
     updating: "Updating...",
+    deleting: "Deleting...",
     inviting: "Inviting..."
   }
 };

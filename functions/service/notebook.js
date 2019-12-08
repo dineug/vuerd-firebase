@@ -1,7 +1,7 @@
 const { functions, db } = require("../plugins/firebase");
-const { getTagsDocRef } = require("../plugins/util");
+const { getTagsDocRef, getNotebooksDocRef } = require("../plugins/util");
 
-exports.createNotebookTag = functions.firestore
+exports.createNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onCreate(async (snapshot, context) => {
     const newNoteBook = snapshot.data();
@@ -23,7 +23,7 @@ exports.createNotebookTag = functions.firestore
     batch.commit();
   });
 
-exports.updateNotebookTag = functions.firestore
+exports.updateNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onUpdate(async (change, context) => {
     const afterNoteBook = change.after.data();
@@ -73,7 +73,7 @@ exports.updateNotebookTag = functions.firestore
     }
   });
 
-exports.deleteNotebookTag = functions.firestore
+exports.deleteNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onDelete(async (snapshot, context) => {
     const noteBook = snapshot.data();
@@ -91,5 +91,7 @@ exports.deleteNotebookTag = functions.firestore
         }
       }
     }
+    batch.delete(getNotebooksDocRef(context.params.notebookId).collection("members").doc());
+    batch.delete(getNotebooksDocRef(context.params.notebookId).collection("trees").doc());
     batch.commit();
   });

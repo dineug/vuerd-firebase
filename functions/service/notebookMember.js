@@ -2,7 +2,8 @@ const { functions, db } = require("../plugins/firebase");
 const {
   getNotificationColRef,
   getUsersDocRef,
-  getNotebooksDocRef
+  getNotebooksDocRef,
+  getMembersDocRef
 } = require("../plugins/util");
 const moment = require("moment");
 
@@ -53,21 +54,68 @@ exports.updateNotebookMember = functions.firestore
           roles
         });
       }
+    } else if (beforeMember.role !== afterMember.role) {
+      const batch = db.batch();
+      const notebookDoc = await getNotebooksDocRef(
+        context.params.notebookId
+      ).get();
+      const notebook = notebookDoc.data();
+      const roles = notebook.roles;
+      roles[context.params.memberId] = afterMember.role;
+      let isOwner = false;
+      Object.keys(roles).forEach(key => {
+        if (roles[key] === "owner") {
+          isOwner = true;
+        }
+      });
+      if (!isOwner) {
+        const ids = Object.keys(roles);
+        if (ids.length !== 0) {
+          roles[ids[0]] = "owner";
+          batch.update(getMembersDocRef(context.params.notebookId, ids[0]), {
+            role: "owner"
+          });
+        }
+      }
+      batch.update(notebookDoc.ref, {
+        roles
+      });
+      batch.commit();
     }
   });
 
 exports.deleteNotebookMember = functions.firestore
   .document("notebooks/{notebookId}/members/{memberId}")
   .onDelete(async (snapshot, context) => {
-    const notebookDoc = await getNotebooksDocRef(
-      context.params.notebookId
-    ).get();
-    const notebook = notebookDoc.data();
-    const members = notebook.members;
-    const roles = notebook.roles;
-    delete roles[context.params.memberId];
-    notebookDoc.ref.update({
-      members: members.filter(member => member !== context.params.memberId),
-      roles
-    });
+    const member = snapshot.data();
+    if (member.status === "accept") {
+      const batch = db.batch();
+      const notebookDoc = await getNotebooksDocRef(
+        context.params.notebookId
+      ).get();
+      const notebook = notebookDoc.data();
+      const members = notebook.members;
+      const roles = notebook.roles;
+      delete roles[context.params.memberId];
+      let isOwner = false;
+      Object.keys(roles).forEach(key => {
+        if (roles[key] === "owner") {
+          isOwner = true;
+        }
+      });
+      if (!isOwner) {
+        const ids = Object.keys(roles);
+        if (ids.length !== 0) {
+          roles[ids[0]] = "owner";
+          batch.update(getMembersDocRef(context.params.notebookId, ids[0]), {
+            role: "owner"
+          });
+        }
+      }
+      batch.update(notebookDoc.ref, {
+        members: members.filter(member => member !== context.params.memberId),
+        roles
+      });
+      batch.commit();
+    }
   });
