@@ -1,4 +1,4 @@
-import { NotificationPaging } from "./NotificationModel";
+import { NotificationModel, NotificationPaging } from "./NotificationModel";
 import { QuerySnapshot } from "@/plugins/firebase";
 import store from "@/store";
 import { getUsersDocRef } from "@/api/UserAPI";
@@ -36,4 +36,13 @@ export function findAllNotificationBy(
     ref = ref.startAfter(paging.last);
   }
   return ref.get();
+}
+
+export function notificationReadUpdate(notification: NotificationModel): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getNotificationDocRef(store.state.user.uid, notification.id).update({
+    read: true
+  });
 }

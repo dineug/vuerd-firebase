@@ -91,7 +91,17 @@ exports.deleteNotebook = functions.firestore
         }
       }
     }
-    batch.delete(getNotebooksDocRef(context.params.notebookId).collection("members").doc());
-    batch.delete(getNotebooksDocRef(context.params.notebookId).collection("trees").doc());
+    const membersQuery = await getNotebooksDocRef(context.params.notebookId).collection("members").get();
+    membersQuery.forEach(doc => {
+      if (doc.exists) {
+        batch.delete(doc.ref);
+      }
+    });
+    const trresQuery = await getNotebooksDocRef(context.params.notebookId).collection("trees").get();
+    trresQuery.forEach(doc => {
+      if (doc.exists) {
+        batch.delete(doc.ref);
+      }
+    });
     batch.commit();
   });

@@ -141,14 +141,17 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { routes } from "@/router";
-import firebase, { auth, User } from "@/plugins/firebase";
+import firebase, { auth, User, FirestoreError } from "@/plugins/firebase";
 import eventBus, { Bus } from "@/ts/EventBus";
 import {
   NotificationModel,
   NotificationModelImpl,
   NotificationPaging
 } from "@/api/NotificationModel";
-import { findAllNotificationBy } from "@/api/NotificationAPI";
+import {
+  findAllNotificationBy,
+  notificationReadUpdate
+} from "@/api/NotificationAPI";
 import { User as UserInfo } from "@/api/UserModel";
 import { invitationAccept, invitationCancel } from "@/api/InvitationAPI";
 import { dateMinutesFormat } from "@/ts/filter";
@@ -318,7 +321,12 @@ export default class Sidebar extends Vue {
     });
     invitationAccept(notification)
       .then(() => this.onNotification())
-      .catch(err => this.$message.error(err.message))
+      .catch((err: FirestoreError) => {
+        this.$message.error(err.message);
+        if (err.code === "permission-denied") {
+          notificationReadUpdate(notification).then(() => this.onNotification());
+        }
+      })
       .finally(() => loading.close());
   }
 
@@ -328,7 +336,12 @@ export default class Sidebar extends Vue {
     });
     invitationCancel(notification)
       .then(() => this.onNotification())
-      .catch(err => this.$message.error(err.message))
+      .catch((err: FirestoreError) => {
+        this.$message.error(err.message);
+        if (err.code === "permission-denied") {
+          notificationReadUpdate(notification).then(() => this.onNotification());
+        }
+      })
       .finally(() => loading.close());
   }
 

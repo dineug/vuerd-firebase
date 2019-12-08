@@ -28,6 +28,7 @@ export type DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 export type QueryDocumentSnapshot = firebase.firestore.QueryDocumentSnapshot;
 export type CollectionReference = firebase.firestore.CollectionReference;
 export type User = firebase.User;
+export type FirestoreError = firebase.firestore.FirestoreError;
 export type AuthProvider = firebase.auth.EmailAuthProvider;
 export interface Paging {
   limit?: number;
