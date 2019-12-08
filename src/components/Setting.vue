@@ -67,7 +67,8 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { identicon } from "@/ts/util";
-import { User, UserModify, Language, userUpdate } from "@/api/UserAPI";
+import { User, UserModify, Language } from "@/api/UserModel";
+import { userUpdate } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { MAX_SIZE } from "@/data/image";
@@ -194,9 +195,7 @@ export default class Setting extends Vue {
       if (this.info.name && this.info.nickname) {
         const loading = this.$loading({
           lock: true,
-          text: this.$t("loading.updating") as string,
-          spinner: "el-icon-loading",
-          background: "rgba(0, 0, 0, 0.7)"
+          text: this.$t("loading.updating") as string
         });
         const user: UserModify = {
           name: this.info.name,

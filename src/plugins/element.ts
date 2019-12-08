@@ -28,6 +28,11 @@ import {
   Tag,
   Table,
   TableColumn,
+  Badge,
+  Popover,
+  Timeline,
+  TimelineItem,
+  Link,
   Loading,
   Message,
   MessageBox,
@@ -69,6 +74,11 @@ const components = [
   Tag,
   Table,
   TableColumn,
+  Badge,
+  Popover,
+  Timeline,
+  TimelineItem,
+  Link,
   Loading
 ];
 

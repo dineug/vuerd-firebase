@@ -6,6 +6,7 @@ import {
 } from "@/plugins/firebase";
 import store from "@/store";
 import { identicon } from "@/ts/util";
+import { User, UserModify, Editor } from "./UserModel";
 
 export function getUsersColRef(): CollectionReference {
   return db.collection("users");
@@ -19,43 +20,6 @@ export function getConfigDocRef(uid: string, id: string): DocumentReference {
   return getUsersDocRef(uid)
     .collection("config")
     .doc(id);
-}
-
-export function getNotificationColRef(uid: string) {
-  return getUsersDocRef(uid).collection("notification");
-}
-
-export type Action = "invitation" | "notification";
-export type Language = "ko" | "en";
-
-export interface User {
-  name: string | null;
-  nickname: string | null;
-  email: string | null;
-  image: string | null;
-  notification: number;
-  language: Language;
-  published: boolean;
-}
-
-export interface UserModify {
-  name: string;
-  nickname: string;
-  image: string | null;
-  language: Language;
-  published: boolean;
-}
-
-export interface Editor {
-  themeName: string;
-}
-
-export interface Notification {
-  message: string;
-  action: Action;
-  read: boolean;
-  key: string | null;
-  createdAt: number;
 }
 
 export function editorSave(editor: Editor): Promise<void> {

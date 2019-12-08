@@ -17,11 +17,8 @@
 </template>
 
 <script lang="ts">
-import {
-  findByPagingAndMember,
-  NotebookModel,
-  NotebookModelImpl
-} from "@/api/NotebookAPI";
+import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
+import { findByPagingAndMember } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";

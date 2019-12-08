@@ -2,14 +2,15 @@ import {
   db,
   QuerySnapshot,
   DocumentReference,
-  QueryDocumentSnapshot,
   Paging,
   CollectionReference
 } from "@/plugins/firebase";
+import { Notebook, NotebookAdd, Member, MemberAdd } from "./NotebookModel";
 import store from "@/store";
 import moment from "moment";
 import { getTreesDocRef } from "./TreeAPI";
-import { findUserBy, User } from "./UserAPI";
+import { User } from "./UserModel";
+import { findUserBy } from "./UserAPI";
 
 export function getNotebooksColRef(): CollectionReference {
   return db.collection("notebooks");
@@ -33,85 +34,6 @@ export function getMembersDocRef(
   return getMembersColRef(notebookId).doc(uid);
 }
 
-export type Role = "owner" | "writer" | "reader";
-export type Status = "invitation" | "accept";
-
-export interface Notebook {
-  roles: { [key: string]: Role };
-  members: string[];
-  published: boolean;
-  title: string;
-  image: string | null;
-  tags: string[];
-  updatedAt: number;
-  createdAt: number;
-}
-
-export interface Member {
-  id?: string;
-  fromId: string;
-  name: string | null;
-  nickname: string | null;
-  email: string | null;
-  image: string | null;
-  role: Role;
-  status: Status;
-  createdAt: number;
-}
-
-export interface MemberAdd {
-  id: string;
-  name: string | null;
-  nickname: string | null;
-  email: string | null;
-  image: string | null;
-}
-
-export interface NotebookModel extends Notebook {
-  id: string;
-}
-
-export class NotebookModelImpl implements NotebookModel {
-  public id: string;
-  public roles: { [p: string]: Role };
-  public members: string[];
-  public published: boolean;
-  public title: string;
-  public image: string | null;
-  public tags: string[];
-  public updatedAt: number;
-  public createdAt: number;
-
-  constructor(doc: QueryDocumentSnapshot) {
-    this.id = doc.id;
-    const {
-      roles,
-      members,
-      published,
-      title,
-      image,
-      tags,
-      updatedAt,
-      createdAt
-    } = doc.data();
-    this.roles = roles;
-    this.members = members;
-    this.published = published;
-    this.title = title;
-    this.image = image;
-    this.tags = tags;
-    this.updatedAt = updatedAt;
-    this.createdAt = createdAt;
-  }
-}
-
-export interface NotebookAdd {
-  published: boolean;
-  title: string;
-  tags: string[];
-  image: string | null;
-}
-
 export async function save(
   notebookAdd: NotebookAdd
 ): Promise<DocumentReference> {
@@ -133,7 +55,7 @@ export async function save(
   const docUser = await findUserBy();
   const user = docUser.data() as User;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({
-    name: store.state.user.displayName,
+    name: user.name,
     nickname: user.nickname,
     email: store.state.user.email,
     image: user.image,
@@ -217,18 +139,16 @@ export function memberInvitation(
   }
   const batch = db.batch();
   for (const member of membersAdd) {
-    if (member.id) {
-      batch.set(getMembersDocRef(notebookId, member.id), {
-        fromId: store.state.user.uid,
-        name: member.name,
-        nickname: member.nickname,
-        email: member.email,
-        image: member.image,
-        role: "reader",
-        status: "invitation",
-        createdAt: moment().unix()
-      } as Member);
-    }
+    batch.set(getMembersDocRef(notebookId, member.id), {
+      fromId: store.state.user.uid,
+      name: member.name,
+      nickname: member.nickname,
+      email: member.email,
+      image: member.image,
+      role: "reader",
+      status: "invitation",
+      createdAt: moment().unix()
+    } as Member);
   }
   return batch.commit();
 }

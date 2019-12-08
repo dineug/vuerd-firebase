@@ -11,7 +11,8 @@
 </template>
 
 <script lang="ts">
-import { Notebook, findById } from "@/api/NotebookAPI";
+import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
+import { findById } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookInfo from "@/components/NotebookSetting/NotebookInfo.vue";
@@ -25,20 +26,19 @@ import NotebookMember from "@/components/NotebookSetting/NotebookMember.vue";
   }
 })
 export default class NotebookSetting extends Vue {
-  private notebook: Notebook | null = null;
+  private notebook: NotebookModel | null = null;
 
   private getNotebook() {
     findById(this.$route.params.id)
       .then(doc => {
-        const notebook = doc.data() as Notebook | undefined;
-        if (notebook) {
-          this.notebook = notebook;
-          if (!notebook.roles[this.$store.state.user.uid]) {
-            this.$message.error("not found role");
-            this.$router.back();
-          }
-        } else {
+        if (!doc.exists) {
           this.$message.error("not found notebook");
+          this.$router.back();
+        }
+        const notebook = new NotebookModelImpl(doc);
+        this.notebook = notebook;
+        if (!notebook.roles[this.$store.state.user.uid]) {
+          this.$message.error("not found role");
           this.$router.back();
         }
       })

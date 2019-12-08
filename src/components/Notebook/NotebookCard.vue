@@ -1,9 +1,5 @@
 <template>
-  <el-card
-    class="notebook-card"
-    :body-style="{ padding: '0px' }"
-    shadow="hover"
-  >
+  <el-card class="notebook-card" :body-style="{ padding: '0px' }">
     <div class="image-box">
       <image-lazy v-if="notebook.image" :src="notebook.image" />
       <el-button-group class="btn-box">
@@ -26,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { NotebookModel } from "@/api/NotebookAPI";
+import { NotebookModel } from "@/api/NotebookModel";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
 

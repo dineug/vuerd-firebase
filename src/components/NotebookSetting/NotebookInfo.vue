@@ -51,7 +51,7 @@
       <el-button type="primary" :disabled="readerRole" @click="onUpdate">
         {{ $t("update") }}
       </el-button>
-      <el-button type="danger" :disabled="ownerRole" @click="onDeleteNotebook">
+      <el-button :disabled="ownerRole" @click="onDeleteNotebook">
         {{ $t("delete") }}
       </el-button>
       <el-button @click="onBack">
@@ -63,7 +63,8 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import { Notebook, NotebookAdd, notebookUpdate } from "@/api/NotebookAPI";
+import { NotebookModel, NotebookAdd } from "@/api/NotebookModel";
+import { notebookUpdate } from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/TagAPI";
 import { FileType, upload } from "@/api/storageAPI";
 import { IMAGE, MAX_SIZE } from "@/data/image";
@@ -83,7 +84,7 @@ import ImageLazy from "@/components/Notebook/ImageLazy.vue";
 })
 export default class NotebookInfo extends Vue {
   @Prop({ type: Object })
-  private notebook!: Notebook;
+  private notebook!: NotebookModel;
 
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
@@ -214,9 +215,7 @@ export default class NotebookInfo extends Vue {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
-        text: this.$t("loading.updating") as string,
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        text: this.$t("loading.updating") as string
       });
       try {
         if (this.file) {

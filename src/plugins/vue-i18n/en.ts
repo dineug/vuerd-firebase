@@ -14,6 +14,7 @@ export default {
   nickname: "Nickname",
   email: "Email",
   language: "Language",
+  accept: "Accept",
   create: "Create",
   cancel: "Cancel",
   update: "Update",
@@ -27,6 +28,8 @@ export default {
   invitationStatus: "Invitation status",
   invitationActive: "Invitation active",
   invitation: "Invitation",
+  notification: "Notification",
+  read: "Read",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",

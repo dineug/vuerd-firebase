@@ -50,9 +50,10 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import { NotebookAdd } from "@/api/NotebookModel";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { routes } from "@/router";
-import { save, NotebookAdd } from "@/api/NotebookAPI";
+import { save } from "@/api/NotebookAPI";
 import { autocomplete } from "@/api/TagAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import { Subject, Subscription } from "rxjs";
@@ -147,9 +148,7 @@ export default class NewNotebook extends Vue {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
-        text: this.$t("loading.creating") as string,
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        text: this.$t("loading.creating") as string
       });
       const notebookAdd: NotebookAdd = {
         title: this.title,

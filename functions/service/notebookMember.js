@@ -1,5 +1,9 @@
 const { functions, db } = require("../plugins/firebase");
-const { getNotificationColRef, getUsersDocRef } = require("../plugins/util");
+const {
+  getNotificationColRef,
+  getUsersDocRef,
+  getNotebooksDocRef
+} = require("../plugins/util");
 const moment = require("moment");
 
 exports.createNotebookMember = functions.firestore
@@ -24,4 +28,46 @@ exports.createNotebookMember = functions.firestore
       });
       batch.commit();
     }
+  });
+
+exports.updateNotebookMember = functions.firestore
+  .document("notebooks/{notebookId}/members/{memberId}")
+  .onUpdate(async (change, context) => {
+    const afterMember = change.after.data();
+    const beforeMember = change.before.data();
+    if (
+      beforeMember.status === "invitation" &&
+      afterMember.status === "accept"
+    ) {
+      const notebookDoc = await getNotebooksDocRef(
+        context.params.notebookId
+      ).get();
+      const notebook = notebookDoc.data();
+      if (notebook.members.indexOf(context.params.memberId) === -1) {
+        const members = notebook.members;
+        const roles = notebook.roles;
+        members.push(context.params.memberId);
+        roles[context.params.memberId] = beforeMember.role;
+        notebookDoc.ref.update({
+          members,
+          roles
+        });
+      }
+    }
+  });
+
+exports.deleteNotebookMember = functions.firestore
+  .document("notebooks/{notebookId}/members/{memberId}")
+  .onDelete(async (snapshot, context) => {
+    const notebookDoc = await getNotebooksDocRef(
+      context.params.notebookId
+    ).get();
+    const notebook = notebookDoc.data();
+    const members = notebook.members;
+    const roles = notebook.roles;
+    delete roles[context.params.memberId];
+    notebookDoc.ref.update({
+      members: members.filter(member => member !== context.params.memberId),
+      roles
+    });
   });

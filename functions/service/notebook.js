@@ -28,7 +28,6 @@ exports.updateNotebookTag = functions.firestore
   .onUpdate(async (change, context) => {
     const afterNoteBook = change.after.data();
     const beforeNoteBook = change.before.data();
-    const batch = db.batch();
     const minus = [];
     const plus = [];
     afterNoteBook.tags.forEach(after => {
@@ -41,34 +40,37 @@ exports.updateNotebookTag = functions.firestore
         minus.push(before);
       }
     });
-    for (const tag of minus) {
-      const doc = await getTagsDocRef(tag).get();
-      const data = doc.data();
-      if (data) {
-        if (data.count <= 1) {
-          batch.delete(doc.ref);
-        } else {
+    if (minus.length !== 0 || plus.length !== 0) {
+      const batch = db.batch();
+      for (const tag of minus) {
+        const doc = await getTagsDocRef(tag).get();
+        const data = doc.data();
+        if (data) {
+          if (data.count <= 1) {
+            batch.delete(doc.ref);
+          } else {
+            batch.update(doc.ref, {
+              count: data.count - 1
+            });
+          }
+        }
+      }
+      for (const tag of plus) {
+        const doc = await getTagsDocRef(tag).get();
+        const data = doc.data();
+        if (data) {
           batch.update(doc.ref, {
-            count: data.count - 1
+            count: data.count + 1
+          });
+        } else {
+          batch.set(doc.ref, {
+            name: tag,
+            count: 1
           });
         }
       }
+      batch.commit();
     }
-    for (const tag of plus) {
-      const doc = await getTagsDocRef(tag).get();
-      const data = doc.data();
-      if (data) {
-        batch.update(doc.ref, {
-          count: data.count + 1
-        });
-      } else {
-        batch.set(doc.ref, {
-          name: tag,
-          count: 1
-        });
-      }
-    }
-    batch.commit();
   });
 
 exports.deleteNotebookTag = functions.firestore

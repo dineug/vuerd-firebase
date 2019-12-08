@@ -3,11 +3,8 @@
 </template>
 
 <script lang="ts">
-import {
-  editorSave,
-  findEditorBy,
-  Editor as ConfigEditor
-} from "@/api/UserAPI";
+import { Editor as ConfigEditor } from "@/api/UserModel";
+import { editorSave, findEditorBy } from "@/api/UserAPI";
 import log from "@/ts/Logger";
 import { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
@@ -20,8 +17,8 @@ export default class Editor extends Vue {
 
   private getConfigEditor() {
     findEditorBy().then(doc => {
-      const editor = doc.data() as ConfigEditor | undefined;
-      if (editor) {
+      if (doc.exists) {
+        const editor = doc.data() as ConfigEditor;
         this.themeName = editor.themeName;
       }
     });

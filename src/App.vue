@@ -21,25 +21,9 @@ export default class App extends Vue {
 </script>
 
 <style lang="scss">
-.app {
+body {
   font-family: "Noto Sans", "Noto Sans KR", "Noto Sans SC", "Noto Sans HK",
-    "Noto Sans JP", "Noto Sans TC", sans-serif;
-
-  .el-avatar {
-    background-color: white;
-  }
-
-  .tag-box {
-    & /deep/ .ti-tag,
-    & /deep/ .ti-selected-item {
-      background-color: $color-tag;
-    }
-    & /deep/ .duplication.ti-tag,
-    & /deep/ .duplication.ti-selected-item {
-      background-color: $color-tag-duplication;
-      text-decoration: line-through;
-    }
-  }
+  "Noto Sans JP", "Noto Sans TC", sans-serif;
 
   /* width */
   ::-webkit-scrollbar {
@@ -71,5 +55,27 @@ export default class App extends Vue {
     scrollbar-color: $color-scrollbar-thumb $color-opacity;
     scrollbar-width: thin;
   }
+}
+.app {
+  .el-avatar {
+    background-color: white;
+  }
+
+  .tag-box {
+    & /deep/ .ti-tag,
+    & /deep/ .ti-selected-item {
+      background-color: $color-tag;
+    }
+    & /deep/ .duplication.ti-tag,
+    & /deep/ .duplication.ti-selected-item {
+      background-color: $color-tag-duplication;
+      text-decoration: line-through;
+    }
+  }
+}
+
+.notification-popover {
+  max-height: 200px;
+  overflow-y: auto;
 }
 </style>

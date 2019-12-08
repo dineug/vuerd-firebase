@@ -14,6 +14,7 @@ export default {
   nickname: "닉네임",
   email: "이메일",
   language: "언어",
+  accept: "수락",
   create: "생성",
   cancel: "취소",
   update: "수정",
@@ -27,6 +28,8 @@ export default {
   invitationStatus: "초대 상태",
   invitationActive: "초대가능 여부",
   invitation: "초대",
+  notification: "알람",
+  read: "읽기",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

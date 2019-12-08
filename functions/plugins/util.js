@@ -22,10 +22,15 @@ function getInvitationDocRef(uid) {
   return db.collection("invitation").doc(uid);
 }
 
+function getNotebooksDocRef(id) {
+  return db.collection("notebooks").doc(id);
+}
+
 module.exports = {
   getTagsDocRef,
   getUsersDocRef,
   getConfigDocRef,
   getNotificationColRef,
-  getInvitationDocRef
+  getInvitationDocRef,
+  getNotebooksDocRef
 };

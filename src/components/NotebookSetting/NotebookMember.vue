@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column :label="$t('invitationStatus')" width="150">
           <template slot-scope="scope">
-            <span>{{ scope.row.status }}</span>
+            <span>{{ $t(scope.row.status) }}</span>
           </template>
         </el-table-column>
         <el-table-column :label="$t('role')" width="150">
@@ -68,14 +68,13 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import { MemberModel, MemberModelImpl, Notebook } from "@/api/NotebookModel";
 import {
-  Member,
-  MemberAdd,
-  Notebook,
-  findAllMemberBy,
-  memberInvitation
-} from "@/api/NotebookAPI";
-import { autocomplete, Member as InvitationMember } from "@/api/InvitationAPI";
+  MemberModel as InvitationMemberModel,
+  MemberModelImpl as InvitationMemberModelImpl
+} from "@/api/InvitationModel";
+import { findAllMemberBy, memberInvitation } from "@/api/NotebookAPI";
+import { autocomplete } from "@/api/InvitationAPI";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
 import { Tag, Validation } from "@/models/vue-tags-input";
@@ -104,9 +103,9 @@ export default class NotebookMember extends Vue {
       rule: this.validationRule
     }
   ];
-  private members: Member[] = [];
-  private tempInvitationMembers: InvitationMember[] = [];
-  private invitationMembers: InvitationMember[] = [];
+  private members: MemberModel[] = [];
+  private tempInvitationMembers: InvitationMemberModel[] = [];
+  private invitationMembers: InvitationMemberModel[] = [];
 
   get ownerRole(): boolean {
     return this.notebook.roles[this.$store.state.user.uid] !== "owner";
@@ -121,17 +120,13 @@ export default class NotebookMember extends Vue {
     findAllMemberBy(this.$route.params.id).then(querySnapshot => {
       this.members = [];
       querySnapshot.docs.forEach(doc => {
-        const member = doc.data() as Member;
-        if (member) {
-          member.id = doc.id;
-          this.members.push(member);
-        }
+        this.members.push(new MemberModelImpl(doc));
       });
     });
   }
 
-  private getInvitationMember(tag: Tag): InvitationMember | null {
-    let result: InvitationMember | null = null;
+  private getInvitationMember(tag: Tag): InvitationMemberModel | null {
+    let result: InvitationMemberModel | null = null;
     for (const member of this.tempInvitationMembers) {
       if (member.email === tag.text) {
         result = member;
@@ -141,7 +136,7 @@ export default class NotebookMember extends Vue {
     return result;
   }
 
-  private leaveRole(member: Member): boolean {
+  private leaveRole(member: MemberModel): boolean {
     if (member.id === this.$store.state.user.uid) {
       return false;
     }
@@ -183,7 +178,7 @@ export default class NotebookMember extends Vue {
     this.tempInvitationMembers = [];
   }
 
-  private onDeleteMember(member: Member) {
+  private onDeleteMember(member: MemberModel) {
     log.debug("NotebookMember onDeleteMember", member);
     this.$confirm(this.$t("confirm.deleteMember") as string, "Warning", {
       confirmButtonText: this.$t("ok") as string,
@@ -204,8 +199,7 @@ export default class NotebookMember extends Vue {
     autocomplete(keyword).then(querySnapshot => {
       this.tempInvitationMembers = [];
       this.autocompleteEmails = querySnapshot.docs.map(doc => {
-        const user = doc.data() as InvitationMember;
-        user.id = doc.id;
+        const user = new InvitationMemberModelImpl(doc);
         this.tempInvitationMembers.push(user);
         return { text: user.email } as Tag;
       });
@@ -216,7 +210,6 @@ export default class NotebookMember extends Vue {
     log.debug("NotebookMember onInvitation");
     if (this.invitationMembers.length === 0) {
       this.$message.warning(this.$t("valid.member") as string);
-      log.debug(this.$refs.invitation);
       const vm = this.$refs.invitation as Vue;
       const input = vm.$el.querySelector("input");
       if (input) {
@@ -225,13 +218,12 @@ export default class NotebookMember extends Vue {
     } else {
       const loading = this.$loading({
         lock: true,
-        text: this.$t("loading.inviting") as string,
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        text: this.$t("loading.inviting") as string
       });
-      memberInvitation(this.$route.params.id, this
-        .invitationMembers as MemberAdd[])
+      memberInvitation(this.$route.params.id, this.invitationMembers)
         .then(() => {
+          this.emails = [];
+          this.invitationMembers = [];
           this.getMembers();
         })
         .catch(err => {
