@@ -50,5 +50,9 @@ export default {
     updating: "Updating...",
     deleting: "Deleting...",
     inviting: "Inviting..."
+  },
+  notFound: {
+    notebook: "not found notebook",
+    role: "not found role"
   }
 };

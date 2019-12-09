@@ -50,5 +50,9 @@ export default {
     updating: "수정중...",
     deleting: "삭제중...",
     inviting: "초대중..."
+  },
+  notFound: {
+    notebook: "노트북이 존재하지 않습니다",
+    role: "권한이 존재하지 않습니다"
   }
 };

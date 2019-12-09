@@ -130,6 +130,18 @@ export default class NotebookMember extends Vue {
     this.autocompleteEmail$.next(this.email);
   }
 
+  @Watch("members")
+  private watchMembers() {
+    if (this.members.length !== 0) {
+      if (
+        !this.members.some(member => member.id === this.$store.state.user.uid)
+      ) {
+        this.$message.error(this.$t("notFound.role") as string);
+        this.$router.back();
+      }
+    }
+  }
+
   private validRole(role: Role, member: MemberModel): boolean {
     let result = false;
     if (

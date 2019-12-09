@@ -216,8 +216,7 @@ export default class Sidebar extends Vue {
           const notification = new NotificationModelImpl(doc);
           this.$notify({
             title: this.$t(notification.action) as string,
-            message: notification.message,
-            duration: 5000
+            message: notification.message
           });
         });
       });
