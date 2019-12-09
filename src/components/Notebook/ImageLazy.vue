@@ -4,7 +4,7 @@
       class="image-box"
       :style="imageStyle"
       :src="src"
-      lazy
+      :lazy="lazy"
       @load="onLoad"
       ref="img"
     />
@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts">
+import log from "@/ts/Logger";
 import { IMAGE } from "@/data/image";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -23,6 +24,8 @@ export default class ImageLazy extends Vue {
   private width!: number;
   @Prop({ type: Number, default: 225 })
   private height!: number;
+  @Prop({ type: Boolean, default: false })
+  private lazy!: boolean;
 
   private horizontal: boolean = true;
   private currentWidth: number = 0;
@@ -53,6 +56,7 @@ export default class ImageLazy extends Vue {
   }
 
   private onLoad() {
+    log.debug("ImageLazy onLoad");
     const vm = this.$refs.img as any;
     const img = (vm.$el as HTMLElement).childNodes[0] as HTMLImageElement;
     if (img && img.naturalWidth && img.naturalHeight) {

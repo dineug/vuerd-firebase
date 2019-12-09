@@ -218,6 +218,7 @@ export default class NotebookMember extends Vue {
     return this.members.some(member => member.email === tag.text);
   }
 
+  // ==================== Event Handler ===================
   private onChangeEamils(newEmails: Tag[]) {
     const afterEmails = newEmails.filter(
       email => email.tiClasses && email.tiClasses.indexOf("duplication") === -1
@@ -328,7 +329,9 @@ export default class NotebookMember extends Vue {
         .finally(() => loading.close());
     }
   }
+  // ==================== Event Handler END ===================
 
+  // ==================== Life Cycle ====================
   private created() {
     this.subAutocompleteEmail = this.autocompleteEmail$
       .pipe(
@@ -342,6 +345,7 @@ export default class NotebookMember extends Vue {
   private destroyed() {
     this.subAutocompleteEmail.unsubscribe();
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

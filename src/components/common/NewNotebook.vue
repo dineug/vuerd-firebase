@@ -175,14 +175,16 @@ export default class NewNotebook extends Vue {
   }
 
   private onDrawerStart() {
+    log.debug("NewNotebook onDrawerStart");
     this.reset();
     this.drawer = true;
-    this.$nextTick(() => {
+    setTimeout(() => {
       (this.$refs.title as HTMLInputElement).focus();
-    });
+    }, 100);
   }
 
   private onDrawerEnd() {
+    log.debug("NewNotebook onDrawerEnd");
     this.drawer = false;
   }
 

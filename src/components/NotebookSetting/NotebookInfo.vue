@@ -158,6 +158,7 @@ export default class NotebookInfo extends Vue {
     return result;
   }
 
+  // ==================== Event Handler ===================
   private onChangeTags(newTags: Tag[]) {
     this.tags = newTags;
     this.autocompleteTags = [];
@@ -261,7 +262,9 @@ export default class NotebookInfo extends Vue {
       })
       .catch(() => {});
   }
+  // ==================== Event Handler END ===================
 
+  // ==================== Life Cycle ====================
   private created() {
     this.inputFile.setAttribute("type", "file");
     this.inputFile.setAttribute("accept", ".png,.jpg,.jpeg");
@@ -275,11 +278,16 @@ export default class NotebookInfo extends Vue {
     this.setNotebook();
   }
 
+  private mounted() {
+    (this.$refs.title as HTMLInputElement).focus();
+  }
+
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
     this.inputFile.remove();
     this.subAutocompleteTag.unsubscribe();
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

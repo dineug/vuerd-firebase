@@ -260,6 +260,7 @@ export default class Sidebar extends Vue {
     });
   }
 
+  // ==================== Event Handler ===================
   private onSelect(key: string) {
     log.debug("Sidebar onSelect", key);
     switch (key) {
@@ -372,10 +373,13 @@ export default class Sidebar extends Vue {
       })
       .finally(() => loading.close());
   }
+  // ==================== Event Handler END ===================
 
+  // ==================== Life Cycle ====================
   private created() {
     this.setActive();
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

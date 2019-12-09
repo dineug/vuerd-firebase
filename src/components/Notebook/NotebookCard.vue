@@ -1,7 +1,7 @@
 <template>
   <el-card class="notebook-card" :body-style="{ padding: '0px' }">
     <div class="image-box">
-      <image-lazy v-if="notebook.image" :src="notebook.image" />
+      <image-lazy v-if="notebook.image" :src="notebook.image" lazy />
       <el-button-group class="btn-box">
         <el-button icon="el-icon-view" @click="onClick('document')" />
         <el-button v-if="edit" icon="el-icon-edit" @click="onClick('editor')" />
