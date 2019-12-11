@@ -9,6 +9,7 @@ import "./plugins/vuerd-core";
 import "./plugins/element";
 import "./plugins/fontawesome";
 import "./plugins/sentry";
+import "./plugins/marked";
 
 Vue.config.productionTip = false;
 

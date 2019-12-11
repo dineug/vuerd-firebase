@@ -2,6 +2,7 @@ export default {
   notebook: "노트북",
   myNotebook: "나의 노트북",
   newNotebook: "새 노트북",
+  notebookSetting: "노트북 설정",
   setting: "설정",
   signOut: "로그아웃",
   signIn: "로그인",

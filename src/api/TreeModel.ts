@@ -12,6 +12,11 @@ export interface TreeNodeModel extends TreeNode {
   id: string;
 }
 
+export interface TreeModel extends TreeNodeModel {
+  parent: TreeModel | null;
+  children?: TreeModel[];
+}
+
 export class TreeNodeModelImpl implements TreeNodeModel {
   public id: string;
   public path: string;

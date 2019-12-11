@@ -3,6 +3,7 @@
     <sidebar />
     <el-container>
       <el-main class="main">
+        <el-page-header @back="onBack" title="" :content="$t('setting')" />
         <el-form style="padding: 20px;" label-width="150px">
           <el-form-item :label="$t('picture')">
             <el-avatar :src="previewImage" :size="100" />
@@ -97,26 +98,6 @@ export default class Setting extends Vue {
     notification: 0
   };
 
-  private onSetInfo() {
-    const info = this.$store.state.info as User | null;
-    if (info) {
-      this.info = {
-        name: info.name,
-        nickname: info.nickname,
-        email: info.email,
-        image: info.image,
-        language: info.language,
-        published: info.published,
-        notification: info.notification
-      };
-      if (info.image) {
-        this.previewImage = info.image;
-      } else {
-        this.previewImage = identicon(info.email);
-      }
-    }
-  }
-
   private valid(): boolean {
     let result = false;
     if (this.info.name === null || this.info.name.trim() === "") {
@@ -151,6 +132,27 @@ export default class Setting extends Vue {
       }
     }
     return result;
+  }
+
+  // ==================== Event Handler ===================
+  private onSetInfo() {
+    const info = this.$store.state.info as User | null;
+    if (info) {
+      this.info = {
+        name: info.name,
+        nickname: info.nickname,
+        email: info.email,
+        image: info.image,
+        language: info.language,
+        published: info.published,
+        notification: info.notification
+      };
+      if (info.image) {
+        this.previewImage = info.image;
+      } else {
+        this.previewImage = identicon(info.email);
+      }
+    }
   }
 
   private onChangeLanguage(language: Language) {
@@ -224,6 +226,12 @@ export default class Setting extends Vue {
     }
   }
 
+  private onBack() {
+    this.$router.back();
+  }
+  // ==================== Event Handler END ===================
+
+  // ==================== Life Cycle ====================
   private created() {
     this.inputFile.setAttribute("type", "file");
     this.inputFile.setAttribute("accept", ".png,.jpg,.jpeg");
@@ -245,6 +253,7 @@ export default class Setting extends Vue {
       this.$i18n.locale = info.language;
     }
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

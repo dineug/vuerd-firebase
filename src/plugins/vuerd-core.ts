@@ -18,17 +18,6 @@ import "vuerd-core/dist/vuerd-core.css";
 import "vuerd-plugin-erd/dist/vuerd-plugin-erd.css";
 import "vuerd-plugin-tui.editor/dist/vuerd-plugin-tui.editor.css";
 
-async function getTreeList(): Promise<TreeNodeModel[]> {
-  if (!store.state.notebookId) {
-    throw new Error("not found notebookId");
-  }
-  const querySnapshot = await findAllBy(store.state.notebookId);
-  const treeList: TreeNodeModel[] = [];
-  querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
-  store.commit(Commit.setTreeList, treeList);
-  return treeList;
-}
-
 async function findFileByPath(path: string): Promise<string> {
   log.debug(`vuerd-core findFileByPath`);
   const treeNode = findTreeNodeByPath(store.state.treeList, path);
@@ -43,7 +32,13 @@ async function findFileByPath(path: string): Promise<string> {
 
 async function findTreeBy(): Promise<Tree> {
   log.debug(`vuerd-core findTreeBy`);
-  const treeList = await getTreeList();
+  if (!store.state.notebookId) {
+    throw new Error("not found notebookId");
+  }
+  const querySnapshot = await findAllBy(store.state.notebookId);
+  const treeList: TreeNodeModel[] = [];
+  querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
+  store.commit(Commit.setTreeList, treeList);
   return convertTree(treeList);
 }
 
@@ -53,7 +48,6 @@ async function save(treeSaves: TreeSave[]): Promise<void> {
     throw new Error("not found notebookId");
   }
   await saveBatch(store.state.notebookId, treeSaves);
-  getTreeList();
 }
 
 async function deleteByPaths(paths: string[]): Promise<void> {
@@ -63,7 +57,6 @@ async function deleteByPaths(paths: string[]): Promise<void> {
   }
   const deletePaths = findPathByPaths(store.state.treeList, paths);
   await deleteByBatch(store.state.notebookId, deletePaths);
-  getTreeList();
 }
 
 async function move(treeMove: TreeMove): Promise<void> {
@@ -72,7 +65,6 @@ async function move(treeMove: TreeMove): Promise<void> {
     throw new Error("not found notebookId");
   }
   await moveBatch(store.state.notebookId, treeMove);
-  getTreeList();
 }
 
 VuerdCore.use({

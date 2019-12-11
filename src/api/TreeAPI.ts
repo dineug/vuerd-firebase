@@ -32,11 +32,7 @@ export function findAllBy(notebookId: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("trees")
-    .get();
+  return getTreesColRef(notebookId).get();
 }
 
 export function deleteByBatch(

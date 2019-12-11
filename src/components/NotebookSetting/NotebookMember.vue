@@ -269,7 +269,11 @@ export default class NotebookMember extends Vue {
                 type: "success",
                 message: this.$t("deleted") as string
               });
-              this.getMembers();
+              if (member.id === this.$store.state.user.uid) {
+                this.$router.back();
+              } else {
+                this.getMembers();
+              }
             })
             .catch(err => this.$message.error(err.message))
             .finally(() => loading.close());

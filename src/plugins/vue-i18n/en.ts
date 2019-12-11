@@ -2,6 +2,7 @@ export default {
   notebook: "notebook",
   myNotebook: "My Notebook",
   newNotebook: "New Notebook",
+  notebookSetting: "Notebook Setting",
   setting: "Setting",
   signOut: "Sign out",
   signIn: "Sign in",

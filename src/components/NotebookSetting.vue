@@ -3,6 +3,11 @@
     <sidebar />
     <el-container>
       <el-main class="main">
+        <el-page-header
+          @back="onBack"
+          title=""
+          :content="$t('notebookSetting')"
+        />
         <notebook-info v-if="notebook !== null" :notebook="notebook" />
         <notebook-member v-if="notebook !== null" :notebook="notebook" />
       </el-main>
@@ -46,6 +51,10 @@ export default class NotebookSetting extends Vue {
         this.$message.error(err.message);
         this.$router.back();
       });
+  }
+
+  private onBack() {
+    this.$router.back();
   }
 
   private onNotebookReload() {

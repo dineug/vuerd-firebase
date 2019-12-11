@@ -18,8 +18,6 @@ import {
   Dialog,
   Form,
   FormItem,
-  Radio,
-  RadioGroup,
   Input,
   Switch,
   Select,
@@ -33,13 +31,14 @@ import {
   Timeline,
   TimelineItem,
   Link,
+  PageHeader,
   Loading,
   Message,
   MessageBox,
   Notification
 } from "element-ui";
 // @ts-ignore
-import lang from "element-ui/lib/locale/lang/ko";
+import lang from "element-ui/lib/locale/lang/en";
 // @ts-ignore
 import locale from "element-ui/lib/locale";
 
@@ -64,8 +63,6 @@ const components = [
   Dialog,
   Form,
   FormItem,
-  Radio,
-  RadioGroup,
   Input,
   Switch,
   Select,
@@ -79,6 +76,7 @@ const components = [
   Timeline,
   TimelineItem,
   Link,
+  PageHeader,
   Loading
 ];
 
