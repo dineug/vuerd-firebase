@@ -24,17 +24,12 @@
 </template>
 
 <script lang="ts">
-import { TreeModel, TreeNodeModel } from "@/api/TreeModel";
+import { TreeModel } from "@/api/TreeModel";
 import { treeModelToTreeNodeModel } from "@/api/TreeHelper";
+import { Editor, treeNodeModelToEditor } from "@/models/Editor";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Markdown from "@/components/Document/ContainerView/Markdown.vue";
 import Erd from "@/components/Document/ContainerView/ERD.vue";
-
-type ViewType = "markdown" | "vuerd";
-
-interface Editor extends TreeNodeModel {
-  type: ViewType;
-}
 
 @Component({
   components: {
@@ -64,17 +59,7 @@ export default class ContainerView extends Vue {
     if (this.tree !== null) {
       const list = treeModelToTreeNodeModel(this.tree);
       this.editors = [];
-      list.forEach(tree => {
-        if (/\.md$/i.test(tree.name)) {
-          const editor = tree as Editor;
-          editor.type = "markdown";
-          this.editors.push(editor);
-        } else if (/\.vuerd$/i.test(tree.name)) {
-          const editor = tree as Editor;
-          editor.type = "vuerd";
-          this.editors.push(editor);
-        }
-      });
+      list.forEach(tree => this.editors.push(treeNodeModelToEditor(tree)));
     }
   }
 }
@@ -87,6 +72,10 @@ export default class ContainerView extends Vue {
   .path {
     padding: 20px;
     background-color: $color-view-header;
+
+    & /deep/ i {
+      color: $color-view-header-text;
+    }
 
     .path-name {
       color: $color-view-header-text;

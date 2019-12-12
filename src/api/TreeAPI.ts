@@ -2,6 +2,7 @@ import {
   db,
   QuerySnapshot,
   DocumentReference,
+  DocumentSnapshot,
   CollectionReference
 } from "@/plugins/firebase";
 import store from "@/store";
@@ -26,6 +27,13 @@ export function getTreesDocRef(
   treeId: string
 ): DocumentReference {
   return getTreesColRef(notebookId).doc(treeId);
+}
+
+export function findTreeById(
+  notebookId: string,
+  treeId: string
+): Promise<DocumentSnapshot> {
+  return getTreesDocRef(notebookId, treeId).get();
 }
 
 export function findAllBy(notebookId: string): Promise<QuerySnapshot> {

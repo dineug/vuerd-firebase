@@ -7,6 +7,7 @@ const Editor = () => import("@/components/Editor.vue");
 const Setting = () => import("@/components/Setting.vue");
 const NotebookSetting = () => import("@/components/NotebookSetting.vue");
 const Document = () => import("@/components/Document.vue");
+const Export = () => import("@/components/Export.vue");
 
 Vue.use(VueRouter);
 
@@ -47,6 +48,11 @@ export const routes = {
     name: Setting.name,
     component: Setting,
     beforeEnter: signIn
+  },
+  Export: {
+    path: "/notebooks/:notebookId/export/:id",
+    name: Export.name,
+    component: Export
   },
   Redirect: {
     path: "*",
