@@ -51,21 +51,17 @@ export default class Export extends Vue {
   private subResize!: Subscription;
 
   private getTree() {
+    const loading = this.$loading({ lock: true });
     findTreeById(this.$route.params.notebookId, this.$route.params.id)
       .then(doc => {
         if (doc.exists) {
           this.editor = treeNodeModelToEditor(new TreeNodeModelImpl(doc));
         } else {
-          this.message = "not found document";
+          this.message = "Not found document";
         }
       })
-      .catch((err: FirestoreError) => {
-        if (err.code === "permission-denied") {
-          this.message = "It's not disclosed";
-        } else {
-          this.message = err.message;
-        }
-      });
+      .catch((err: FirestoreError) => (this.message = err.message))
+      .finally(() => loading.close());
   }
 
   private onResize() {

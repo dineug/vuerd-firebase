@@ -8,11 +8,10 @@ deploy:
   token:
     secure: $FIREBASE_TOKEN
   skip_cleanup: true
-  on:
-    tags: true
 
 script:
-  - yarn lint
-  - yarn build
   - cd functions
   - npm install
+  - ../
+  - yarn lint
+  - yarn build
