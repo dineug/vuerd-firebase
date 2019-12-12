@@ -21,8 +21,7 @@ export default class App extends Vue {
 @import "~github-markdown-css";
 
 body {
-  font-family: "Noto Sans", "Noto Sans KR", "Noto Sans SC", "Noto Sans HK",
-    "Noto Sans JP", "Noto Sans TC", sans-serif;
+  font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
 
   /* width */
   ::-webkit-scrollbar {

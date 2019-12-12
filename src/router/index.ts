@@ -14,24 +14,24 @@ Vue.use(VueRouter);
 export const routes = {
   Notebook: {
     path: "/",
-    name: Notebook.name,
+    name: "Notebook",
     component: Notebook
   },
   MyNotebook: {
     path: "/notebooks/me",
-    name: MyNotebook.name,
+    name: "MyNotebook",
     component: MyNotebook,
     beforeEnter: signIn
   },
   NotebookSetting: {
     path: "/notebooks/:id/setting",
-    name: NotebookSetting.name,
+    name: "NotebookSetting",
     component: NotebookSetting,
     beforeEnter: signIn
   },
   Document: {
     path: "/notebooks/:id/document",
-    name: Document.name,
+    name: "Document",
     component: Document,
     props: (route: Route) => ({
       treeActiveId: route.query.active
@@ -39,19 +39,19 @@ export const routes = {
   },
   Editor: {
     path: "/notebooks/:id/editor",
-    name: Editor.name,
+    name: "Editor",
     component: Editor,
     beforeEnter: signIn
   },
   Setting: {
     path: "/setting",
-    name: Setting.name,
+    name: "Setting",
     component: Setting,
     beforeEnter: signIn
   },
   Export: {
     path: "/notebooks/:notebookId/export/:id",
-    name: Export.name,
+    name: "Export",
     component: Export
   },
   Redirect: {
