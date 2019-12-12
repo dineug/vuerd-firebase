@@ -10,8 +10,7 @@ deploy:
   skip_cleanup: true
 
 script:
-  - cd functions
-  - npm install
-  - ../
   - yarn lint
   - yarn build
+  - cd functions
+  - npm install
