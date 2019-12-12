@@ -150,6 +150,11 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import {
+  COLOR_SIDEBAR,
+  COLOR_SIDEBAR_ACTIVE,
+  COLOR_SIDEBAR_TEXT
+} from "@/data/color";
 import { routes } from "@/router";
 import firebase, { auth, User, FirestoreError } from "@/plugins/firebase";
 import eventBus, { Bus } from "@/ts/EventBus";
@@ -180,9 +185,9 @@ const enum Provider {
 })
 export default class Sidebar extends Vue {
   private openDelay: number = 0;
-  private backgroundColor: string = "#282828";
-  private textColor: string = "#fff";
-  private activeTextColor: string = "#ffc107";
+  private backgroundColor: string = COLOR_SIDEBAR;
+  private textColor: string = COLOR_SIDEBAR_TEXT;
+  private activeTextColor: string = COLOR_SIDEBAR_ACTIVE;
   private active: string = routes.Notebook.name;
 
   private notifications: NotificationModel[] = [];

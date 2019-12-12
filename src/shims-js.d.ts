@@ -3,6 +3,7 @@ declare module "marked";
 declare module "@tweenjs/tween.js";
 declare module "highlight.js";
 declare module "vue-fragment";
+declare module "undo-manager";
 interface Jdenticon {
   version: string;
   update(selector: Element | string, hash: string): void;

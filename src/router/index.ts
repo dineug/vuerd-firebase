@@ -1,5 +1,5 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
+import VueRouter, { Route } from "vue-router";
 import { signIn } from "./Guard";
 const Notebook = () => import("@/components/Notebook.vue");
 const MyNotebook = () => import("@/components/MyNotebook.vue");
@@ -31,7 +31,10 @@ export const routes = {
   Document: {
     path: "/notebooks/:id/document",
     name: Document.name,
-    component: Document
+    component: Document,
+    props: (route: Route) => ({
+      treeActiveId: route.query.active
+    })
   },
   Editor: {
     path: "/notebooks/:id/editor",

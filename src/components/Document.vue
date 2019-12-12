@@ -20,7 +20,7 @@
         <container-view
           :width="contentViewWidth"
           :height="contentViewHeight"
-          :treeList="treeList"
+          :tree="treeActive"
         />
         <sash
           vertical
@@ -35,9 +35,16 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { getTreesColRef } from "@/api/TreeAPI";
-import { convertTreeModel, findParentTreeByChildren } from "@/api/TreeHelper";
+import {
+  convertTreeModel,
+  findParentTreeByChildren,
+  orderByPathLengthASC,
+  isEditor,
+  findTreeModelById
+} from "@/api/TreeHelper";
 import { TreeModel, TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import { fromEvent, Observable, Subscription } from "rxjs";
+import { Commit } from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import Explorer from "@/components/Document/Explorer.vue";
@@ -62,6 +69,9 @@ const enum Direction {
   }
 })
 export default class Document extends Vue {
+  @Prop({ type: String, default: "" })
+  private treeActiveId!: string;
+
   private explorerWidth: number = EXPLORER_WIDTH;
   private windowWidth: number = window.innerWidth;
   private windowHeight: number = window.innerHeight;
@@ -74,6 +84,7 @@ export default class Document extends Vue {
   private trees: TreeModel[] = [];
   private unsubscribe: { (): void; (): void } | null = null;
   private search: string = "";
+  private treeActive: TreeModel | null = null;
 
   get contentViewWidth(): number {
     return this.windowWidth - this.explorerWidth - SIDEBAR_WIDTH - MARGIN;
@@ -94,8 +105,7 @@ export default class Document extends Vue {
   @Watch("treeListFilter")
   private watchTreeListFilter() {
     log.debug("Document watchTreeListFilter");
-    const list = [...this.treeListFilter];
-    const tree = convertTreeModel(list);
+    const tree = convertTreeModel(this.treeListFilter);
     this.trees = [tree];
   }
 
@@ -103,6 +113,32 @@ export default class Document extends Vue {
   private watchSearch() {
     log.debug("Document watchSearch");
     this.watchTreeList();
+  }
+
+  @Watch("treeActiveId")
+  private watchTreeActiveId() {
+    let all = true;
+    if (this.treeActiveId) {
+      const treeModel = findTreeModelById(
+        convertTreeModel(this.treeList),
+        this.treeActiveId
+      );
+      if (treeModel) {
+        this.$store.commit(Commit.setTreeActiveId, this.treeActiveId);
+        this.treeActive = treeModel;
+        all = false;
+      }
+    }
+    if (all) {
+      const treeModel = findTreeModelById(
+        convertTreeModel(this.treeList),
+        this.treeList[0].id
+      );
+      if (treeModel) {
+        this.$store.commit(Commit.setTreeActiveId, this.treeList[0].id);
+        this.treeActive = treeModel;
+      }
+    }
   }
 
   private getTrees() {
@@ -113,7 +149,7 @@ export default class Document extends Vue {
         snapshot.forEach(doc => {
           const treeNode = new TreeNodeModelImpl(doc);
           list.push(treeNode);
-          if (/\.(md|vuerd)$/i.test(treeNode.name)) {
+          if (isEditor(treeNode.name)) {
             target.push(treeNode);
           }
         });
@@ -121,6 +157,10 @@ export default class Document extends Vue {
         this.treeList = [];
         this.treeList.push.apply(this.treeList, target);
         this.treeList.push.apply(this.treeList, parent);
+        this.treeList.sort(orderByPathLengthASC);
+        if (this.$store.state.treeActiveId === null) {
+          this.watchTreeActiveId();
+        }
       },
       err => {
         this.$message.error(err.message);
@@ -170,6 +210,7 @@ export default class Document extends Vue {
   // ==================== Life Cycle ====================
   private created() {
     this.getTrees();
+    this.$store.commit(Commit.setTreeActiveId, null);
   }
 
   private mounted() {
@@ -182,6 +223,7 @@ export default class Document extends Vue {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+    this.$store.commit(Commit.setTreeActiveId, null);
   }
   // ==================== Life Cycle END ====================
 }
@@ -194,6 +236,7 @@ export default class Document extends Vue {
   .main {
     position: relative;
     margin: 10px 10px 10px 0;
+    background-color: white;
     overflow-y: auto;
     overflow-x: hidden;
     border-radius: 4px;

@@ -1,19 +1,18 @@
 import { TreeNodeModel, TreeModel } from "./TreeModel";
 import { Tree } from "vuerd-core";
-import log from "@/ts/Logger";
 
 export function convertTree(treeList: TreeNodeModel[]): Tree {
-  treeList.sort(orderByPathLengthASC);
+  const list = [...treeList];
+  list.sort(orderByPathLengthASC);
   const tree: Tree = {
-    name: treeList[0].name,
+    name: list[0].name,
     open: true,
     children: []
   };
-  const children = treeList.splice(1);
+  const children = list.splice(1);
   children.forEach(treeNode => {
     createTree(tree, treeNode);
   });
-  orderAllByNameASC(tree);
   return tree;
 }
 
@@ -22,7 +21,7 @@ function createTree(root: Tree, treeNode: TreeNodeModel) {
   paths.pop();
   const parent = findTreeByParent(root, paths);
   if (parent.children) {
-    if (treeNode.value) {
+    if (treeNode.value !== undefined) {
       parent.children.push({
         name: treeNode.name
       });
@@ -53,11 +52,12 @@ function findTreeByParent(root: Tree, paths: string[]): Tree {
 }
 
 export function convertTreeModel(treeList: TreeNodeModel[]): TreeModel {
-  treeList.sort(orderByPathLengthASC);
-  const tree = treeList[0] as TreeModel;
+  const list = [...treeList];
+  list.sort(orderByPathLengthASC);
+  const tree = list[0] as TreeModel;
   tree.parent = null;
   tree.children = [];
-  const children = treeList.splice(1);
+  const children = list.splice(1);
   children.forEach(treeNode => {
     createTreeModel(tree, treeNode);
   });
@@ -70,7 +70,7 @@ function createTreeModel(root: TreeModel, treeNode: TreeNodeModel) {
   paths.pop();
   const parent = findTreeModelByParent(root, paths);
   if (parent.children) {
-    if (treeNode.value) {
+    if (treeNode.value !== undefined) {
       const node = treeNode as TreeModel;
       node.parent = parent;
       parent.children.push(node);
@@ -219,4 +219,43 @@ function findParentTreeByPaths(
     findParentTreeByPaths(treeList, paths, result);
   }
   return result;
+}
+
+export function isEditor(name: string): boolean {
+  return /\.(md|vuerd)$/i.test(name);
+}
+
+export function treeModelToTreeNodeModel(
+  treeModel: TreeModel,
+  result: TreeNodeModel[] = []
+): TreeNodeModel[] {
+  if (isEditor(treeModel.name)) {
+    result.push(treeModel);
+  }
+  if (treeModel.children) {
+    treeModel.children.forEach(tree => {
+      treeModelToTreeNodeModel(tree, result);
+    });
+  }
+  return result;
+}
+
+export function findTreeModelById(
+  container: TreeModel,
+  id: string
+): TreeModel | null {
+  if (container.id === id) {
+    return container;
+  } else {
+    let target: TreeModel | null = null;
+    if (container.children) {
+      for (const value of container.children) {
+        target = findTreeModelById(value, id);
+        if (target) {
+          break;
+        }
+      }
+    }
+    return target;
+  }
 }

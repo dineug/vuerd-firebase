@@ -1,24 +1,45 @@
 <template>
   <div class="container-view" :style="contentViewStyle">
-    <markdown
-      v-for="(markdown, i) in markdownList"
-      :key="`markdown-${i}`"
-      :value="markdown"
-      :width="width"
-    />
+    <div v-for="editor in editors" :key="editor.id">
+      <el-breadcrumb class="path" separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item
+          v-for="pathName in editor.path.split('/')"
+          :key="pathName"
+        >
+          <span class="path-name">{{ pathName }}</span>
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+      <markdown
+        v-if="editor.type === 'markdown'"
+        :value="editor.value"
+        :width="width"
+      />
+      <erd
+        v-else-if="editor.type === 'vuerd'"
+        :value="editor.value"
+        :width="width"
+      />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import log from "@/ts/Logger";
 import { TreeModel, TreeNodeModel } from "@/api/TreeModel";
-import eventBus, { Bus } from "@/ts/EventBus";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { treeModelToTreeNodeModel } from "@/api/TreeHelper";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Markdown from "@/components/Document/ContainerView/Markdown.vue";
+import Erd from "@/components/Document/ContainerView/ERD.vue";
+
+type ViewType = "markdown" | "vuerd";
+
+interface Editor extends TreeNodeModel {
+  type: ViewType;
+}
 
 @Component({
   components: {
-    Markdown
+    Markdown,
+    Erd
   }
 })
 export default class ContainerView extends Vue {
@@ -26,8 +47,10 @@ export default class ContainerView extends Vue {
   private width!: number;
   @Prop({ type: Number, default: 1000 })
   private height!: number;
-  @Prop({ type: Array, default: () => [] })
-  private treeList!: TreeNodeModel[];
+  @Prop({ type: Object, default: () => ({}) })
+  private tree!: TreeModel | null;
+
+  private editors: Editor[] = [];
 
   get contentViewStyle(): string {
     return `
@@ -36,37 +59,38 @@ export default class ContainerView extends Vue {
     `;
   }
 
-  get markdownList(): string[] {
-    log.debug(this.treeList.length);
-    const markdownList: string[] = [];
-    this.treeList.forEach(tree => {
-      if (/\.(md)$/i.test(tree.name)) {
-        if (tree.value) {
-          markdownList.push(tree.value);
+  @Watch("tree")
+  private watchTree() {
+    if (this.tree !== null) {
+      const list = treeModelToTreeNodeModel(this.tree);
+      this.editors = [];
+      list.forEach(tree => {
+        if (/\.md$/i.test(tree.name)) {
+          const editor = tree as Editor;
+          editor.type = "markdown";
+          this.editors.push(editor);
+        } else if (/\.vuerd$/i.test(tree.name)) {
+          const editor = tree as Editor;
+          editor.type = "vuerd";
+          this.editors.push(editor);
         }
-      }
-    });
-    return markdownList;
-  }
-
-  private onViewLoad(treeModel: TreeModel) {
-    log.debug("Container onViewLoad", treeModel);
-  }
-
-  private created() {
-    eventBus.$on(Bus.ContainerView.viewLoad, this.onViewLoad);
-  }
-
-  private destroyed() {
-    eventBus.$off(Bus.ContainerView.viewLoad, this.onViewLoad);
+      });
+    }
   }
 }
 </script>
 
 <style scoped lang="scss">
 .container-view {
-  background-color: white;
   box-sizing: border-box;
-  padding: 20px;
+
+  .path {
+    padding: 20px;
+    background-color: $color-view-header;
+
+    .path-name {
+      color: $color-view-header-text;
+    }
+  }
 }
 </style>

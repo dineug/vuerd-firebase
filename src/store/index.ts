@@ -16,6 +16,7 @@ export interface State {
   notebookId: string | null;
   treeList: TreeNodeModel[];
   unsubscribe: { (): void; (): void } | null;
+  treeActiveId: string | null;
 }
 
 export const enum Commit {
@@ -23,7 +24,8 @@ export const enum Commit {
   signOut = "signOut",
   referer = "referer",
   setNotebookId = "setNotebookId",
-  setTreeList = "setTreeList"
+  setTreeList = "setTreeList",
+  setTreeActiveId = "setTreeActiveId"
 }
 
 export default new Vuex.Store<State>({
@@ -33,7 +35,8 @@ export default new Vuex.Store<State>({
     referer: "/",
     notebookId: null,
     treeList: [],
-    unsubscribe: null
+    unsubscribe: null,
+    treeActiveId: null
   },
   mutations: {
     signIn(state: State, user: User) {
@@ -66,6 +69,9 @@ export default new Vuex.Store<State>({
     },
     setTreeList(state: State, treeList: TreeNodeModel[]) {
       state.treeList = treeList;
+    },
+    setTreeActiveId(state: State, treeActiveId: string | null) {
+      state.treeActiveId = treeActiveId;
     }
   },
   actions: {}

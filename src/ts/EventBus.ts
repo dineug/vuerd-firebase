@@ -71,15 +71,10 @@ enum Setting {
   setInfo = "Setting.setInfo"
 }
 
-enum ContainerView {
-  viewLoad = "ContainerView.viewLoad"
-}
-
 export const Bus = {
   Editor,
   NewNotebook,
-  Setting,
-  ContainerView
+  Setting
 };
 
 export default new EventBus();

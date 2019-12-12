@@ -105,6 +105,7 @@ VuerdCore.use(ERD);
 VuerdCore.use(TuiEditor, {
   imageUpload(blob, callback) {
     upload(blob).then(string => callback(string));
-  }
+  },
+  scope: [/\.(md|tui.editor.md)$/i]
 });
 Vue.use(VuerdCore);

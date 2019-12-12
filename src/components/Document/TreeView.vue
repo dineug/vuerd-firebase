@@ -1,10 +1,10 @@
 <template>
   <ul class="tree-view">
-    <li v-for="node in trees" :key="node.name">
+    <li v-for="node in trees" :key="node.id">
       <span
         class="tree-name"
-        :class="{ folder: node.children }"
-        @click="onView(node)"
+        :class="{ folder: node.children, active: active(node.id) }"
+        @click="onActive(node)"
         >{{ node.name }}</span
       >
       <tree-view
@@ -18,7 +18,7 @@
 <script lang="ts">
 import log from "@/ts/Logger";
 import { TreeModel } from "@/api/TreeModel";
-import eventBus, { Bus } from "@/ts/EventBus";
+import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
@@ -26,9 +26,23 @@ export default class TreeView extends Vue {
   @Prop({ type: Array, default: () => [] })
   private trees!: TreeModel[];
 
-  private onView(treeModel: TreeModel) {
-    log.debug("TreeView onView");
-    eventBus.$emit(Bus.ContainerView.viewLoad, treeModel);
+  private onActive(treeModel: TreeModel) {
+    log.debug("TreeView onActive");
+    if (this.$route.query.active !== treeModel.id) {
+      this.$router.push({
+        name: routes.Document.name,
+        params: {
+          id: this.$route.params.id
+        },
+        query: {
+          active: treeModel.id
+        }
+      });
+    }
+  }
+
+  private active(id: string): boolean {
+    return this.$store.state.treeActiveId === id;
   }
 }
 </script>
@@ -53,6 +67,10 @@ export default class TreeView extends Vue {
 
       &.folder {
         font-weight: bold;
+      }
+
+      &.active {
+        color: $color-sidebar-active;
       }
     }
   }

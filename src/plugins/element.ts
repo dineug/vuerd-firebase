@@ -32,6 +32,8 @@ import {
   TimelineItem,
   Link,
   PageHeader,
+  Breadcrumb,
+  BreadcrumbItem,
   Loading,
   Message,
   MessageBox,
@@ -77,6 +79,8 @@ const components = [
   TimelineItem,
   Link,
   PageHeader,
+  Breadcrumb,
+  BreadcrumbItem,
   Loading
 ];
 
