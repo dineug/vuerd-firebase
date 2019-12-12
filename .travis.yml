@@ -8,6 +8,8 @@ deploy:
   token:
     secure: $FIREBASE_TOKEN
   skip_cleanup: true
+  on:
+    tags: true
 
 before_install:
   - npm i -g firebase-tools

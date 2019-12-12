@@ -209,8 +209,8 @@ export default class Document extends Vue {
 
   // ==================== Life Cycle ====================
   private created() {
-    this.getTrees();
     this.$store.commit(Commit.setTreeActiveId, null);
+    this.getTrees();
   }
 
   private mounted() {

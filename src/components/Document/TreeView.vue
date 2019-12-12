@@ -5,8 +5,9 @@
         class="tree-name"
         :class="{ folder: node.children, active: active(node.id) }"
         @click="onActive(node)"
-        >{{ node.name }}</span
       >
+        {{ node.name }}
+      </span>
       <tree-view
         v-if="node.children && node.children.length !== 0"
         :trees="node.children"
@@ -21,7 +22,9 @@ import { TreeModel } from "@/api/TreeModel";
 import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
-@Component
+@Component({
+  name: "TreeView"
+})
 export default class TreeView extends Vue {
   @Prop({ type: Array, default: () => [] })
   private trees!: TreeModel[];
