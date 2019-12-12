@@ -9,9 +9,12 @@ deploy:
     secure: $FIREBASE_TOKEN
   skip_cleanup: true
 
+before_install:
+  - npm i -g firebase-tools
+
 script:
   - yarn lint
   - yarn build
   - cd functions
-  - npm install
+  - yarn
   - cd ..

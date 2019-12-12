@@ -49,6 +49,7 @@ export default class Sash extends Vue {
 
   // ==================== Event Handler ===================
   private onMousedown(event: MouseEvent) {
+    this.onMouseup(event);
     this.subMouseup = this.mouseup$.subscribe(this.onMouseup);
     this.subMousemove = this.mousemove$.subscribe(this.onMousemove);
     this.$emit("mousedown", event);
