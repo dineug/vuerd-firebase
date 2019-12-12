@@ -16,5 +16,5 @@ script:
   - yarn lint
   - yarn build
   - cd functions
-  - yarn i
+  - yarn
   - cd ..
