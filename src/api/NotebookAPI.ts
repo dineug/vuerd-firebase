@@ -79,7 +79,7 @@ export function findByPaging(paging: Paging): Promise<QuerySnapshot> {
     paging.limit = 20;
   }
   if (!paging.orderBy) {
-    paging.orderBy = "updatedAt";
+    paging.orderBy = "createdAt";
   }
   if (!paging.sort) {
     paging.sort = "desc";
@@ -102,7 +102,7 @@ export function findByPagingAndMember(paging: Paging): Promise<QuerySnapshot> {
     paging.limit = 20;
   }
   if (!paging.orderBy) {
-    paging.orderBy = "updatedAt";
+    paging.orderBy = "createdAt";
   }
   if (!paging.sort) {
     paging.sort = "desc";

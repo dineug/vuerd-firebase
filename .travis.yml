@@ -5,18 +5,10 @@ node_js:
 deploy:
   provider: firebase
   project: $PROJECT_ID
-  token:
-    secure: $FIREBASE_TOKEN
-  skip_cleanup: true
-  on:
-    tags: true
-
-before_install:
-  - npm i -g firebase-tools
+  token: $FIREBASE_TOKEN
+  only: hosting
+  edge: true
 
 script:
   - yarn lint
   - yarn build
-  - cd functions
-  - npm i
-  - cd ..

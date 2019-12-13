@@ -19,9 +19,11 @@ export default class App extends Vue {
 <style lang="scss">
 @import "~highlight.js/styles/monokai-sublime.css";
 @import "~github-markdown-css";
+@import "~vuerd-plugin-erd/dist/vuerd-plugin-erd.css";
 
 body {
   font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
+  margin: 0;
 
   /* width */
   ::-webkit-scrollbar {

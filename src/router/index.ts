@@ -1,13 +1,11 @@
 import Vue from "vue";
 import VueRouter, { Route } from "vue-router";
 import { signIn } from "./Guard";
-const Notebook = () => import("@/components/Notebook.vue");
-const MyNotebook = () => import("@/components/MyNotebook.vue");
-const Editor = () => import("@/components/Editor.vue");
-const Setting = () => import("@/components/Setting.vue");
-const NotebookSetting = () => import("@/components/NotebookSetting.vue");
-const Document = () => import("@/components/Document.vue");
-const Export = () => import("@/components/Export.vue");
+
+function loadView(view: string) {
+  return () =>
+    import(/* webpackChunkName: "[request]" */ `@/components/${view}.vue`);
+}
 
 Vue.use(VueRouter);
 
@@ -15,24 +13,24 @@ export const routes = {
   Notebook: {
     path: "/",
     name: "Notebook",
-    component: Notebook
+    component: loadView("Notebook")
   },
   MyNotebook: {
     path: "/notebooks/me",
     name: "MyNotebook",
-    component: MyNotebook,
+    component: loadView("MyNotebook"),
     beforeEnter: signIn
   },
   NotebookSetting: {
     path: "/notebooks/:id/setting",
     name: "NotebookSetting",
-    component: NotebookSetting,
+    component: loadView("NotebookSetting"),
     beforeEnter: signIn
   },
   Document: {
     path: "/notebooks/:id/document",
     name: "Document",
-    component: Document,
+    component: loadView("Document"),
     props: (route: Route) => ({
       treeActiveId: route.query.active
     })
@@ -40,19 +38,19 @@ export const routes = {
   Editor: {
     path: "/notebooks/:id/editor",
     name: "Editor",
-    component: Editor,
+    component: loadView("Editor"),
     beforeEnter: signIn
   },
   Setting: {
     path: "/setting",
     name: "Setting",
-    component: Setting,
+    component: loadView("Setting"),
     beforeEnter: signIn
   },
   Export: {
     path: "/notebooks/:notebookId/export/:id",
     name: "Export",
-    component: Export
+    component: loadView("Export")
   },
   Redirect: {
     path: "*",

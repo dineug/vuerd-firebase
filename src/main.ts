@@ -5,7 +5,6 @@ import router from "./router";
 import store from "./store";
 import i18n from "./plugins/vue-i18n";
 import "./plugins/fragment";
-import "./plugins/vuerd-core";
 import "./plugins/element";
 import "./plugins/fontawesome";
 import "./plugins/sentry";

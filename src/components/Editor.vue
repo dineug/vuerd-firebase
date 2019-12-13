@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+import "@/plugins/vuerd-core";
 import { Editor as ConfigEditor } from "@/api/UserModel";
 import { editorSave, findEditorBy } from "@/api/UserAPI";
 import { getTreesColRef } from "@/api/TreeAPI";

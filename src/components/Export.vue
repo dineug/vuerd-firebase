@@ -15,7 +15,18 @@
       <h1>{{ message }}</h1>
     </div>
     <div class="mark">
+      <el-tooltip effect="dark" content="Full Screen" placement="top-end">
+        <a class="link" :href="link" target="_blank">
+          <el-button
+            type="primary"
+            icon="el-icon-full-screen"
+            size="mini"
+            circle
+          />
+        </a>
+      </el-tooltip>
       <el-link
+        class="link"
         type="primary"
         href="https://vuerd-547c3.web.app"
         target="_blank"
@@ -49,6 +60,8 @@ export default class Export extends Vue {
   private windowHeight: number = window.innerHeight;
   private resize$: Observable<Event> = fromEvent(window, "resize");
   private subResize!: Subscription;
+
+  private link: string = window.location.href;
 
   private getTree() {
     const loading = this.$loading({ lock: true });
@@ -102,5 +115,11 @@ export default class Export extends Vue {
   bottom: 10px;
   right: 10px;
   z-index: 999999;
+
+  .link {
+    display: block;
+    text-align: center;
+    margin-top: 5px;
+  }
 }
 </style>
