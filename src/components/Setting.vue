@@ -66,6 +66,7 @@
 </template>
 
 <script lang="ts">
+import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import { identicon } from "@/ts/util";
 import { User, UserModify, Language } from "@/api/UserModel";
@@ -197,6 +198,7 @@ export default class Setting extends Vue {
       if (this.info.name && this.info.nickname) {
         const loading = this.$loading({
           lock: true,
+          background: COLOR_LOADING,
           text: this.$t("loading.updating") as string
         });
         const user: UserModify = {

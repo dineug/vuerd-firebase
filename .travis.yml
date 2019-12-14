@@ -5,9 +5,11 @@ node_js:
 deploy:
   provider: firebase
   project: $PROJECT_ID
-  token: $FIREBASE_TOKEN
-  only: hosting
-  edge: true
+  token:
+    secure: $FIREBASE_TOKEN
+  skip_cleanup: true
+  on:
+    tags: true
 
 script:
   - yarn lint

@@ -71,6 +71,7 @@
 </template>
 
 <script lang="ts">
+import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import {
   MemberModel,
@@ -261,6 +262,7 @@ export default class NotebookMember extends Vue {
         .then(() => {
           const loading = this.$loading({
             lock: true,
+            background: COLOR_LOADING,
             text: this.$t("loading.deleting") as string
           });
           deleteMemberById(this.notebook.id, member.id)
@@ -319,6 +321,7 @@ export default class NotebookMember extends Vue {
     } else {
       const loading = this.$loading({
         lock: true,
+        background: COLOR_LOADING,
         text: this.$t("loading.inviting") as string
       });
       memberInvitation(this.$route.params.id, this.invitationMembers)

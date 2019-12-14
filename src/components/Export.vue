@@ -16,7 +16,7 @@
     </div>
     <div class="mark">
       <el-tooltip effect="dark" content="Full Screen" placement="top-end">
-        <a class="link" :href="link" target="_blank">
+        <a class="link" :href="currentHref" target="_blank">
           <el-button
             type="primary"
             icon="el-icon-full-screen"
@@ -28,7 +28,7 @@
       <el-link
         class="link"
         type="primary"
-        href="https://vuerd-547c3.web.app"
+        href="https://vuerd.io"
         target="_blank"
       >
         vuerd.io
@@ -38,6 +38,7 @@
 </template>
 
 <script lang="ts">
+import { COLOR_LOADING } from "@/data/color";
 import { findTreeById } from "@/api/TreeAPI";
 import { TreeNodeModelImpl } from "@/api/TreeModel";
 import { Editor, treeNodeModelToEditor } from "@/models/Editor";
@@ -61,10 +62,13 @@ export default class Export extends Vue {
   private resize$: Observable<Event> = fromEvent(window, "resize");
   private subResize!: Subscription;
 
-  private link: string = window.location.href;
+  private currentHref: string = window.location.href;
 
   private getTree() {
-    const loading = this.$loading({ lock: true });
+    const loading = this.$loading({
+      lock: true,
+      background: COLOR_LOADING
+    });
     findTreeById(this.$route.params.notebookId, this.$route.params.id)
       .then(doc => {
         if (doc.exists) {

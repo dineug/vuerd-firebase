@@ -49,6 +49,7 @@
 </template>
 
 <script lang="ts">
+import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookAdd } from "@/api/NotebookModel";
 import eventBus, { Bus } from "@/ts/EventBus";
@@ -148,6 +149,7 @@ export default class NewNotebook extends Vue {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
+        background: COLOR_LOADING,
         text: this.$t("loading.creating") as string
       });
       const notebookAdd: NotebookAdd = {

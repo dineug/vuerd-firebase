@@ -62,6 +62,7 @@
 </template>
 
 <script lang="ts">
+import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookModel, NotebookAdd } from "@/api/NotebookModel";
 import { notebookUpdate, deleteById } from "@/api/NotebookAPI";
@@ -216,6 +217,7 @@ export default class NotebookInfo extends Vue {
     if (this.valid()) {
       const loading = this.$loading({
         lock: true,
+        background: COLOR_LOADING,
         text: this.$t("loading.updating") as string
       });
       try {
@@ -247,6 +249,7 @@ export default class NotebookInfo extends Vue {
       .then(() => {
         const loading = this.$loading({
           lock: true,
+          background: COLOR_LOADING,
           text: this.$t("loading.deleting") as string
         });
         deleteById(this.notebook.id)

@@ -1,6 +1,8 @@
 import Vue from "vue";
-import VueRouter, { Route } from "vue-router";
+import VueRouter, { RawLocation, Route } from "vue-router";
 import { signIn } from "./Guard";
+import { ElLoadingComponent } from "element-ui/types/loading";
+import { COLOR_LOADING } from "@/data/color";
 
 function loadView(view: string) {
   return () =>
@@ -8,6 +10,8 @@ function loadView(view: string) {
 }
 
 Vue.use(VueRouter);
+
+let loading: ElLoadingComponent | null = null;
 
 export const routes = {
   Notebook: {
@@ -39,7 +43,13 @@ export const routes = {
     path: "/notebooks/:id/editor",
     name: "Editor",
     component: loadView("Editor"),
-    beforeEnter: signIn
+    beforeEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
+      loading = Vue.prototype.$loading({
+        lock: true,
+        background: COLOR_LOADING
+      });
+      signIn(to, from, next);
+    }
   },
   Setting: {
     path: "/setting",
@@ -62,6 +72,13 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes: Object.values(routes)
+});
+
+router.afterEach((to, from) => {
+  if (loading !== null) {
+    loading.close();
+    loading = null;
+  }
 });
 
 export default router;
