@@ -156,7 +156,12 @@ import {
   COLOR_SIDEBAR_TEXT
 } from "@/data/color";
 import { routes } from "@/router";
-import firebase, { auth, User, FirestoreError } from "@/plugins/firebase";
+import firebase, {
+  auth,
+  User,
+  FirestoreError,
+  AuthError
+} from "@/plugins/firebase";
 import eventBus, { Bus } from "@/ts/EventBus";
 import {
   NotificationModel,
@@ -245,7 +250,12 @@ export default class Sidebar extends Vue {
             });
           }
         })
-        .catch(err => this.$message.error(err.message))
+        .catch(err =>
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+        )
         .finally(() => {
           this.notificationProcess = false;
           if (this.notificationLoading) {
@@ -287,7 +297,12 @@ export default class Sidebar extends Vue {
               this.$router.push(routes.Notebook);
             }
           })
-          .catch(err => this.$message.error(err.message))
+          .catch(err =>
+            this.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          )
           .finally(() => this.setActive());
         break;
       case routes.Setting.name:
@@ -311,7 +326,14 @@ export default class Sidebar extends Vue {
       case Provider.google:
         auth
           .signInWithPopup(new firebase.auth.GoogleAuthProvider())
-          .catch(err => this.$message.error(err.message))
+          .catch((err: AuthError) => {
+            if (err.code !== "auth/popup-closed-by-user") {
+              this.$notify.error({
+                title: err.code,
+                message: err.message
+              });
+            }
+          })
           .finally(() => this.setActive());
         break;
     }
@@ -352,7 +374,10 @@ export default class Sidebar extends Vue {
     invitationAccept(notification)
       .then(() => this.onNotification())
       .catch((err: FirestoreError) => {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
         if (err.code === "permission-denied") {
           notificationReadUpdate(notification).then(() =>
             this.onNotification()
@@ -369,7 +394,10 @@ export default class Sidebar extends Vue {
     invitationCancel(notification)
       .then(() => this.onNotification())
       .catch((err: FirestoreError) => {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
         if (err.code === "permission-denied") {
           notificationReadUpdate(notification).then(() =>
             this.onNotification()

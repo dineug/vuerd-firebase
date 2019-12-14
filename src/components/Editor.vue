@@ -38,7 +38,10 @@ export default class Editor extends Vue {
         this.$store.commit(Commit.setTreeList, treeList);
       },
       err => {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
         this.$router.back();
       }
     );

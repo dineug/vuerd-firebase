@@ -170,7 +170,10 @@ export default class Document extends Vue {
         }
       })
       .catch(err => {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
         this.$router.back();
       });
   }

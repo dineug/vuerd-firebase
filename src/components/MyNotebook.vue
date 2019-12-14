@@ -53,7 +53,12 @@ export default class MyNotebook extends Vue {
             );
           }
         })
-        .catch(err => this.$message.error(err.message))
+        .catch(err =>
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+        )
         .finally(() => (this.listProcess = false));
     }
   }

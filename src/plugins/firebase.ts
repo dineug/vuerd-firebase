@@ -27,6 +27,7 @@ export type DocumentReference = firebase.firestore.DocumentReference;
 export type DocumentSnapshot = firebase.firestore.DocumentSnapshot;
 export type CollectionReference = firebase.firestore.CollectionReference;
 export type FirestoreError = firebase.firestore.FirestoreError;
+export type AuthError = firebase.auth.AuthError;
 export type User = firebase.User;
 export interface Paging {
   limit?: number;

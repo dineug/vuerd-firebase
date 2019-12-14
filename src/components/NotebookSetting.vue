@@ -37,18 +37,27 @@ export default class NotebookSetting extends Vue {
     findById(this.$route.params.id)
       .then(doc => {
         if (!doc.exists) {
-          this.$message.error(this.$t("notFound.notebook") as string);
+          this.$notify.error({
+            title: "Error",
+            message: this.$t("notFound.notebook") as string
+          });
           this.$router.back();
         }
         const notebook = new NotebookModelImpl(doc);
         this.notebook = notebook;
         if (!notebook.roles[this.$store.state.user.uid]) {
-          this.$message.error(this.$t("notFound.role") as string);
+          this.$notify.error({
+            title: "Error",
+            message: this.$t("notFound.role") as string
+          });
           this.$router.back();
         }
       })
       .catch(err => {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
         this.$router.back();
       });
   }

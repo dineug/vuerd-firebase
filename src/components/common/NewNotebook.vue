@@ -103,7 +103,10 @@ export default class NewNotebook extends Vue {
     let result = false;
     if (this.title.trim() === "") {
       this.title = "";
-      this.$message.warning(this.$t("valid.title") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.title") as string
+      });
       (this.$refs.title as HTMLInputElement).focus();
     } else {
       result = true;
@@ -118,9 +121,15 @@ export default class NewNotebook extends Vue {
       const isJPG = file.type === FileType.jpg;
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning(this.$t("valid.imageType") as string);
+        this.$notify.warning({
+          title: "Valid",
+          message: this.$t("valid.imageType") as string
+        });
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning(this.$t("valid.imageSize") as string);
+        this.$notify.warning({
+          title: "Valid",
+          message: this.$t("valid.imageSize") as string
+        });
       } else {
         result = true;
       }
@@ -170,7 +179,10 @@ export default class NewNotebook extends Vue {
           }
         });
       } catch (err) {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
       }
       loading.close();
     }

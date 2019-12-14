@@ -103,14 +103,20 @@ export default class Setting extends Vue {
     let result = false;
     if (this.info.name === null || this.info.name.trim() === "") {
       this.info.name = "";
-      this.$message.warning(this.$t("valid.name") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.name") as string
+      });
       (this.$refs.name as HTMLInputElement).focus();
     } else if (
       this.info.nickname === null ||
       this.info.nickname.trim() === ""
     ) {
       this.info.nickname = "";
-      this.$message.warning(this.$t("valid.nickname") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.nickname") as string
+      });
       (this.$refs.nickname as HTMLInputElement).focus();
     } else {
       result = true;
@@ -125,9 +131,15 @@ export default class Setting extends Vue {
       const isJPG = file.type === FileType.jpg;
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning(this.$t("valid.imageType") as string);
+        this.$notify.warning({
+          title: this.$t("Valid") as string,
+          message: this.$t("valid.imageType") as string
+        });
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning(this.$t("valid.imageSize") as string);
+        this.$notify.warning({
+          title: this.$t("Valid") as string,
+          message: this.$t("valid.imageSize") as string
+        });
       } else {
         result = true;
       }
@@ -217,10 +229,13 @@ export default class Setting extends Vue {
           }
           await userUpdate(user);
         } catch (err) {
-          this.$message.error(err.message);
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          });
         }
-        this.$message({
-          type: "success",
+        this.$notify.success({
+          title: "Success",
           message: this.$t("updated") as string
         });
         loading.close();

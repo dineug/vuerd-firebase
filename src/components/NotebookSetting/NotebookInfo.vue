@@ -134,7 +134,10 @@ export default class NotebookInfo extends Vue {
     let result = false;
     if (this.notebookModify.title.trim() === "") {
       this.notebookModify.title = "";
-      this.$message.warning(this.$t("valid.title") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.title") as string
+      });
       (this.$refs.title as HTMLInputElement).focus();
     } else {
       result = true;
@@ -149,9 +152,15 @@ export default class NotebookInfo extends Vue {
       const isJPG = file.type === FileType.jpg;
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
-        this.$message.warning(this.$t("valid.imageType") as string);
+        this.$notify.warning({
+          title: this.$t("Valid") as string,
+          message: this.$t("valid.imageType") as string
+        });
       } else if (file.size > MAX_SIZE) {
-        this.$message.warning(this.$t("valid.imageSize") as string);
+        this.$notify.warning({
+          title: this.$t("Valid") as string,
+          message: this.$t("valid.imageSize") as string
+        });
       } else {
         result = true;
       }
@@ -230,10 +239,13 @@ export default class NotebookInfo extends Vue {
         this.notebookModify.tags = this.tags.map(tag => tag.text);
         notebookUpdate(this.$route.params.id, this.notebookModify);
       } catch (err) {
-        this.$message.error(err.message);
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        });
       }
-      this.$message({
-        type: "success",
+      this.$notify.success({
+        title: "Success",
         message: this.$t("updated") as string
       });
       loading.close();
@@ -254,13 +266,18 @@ export default class NotebookInfo extends Vue {
         });
         deleteById(this.notebook.id)
           .then(() => {
-            this.$message({
-              type: "success",
+            this.$notify.success({
+              title: "Success",
               message: this.$t("deleted") as string
             });
             this.$router.back();
           })
-          .catch(err => this.$message.error(err.message))
+          .catch(err =>
+            this.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          )
           .finally(() => loading.close());
       })
       .catch(() => {});

@@ -137,7 +137,10 @@ export default class NotebookMember extends Vue {
       if (
         !this.members.some(member => member.id === this.$store.state.user.uid)
       ) {
-        this.$message.error(this.$t("notFound.role") as string);
+        this.$notify.error({
+          title: "Error",
+          message: this.$t("notFound.role") as string
+        });
         this.$router.back();
       }
     }
@@ -155,7 +158,10 @@ export default class NotebookMember extends Vue {
           value.id !== member.id
       ).length === 0
     ) {
-      this.$message.warning(this.$t("valid.memberRole") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.memberRole") as string
+      });
     } else {
       result = true;
     }
@@ -170,7 +176,10 @@ export default class NotebookMember extends Vue {
         value => value.status === "accept" && value.id !== member.id
       ).length === 0
     ) {
-      this.$message.warning(this.$t("valid.memberDelete") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.memberDelete") as string
+      });
     } else if (
       member.id === this.$store.state.user.uid &&
       this.members.filter(
@@ -180,7 +189,10 @@ export default class NotebookMember extends Vue {
           value.id !== member.id
       ).length === 0
     ) {
-      this.$message.warning(this.$t("valid.memberRole") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.memberRole") as string
+      });
     } else {
       result = true;
     }
@@ -267,8 +279,8 @@ export default class NotebookMember extends Vue {
           });
           deleteMemberById(this.notebook.id, member.id)
             .then(() => {
-              this.$message({
-                type: "success",
+              this.$notify.success({
+                title: "Success",
                 message: this.$t("deleted") as string
               });
               if (member.id === this.$store.state.user.uid) {
@@ -277,7 +289,12 @@ export default class NotebookMember extends Vue {
                 this.getMembers();
               }
             })
-            .catch(err => this.$message.error(err.message))
+            .catch(err =>
+              this.$notify.error({
+                title: "Error",
+                message: err.message
+              })
+            )
             .finally(() => loading.close());
         })
         .catch(() => {});
@@ -293,7 +310,12 @@ export default class NotebookMember extends Vue {
           this.notebook.roles[member.id] = role;
           this.getMembers();
         })
-        .catch(err => this.$message.error(err.message));
+        .catch(err =>
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+        );
     }
   }
 
@@ -312,7 +334,10 @@ export default class NotebookMember extends Vue {
   private onInvitation() {
     log.debug("NotebookMember onInvitation");
     if (this.invitationMembers.length === 0) {
-      this.$message.warning(this.$t("valid.member") as string);
+      this.$notify.warning({
+        title: this.$t("Valid") as string,
+        message: this.$t("valid.member") as string
+      });
       const vm = this.$refs.invitation as Vue;
       const input = vm.$el.querySelector("input");
       if (input) {
@@ -330,9 +355,12 @@ export default class NotebookMember extends Vue {
           this.invitationMembers = [];
           this.getMembers();
         })
-        .catch(err => {
-          this.$message.error(err.message);
-        })
+        .catch(err =>
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+        )
         .finally(() => loading.close());
     }
   }

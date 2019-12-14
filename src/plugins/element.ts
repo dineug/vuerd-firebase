@@ -35,7 +35,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Loading,
-  Message,
   MessageBox,
   Notification
 } from "element-ui";
@@ -86,7 +85,6 @@ const components = [
 
 components.forEach(component => Vue.use(component));
 
-Vue.prototype.$message = Message;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
