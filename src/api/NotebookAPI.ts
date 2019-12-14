@@ -63,6 +63,7 @@ export async function save(
   const docUser = await findUserBy();
   const user = docUser.data() as User;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({
+    uid: store.state.user.uid,
     name: user.name,
     nickname: user.nickname,
     email: store.state.user.email,
@@ -149,6 +150,7 @@ export function memberInvitation(
   for (const member of membersAdd) {
     batch.set(getMembersDocRef(notebookId, member.id), {
       fromId: store.state.user.uid,
+      uid: member.uid,
       name: member.name,
       nickname: member.nickname,
       email: member.email,

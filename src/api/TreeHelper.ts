@@ -51,7 +51,10 @@ function findTreeByParent(root: Tree, paths: string[]): Tree {
   return root;
 }
 
-export function convertTreeModel(treeList: TreeNodeModel[]): TreeModel {
+export function convertTreeModel(treeList: TreeNodeModel[]): TreeModel | null {
+  if (treeList.length === 0) {
+    return null;
+  }
   const list = [...treeList];
   list.sort(orderByPathLengthASC);
   const tree = list[0] as TreeModel;

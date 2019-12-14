@@ -52,6 +52,7 @@ export class NotebookModelImpl implements NotebookModel {
 
 export interface Member {
   fromId: string;
+  uid: string;
   name: string | null;
   nickname: string | null;
   email: string | null;
@@ -63,6 +64,7 @@ export interface Member {
 
 export interface MemberAdd {
   id: string;
+  uid: string;
   name: string | null;
   nickname: string | null;
   email: string | null;
@@ -75,6 +77,7 @@ export interface MemberModel extends Member {
 
 export class MemberModelImpl implements MemberModel {
   public id: string;
+  public uid: string;
   public fromId: string;
   public name: string | null;
   public nickname: string | null;
@@ -87,6 +90,7 @@ export class MemberModelImpl implements MemberModel {
   constructor(doc: DocumentSnapshot) {
     const data = doc.data() as Member;
     this.id = doc.id;
+    this.uid = data.uid;
     this.fromId = data.fromId;
     this.name = data.name;
     this.nickname = data.nickname;

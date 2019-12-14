@@ -24,6 +24,7 @@
         />
         <sash
           vertical
+          :left="sashLeft"
           @mousemove="onMousemoveSash"
           @mousedown="onMousedownSash"
         />
@@ -34,7 +35,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
-import { getTreesColRef } from "@/api/TreeAPI";
+import { findAllBy } from "@/api/TreeAPI";
 import {
   convertTreeModel,
   findParentTreeByChildren,
@@ -82,7 +83,6 @@ export default class Document extends Vue {
   private treeList: TreeNodeModel[] = [];
   private treeListFilter: TreeNodeModel[] = [];
   private trees: TreeModel[] = [];
-  private unsubscribe: { (): void; (): void } | null = null;
   private search: string = "";
   private treeActive: TreeModel | null = null;
 
@@ -92,6 +92,10 @@ export default class Document extends Vue {
 
   get contentViewHeight(): number {
     return this.windowHeight - MARGIN * 2;
+  }
+
+  get sashLeft(): number {
+    return this.explorerWidth + SIDEBAR_WIDTH;
   }
 
   @Watch("treeList")
@@ -106,7 +110,10 @@ export default class Document extends Vue {
   private watchTreeListFilter() {
     log.debug("Document watchTreeListFilter");
     const tree = convertTreeModel(this.treeListFilter);
-    this.trees = [tree];
+    this.trees = [];
+    if (tree !== null) {
+      this.trees.push(tree);
+    }
   }
 
   @Watch("search")
@@ -119,34 +126,34 @@ export default class Document extends Vue {
   private watchTreeActiveId() {
     let all = true;
     if (this.treeActiveId) {
-      const treeModel = findTreeModelById(
-        convertTreeModel(this.treeList),
-        this.treeActiveId
-      );
-      if (treeModel) {
-        this.$store.commit(Commit.setTreeActiveId, this.treeActiveId);
-        this.treeActive = treeModel;
-        all = false;
+      const tree = convertTreeModel(this.treeList);
+      if (tree !== null) {
+        const treeModel = findTreeModelById(tree, this.treeActiveId);
+        if (treeModel) {
+          this.$store.commit(Commit.setTreeActiveId, this.treeActiveId);
+          this.treeActive = treeModel;
+          all = false;
+        }
       }
     }
     if (all) {
-      const treeModel = findTreeModelById(
-        convertTreeModel(this.treeList),
-        this.treeList[0].id
-      );
-      if (treeModel) {
-        this.$store.commit(Commit.setTreeActiveId, this.treeList[0].id);
-        this.treeActive = treeModel;
+      const tree = convertTreeModel(this.treeList);
+      if (tree !== null) {
+        const treeModel = findTreeModelById(tree, this.treeList[0].id);
+        if (treeModel) {
+          this.$store.commit(Commit.setTreeActiveId, this.treeList[0].id);
+          this.treeActive = treeModel;
+        }
       }
     }
   }
 
   private getTrees() {
-    this.unsubscribe = getTreesColRef(this.$route.params.id).onSnapshot(
-      snapshot => {
+    findAllBy(this.$route.params.id)
+      .then(querySnapshot => {
         const target: TreeNodeModel[] = [];
         const list: TreeNodeModel[] = [];
-        snapshot.forEach(doc => {
+        querySnapshot.forEach(doc => {
           const treeNode = new TreeNodeModelImpl(doc);
           list.push(treeNode);
           if (isEditor(treeNode.name)) {
@@ -161,12 +168,11 @@ export default class Document extends Vue {
         if (this.$store.state.treeActiveId === null) {
           this.watchTreeActiveId();
         }
-      },
-      err => {
+      })
+      .catch(err => {
         this.$message.error(err.message);
         this.$router.back();
-      }
-    );
+      });
   }
 
   // ==================== Event Handler ===================
@@ -220,9 +226,6 @@ export default class Document extends Vue {
 
   private destroyed() {
     this.subResize.unsubscribe();
-    if (this.unsubscribe) {
-      this.unsubscribe();
-    }
     this.$store.commit(Commit.setTreeActiveId, null);
   }
   // ==================== Life Cycle END ====================

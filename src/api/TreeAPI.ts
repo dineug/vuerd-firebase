@@ -37,9 +37,6 @@ export function findTreeById(
 }
 
 export function findAllBy(notebookId: string): Promise<QuerySnapshot> {
-  if (!store.state.user) {
-    throw new Error("not found user");
-  }
   return getTreesColRef(notebookId).get();
 }
 

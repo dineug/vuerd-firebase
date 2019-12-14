@@ -67,7 +67,7 @@ export async function signIn(): Promise<void> {
         : identicon(store.state.user.email),
       language: "en",
       published: false
-    });
+    } as User);
     batch.set(getConfigDocRef(store.state.user.uid, "editor"), {
       themeName: "VSCode"
     });

@@ -1,19 +1,19 @@
 <template>
-  <div v-if="editor">
+  <div>
     <markdown
-      v-if="editor.type === 'markdown'"
+      v-if="editor && editor.type === 'markdown'"
       :value="editor.value"
       :width="windowWidth"
     />
     <erd
-      v-else-if="editor.type === 'vuerd'"
+      v-else-if="editor && editor.type === 'vuerd'"
       :value="editor.value"
       :width="windowWidth"
       :height="windowHeight"
     />
-    <div v-else class="none">
-      <h1>{{ message }}</h1>
-    </div>
+    <h1 v-else class="none">
+      {{ message }}
+    </h1>
     <div class="mark">
       <el-tooltip effect="dark" content="Full Screen" placement="top-end">
         <a class="link" :href="currentHref" target="_blank">
@@ -56,7 +56,7 @@ import Erd from "@/components/Export/ERD.vue";
 })
 export default class Export extends Vue {
   private editor: Editor | null = null;
-  private message: string = "None";
+  private message: string = "";
   private windowWidth: number = window.innerWidth;
   private windowHeight: number = window.innerHeight;
   private resize$: Observable<Event> = fromEvent(window, "resize");
@@ -109,8 +109,8 @@ export default class Export extends Vue {
   bottom: 0;
   left: 0;
   right: 0;
-  width: 100px;
-  height: 53px;
+  width: 100%;
+  height: 43px;
   margin: auto;
 }
 .mark {

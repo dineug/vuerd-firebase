@@ -74,7 +74,7 @@ export default class Sash extends Vue {
 
 <style scoped lang="scss">
 .sash {
-  position: absolute;
+  position: fixed;
   z-index: 1000;
 
   &.vertical {
