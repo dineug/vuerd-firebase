@@ -159,7 +159,7 @@ export default class NotebookMember extends Vue {
       ).length === 0
     ) {
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.memberRole") as string
       });
     } else {
@@ -177,7 +177,7 @@ export default class NotebookMember extends Vue {
       ).length === 0
     ) {
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.memberDelete") as string
       });
     } else if (
@@ -190,7 +190,7 @@ export default class NotebookMember extends Vue {
       ).length === 0
     ) {
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.memberRole") as string
       });
     } else {
@@ -336,7 +336,7 @@ export default class NotebookMember extends Vue {
     log.debug("NotebookMember onInvitation");
     if (this.invitationMembers.length === 0) {
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.member") as string
       });
       const vm = this.$refs.invitation as Vue;

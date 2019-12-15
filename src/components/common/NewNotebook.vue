@@ -116,7 +116,7 @@ export default class NewNotebook extends Vue {
     if (this.title.trim() === "") {
       this.title = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.title") as string
       });
       (this.$refs.title as HTMLInputElement).focus();

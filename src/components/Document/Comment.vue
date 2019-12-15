@@ -128,7 +128,7 @@ export default class Comment extends Vue {
     if (this.message.trim() === "") {
       this.message = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.comments") as string
       });
       (this.$refs.message as HTMLInputElement).focus();
@@ -148,7 +148,7 @@ export default class Comment extends Vue {
   private onCreate() {
     if (!this.$store.state.user) {
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.signIn") as string
       });
     } else if (this.valid()) {
@@ -212,7 +212,7 @@ export default class Comment extends Vue {
     if (this.editMessage.trim() === "") {
       this.editMessage = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.comments") as string
       });
       const input = document.querySelector(

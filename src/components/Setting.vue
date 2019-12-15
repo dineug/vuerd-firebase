@@ -104,7 +104,7 @@ export default class Setting extends Vue {
     if (this.info.name === null || this.info.name.trim() === "") {
       this.info.name = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.name") as string
       });
       (this.$refs.name as HTMLInputElement).focus();
@@ -114,7 +114,7 @@ export default class Setting extends Vue {
     ) {
       this.info.nickname = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.nickname") as string
       });
       (this.$refs.nickname as HTMLInputElement).focus();
@@ -132,12 +132,12 @@ export default class Setting extends Vue {
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
         this.$notify.warning({
-          title: this.$t("Valid") as string,
+          title: "Valid",
           message: this.$t("valid.imageType") as string
         });
       } else if (file.size > MAX_SIZE) {
         this.$notify.warning({
-          title: this.$t("Valid") as string,
+          title: "Valid",
           message: this.$t("valid.imageSize") as string
         });
       } else {

@@ -147,7 +147,7 @@ export default class NotebookInfo extends Vue {
     if (this.notebookModify.title.trim() === "") {
       this.notebookModify.title = "";
       this.$notify.warning({
-        title: this.$t("Valid") as string,
+        title: "Valid",
         message: this.$t("valid.title") as string
       });
       (this.$refs.title as HTMLInputElement).focus();
@@ -165,12 +165,12 @@ export default class NotebookInfo extends Vue {
       const isPNG = file.type === FileType.png;
       if (!(isJPG || isPNG)) {
         this.$notify.warning({
-          title: this.$t("Valid") as string,
+          title: "Valid",
           message: this.$t("valid.imageType") as string
         });
       } else if (file.size > MAX_SIZE) {
         this.$notify.warning({
-          title: this.$t("Valid") as string,
+          title: "Valid",
           message: this.$t("valid.imageSize") as string
         });
       } else {
