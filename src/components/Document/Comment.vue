@@ -38,7 +38,7 @@
               resize="none"
               v-model="editMessage"
             />
-            <pre v-else>{{ comment.message }}</pre>
+            <div class="message-box" v-else>{{ comment.message }}</div>
             <el-button-group
               v-if="
                 myComment(comment) &&
@@ -278,6 +278,11 @@ export default class Comment extends Vue {
       display: inline-block;
       margin-left: 5px;
     }
+  }
+
+  .message-box {
+    word-wrap: break-word;
+    white-space: pre-line;
   }
 }
 .comment-form {

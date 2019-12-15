@@ -61,16 +61,15 @@ body {
     background-color: white;
   }
 
-  .tag-box {
-    & /deep/ .ti-tag,
-    & /deep/ .ti-selected-item {
-      background-color: $color-tag;
-    }
-    & /deep/ .duplication.ti-tag,
-    & /deep/ .duplication.ti-selected-item {
-      background-color: $color-tag-duplication;
-      text-decoration: line-through;
-    }
+  .tag-box .ti-tag,
+  .tag-box .ti-selected-item {
+    background-color: $color-tag;
+  }
+
+  .tag-box .duplication.ti-tag,
+  .tag-box .duplication.ti-selected-item {
+    background-color: $color-tag-duplication;
+    text-decoration: line-through;
   }
 }
 

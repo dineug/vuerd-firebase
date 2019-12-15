@@ -136,7 +136,9 @@ export function findAllMemberBy(id: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getMembersColRef(id).get();
+  return getMembersColRef(id)
+    .orderBy("createdAt", "asc")
+    .get();
 }
 
 export function memberInvitation(

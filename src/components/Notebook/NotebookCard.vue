@@ -14,7 +14,7 @@
     </div>
     <div class="content-box scrollbar" :style="contentBoxStyle">
       <div class="title-box">{{ notebook.title }}</div>
-      <pre>{{ notebook.description }}</pre>
+      <div class="title-box">{{ notebook.description }}</div>
       <div class="tag-box">
         <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
       </div>
@@ -104,7 +104,7 @@ export default class NotebookCard extends Vue {
     overflow-y: scroll;
 
     .title-box {
-      word-wrap: break-word;
+      white-space: pre-line;
     }
 
     .tag-box {
