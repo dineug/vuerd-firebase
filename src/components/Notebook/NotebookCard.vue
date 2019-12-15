@@ -14,6 +14,7 @@
     </div>
     <div class="content-box scrollbar" :style="contentBoxStyle">
       <div class="title-box">{{ notebook.title }}</div>
+      <pre>{{ notebook.description }}</pre>
       <div class="tag-box">
         <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
       </div>

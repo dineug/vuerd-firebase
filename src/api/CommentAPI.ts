@@ -1,10 +1,4 @@
-import {
-  db,
-  DocumentReference,
-  CollectionReference,
-  Paging,
-  QuerySnapshot
-} from "@/plugins/firebase";
+import { db, DocumentReference, CollectionReference } from "@/plugins/firebase";
 import store from "@/store";
 import moment from "moment";
 import { Comment } from "./CommentModel";
@@ -42,7 +36,10 @@ export function save(
   } as Comment);
 }
 
-export function deleteBy(notebookId: string, commentId: string): Promise<void> {
+export function deleteById(
+  notebookId: string,
+  commentId: string
+): Promise<void> {
   if (!store.state.user || !store.state.info) {
     throw new Error("not found user");
   }
@@ -61,26 +58,4 @@ export function commentUpdate(
     message,
     updatedAt: moment().unix()
   } as Comment);
-}
-
-export function findByPaging(
-  notebookId: string,
-  paging: Paging
-): Promise<QuerySnapshot> {
-  if (!paging.limit) {
-    paging.limit = 20;
-  }
-  if (!paging.orderBy) {
-    paging.orderBy = "createdAt";
-  }
-  if (!paging.sort) {
-    paging.sort = "asc";
-  }
-  let ref = getCommentColRef(notebookId)
-    .orderBy(paging.orderBy, paging.sort)
-    .limit(paging.limit);
-  if (paging.last) {
-    ref = ref.startAfter(paging.last);
-  }
-  return ref.get();
 }

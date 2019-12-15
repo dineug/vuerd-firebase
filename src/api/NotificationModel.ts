@@ -1,6 +1,6 @@
 import { DocumentSnapshot, Paging } from "@/plugins/firebase";
 
-export type Action = "invitation" | "notification";
+export type Action = "invitation" | "notification" | "comment";
 
 export interface NotificationPaging extends Paging {
   read?: boolean;

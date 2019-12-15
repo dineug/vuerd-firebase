@@ -33,6 +33,16 @@
         ref="title"
       />
     </el-form-item>
+    <el-form-item :label="$t('description')">
+      <el-input
+        style="width: 450px;"
+        type="textarea"
+        :rows="5"
+        placeholder="Notebook description"
+        resize="none"
+        v-model="notebookModify.description"
+      />
+    </el-form-item>
     <el-form-item :label="$t('published')">
       <el-switch v-model="notebookModify.published" :disabled="ownerRole" />
     </el-form-item>
@@ -97,6 +107,7 @@ export default class NotebookInfo extends Vue {
   private file: File | null = null;
   private notebookModify: NotebookAdd = {
     title: "",
+    description: "",
     published: false,
     tags: [],
     image: null
@@ -118,6 +129,7 @@ export default class NotebookInfo extends Vue {
   private setNotebook() {
     this.notebookModify = {
       title: this.notebook.title,
+      description: this.notebook.description,
       published: this.notebook.published,
       tags: this.notebook.tags,
       image: this.notebook.image
@@ -246,7 +258,8 @@ export default class NotebookInfo extends Vue {
       }
       this.$notify.success({
         title: "Success",
-        message: this.$t("updated") as string
+        message: this.$t("updated") as string,
+        duration: 3000
       });
       loading.close();
     }
@@ -268,7 +281,8 @@ export default class NotebookInfo extends Vue {
           .then(() => {
             this.$notify.success({
               title: "Success",
-              message: this.$t("deleted") as string
+              message: this.$t("deleted") as string,
+              duration: 3000
             });
             this.$router.back();
           })

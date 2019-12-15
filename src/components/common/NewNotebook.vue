@@ -1,5 +1,5 @@
 <template>
-  <el-drawer :title="$t('newNotebook')" :visible.sync="drawer" size="660px">
+  <el-drawer :title="$t('newNotebook')" :visible.sync="drawer" size="700px">
     <el-form style="padding: 0 20px;" label-width="120px">
       <el-form-item :label="$t('picture')">
         <image-lazy :src="previewImage" />
@@ -21,6 +21,16 @@
           maxlength="100"
           show-word-limit
           ref="title"
+        />
+      </el-form-item>
+      <el-form-item :label="$t('description')">
+        <el-input
+          style="width: 450px;"
+          type="textarea"
+          :rows="5"
+          placeholder="Notebook description"
+          resize="none"
+          v-model="description"
         />
       </el-form-item>
       <el-form-item :label="$t('published')">
@@ -77,6 +87,7 @@ export default class NewNotebook extends Vue {
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
   private title: string = "";
+  private description: string = "";
   private published: boolean = false;
   private tag: string = "";
   private tags: Tag[] = [];
@@ -92,6 +103,7 @@ export default class NewNotebook extends Vue {
 
   private reset() {
     this.title = "";
+    this.description = "";
     this.published = false;
     this.tag = "";
     this.tags = [];
@@ -163,6 +175,7 @@ export default class NewNotebook extends Vue {
       });
       const notebookAdd: NotebookAdd = {
         title: this.title,
+        description: this.description,
         published: this.published,
         tags: this.tags.map(tag => tag.text),
         image: null

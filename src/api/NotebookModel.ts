@@ -8,6 +8,7 @@ export interface Notebook {
   members: string[];
   published: boolean;
   title: string;
+  description: string;
   image: string | null;
   tags: string[];
   updatedAt: number;
@@ -17,6 +18,7 @@ export interface Notebook {
 export interface NotebookAdd {
   published: boolean;
   title: string;
+  description: string;
   tags: string[];
   image: string | null;
 }
@@ -31,6 +33,7 @@ export class NotebookModelImpl implements NotebookModel {
   public members: string[];
   public published: boolean;
   public title: string;
+  public description: string;
   public image: string | null;
   public tags: string[];
   public updatedAt: number;
@@ -43,6 +46,7 @@ export class NotebookModelImpl implements NotebookModel {
     this.members = data.members;
     this.published = data.published;
     this.title = data.title;
+    this.description = data.description;
     this.image = data.image;
     this.tags = data.tags;
     this.updatedAt = data.updatedAt;

@@ -32,6 +32,10 @@ export default {
   notification: "Notification",
   read: "Read",
   noNotification: "No notification",
+  comment: "Comment",
+  noComment: "There's no comment",
+  writeComment: "Write a comment",
+  description: "Description",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",
@@ -40,11 +44,14 @@ export default {
     imageType: "Picture must be JPG, PNG format",
     imageSize: "Picture size can not exceed 2MB",
     memberDelete: "least one member",
-    memberRole: "least one owner"
+    memberRole: "least one owner",
+    comments: "Please enter comments",
+    signIn: "Please sign in and use it"
   },
   confirm: {
     deleteNotebook: "Are you sure you want to delete the notebook?",
-    deleteMember: "Are you sure you want to delete the member?"
+    deleteMember: "Are you sure you want to delete the member?",
+    deleteComments: "Are you sure you want to delete the comments?"
   },
   loading: {
     creating: "Creating...",

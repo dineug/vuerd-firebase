@@ -32,6 +32,10 @@ export default {
   notification: "알람",
   read: "읽기",
   noNotification: "알림이 없습니다",
+  comment: "댓글",
+  noComment: "댓글이 없습니다",
+  writeComment: "댓글쓰기",
+  description: "설명",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",
@@ -40,11 +44,14 @@ export default {
     imageType: "사진은 JPG, PNG 형식만 가능합니다",
     imageSize: "사진 크기는 2MB를 초과할 수 없습니다",
     memberDelete: "최소 한 명의 구성원이 필요합니다",
-    memberRole: "최소 한 명의 Owner가 필요합니다"
+    memberRole: "최소 한 명의 Owner가 필요합니다",
+    comments: "댓글을 입력해주세요",
+    signIn: "로그인후 이용해주세요"
   },
   confirm: {
     deleteNotebook: "노트북을 삭제하시겠습니까?",
-    deleteMember: "구성원을 삭제하시겠습니까?"
+    deleteMember: "구성원을 삭제하시겠습니까?",
+    deleteComments: "댓글을 삭제하시겠습니까?"
   },
   loading: {
     creating: "생성중...",

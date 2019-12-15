@@ -236,7 +236,8 @@ export default class Setting extends Vue {
         }
         this.$notify.success({
           title: "Success",
-          message: this.$t("updated") as string
+          message: this.$t("updated") as string,
+          duration: 3000
         });
         loading.close();
       }

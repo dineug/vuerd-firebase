@@ -29,12 +29,33 @@
           @mousedown="onMousedownSash"
         />
       </div>
+      <el-button
+        v-if="commentCount === 0"
+        class="btn-comment btn-btn-comment-size"
+        type="info"
+        icon="el-icon-chat-dot-round"
+        plain
+        circle
+        @click="onComment"
+      />
+      <el-badge v-else class="btn-comment" type="primary" :value="commentCount">
+        <el-button
+          class="btn-btn-comment-size"
+          type="info"
+          icon="el-icon-chat-dot-round"
+          plain
+          circle
+          @click="onComment"
+        />
+      </el-badge>
+      <comment :height="windowHeight" :comments="comments" />
     </el-container>
   </el-container>
 </template>
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import eventBus, { Bus } from "@/ts/EventBus";
 import { findAllBy } from "@/api/TreeAPI";
 import {
   convertTreeModel,
@@ -43,6 +64,8 @@ import {
   isEditor,
   findTreeModelById
 } from "@/api/TreeHelper";
+import { getCommentColRef } from "@/api/CommentAPI";
+import { CommentModel, CommentModelImpl } from "@/api/CommentModel";
 import { TreeModel, TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import { fromEvent, Observable, Subscription } from "rxjs";
 import { Commit } from "@/store";
@@ -51,6 +74,7 @@ import Sidebar from "./common/Sidebar.vue";
 import Explorer from "@/components/Document/Explorer.vue";
 import Sash from "@/components/common/Sash.vue";
 import ContainerView from "@/components/Document/ContainerView.vue";
+import Comment from "@/components/Document/Comment.vue";
 
 const SIDEBAR_WIDTH = 64;
 const MARGIN = 10;
@@ -66,7 +90,8 @@ const enum Direction {
     Sidebar,
     Explorer,
     Sash,
-    ContainerView
+    ContainerView,
+    Comment
   }
 })
 export default class Document extends Vue {
@@ -85,6 +110,9 @@ export default class Document extends Vue {
   private trees: TreeModel[] = [];
   private search: string = "";
   private treeActive: TreeModel | null = null;
+  private comments: CommentModel[] = [];
+  private commentCount: number = 0;
+  private unsubscribeComment: { (): void; (): void } | null = null;
 
   get contentViewWidth(): number {
     return this.windowWidth - this.explorerWidth - SIDEBAR_WIDTH - MARGIN;
@@ -178,6 +206,25 @@ export default class Document extends Vue {
       });
   }
 
+  private getComments() {
+    this.unsubscribeComment = getCommentColRef(this.$route.params.id)
+      .orderBy("createdAt", "asc")
+      .onSnapshot(
+        snapshot => {
+          this.comments = [];
+          this.commentCount = snapshot.size;
+          snapshot.forEach(doc =>
+            this.comments.push(new CommentModelImpl(doc))
+          );
+        },
+        err =>
+          this.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+      );
+  }
+
   // ==================== Event Handler ===================
   private onResize() {
     this.windowWidth = window.innerWidth;
@@ -214,12 +261,19 @@ export default class Document extends Vue {
     log.debug("Document onSearch", keyword);
     this.search = keyword;
   }
+
+  private onComment() {
+    log.debug("Document onComment");
+    eventBus.$emit(Bus.Comment.drawerStart);
+  }
   // ==================== Event Handler END ===================
 
   // ==================== Life Cycle ====================
   private created() {
+    log.debug("Document created");
     this.$store.commit(Commit.setTreeActiveId, null);
     this.getTrees();
+    this.getComments();
   }
 
   private mounted() {
@@ -228,7 +282,11 @@ export default class Document extends Vue {
   }
 
   private destroyed() {
+    log.debug("Document destroyed");
     this.subResize.unsubscribe();
+    if (this.unsubscribeComment !== null) {
+      this.unsubscribeComment();
+    }
     this.$store.commit(Commit.setTreeActiveId, null);
   }
   // ==================== Life Cycle END ====================
@@ -238,6 +296,21 @@ export default class Document extends Vue {
 <style scoped lang="scss">
 .document-container {
   background-color: $color-document;
+
+  .btn-comment {
+    z-index: 999999;
+    position: fixed;
+    left: 74px;
+    bottom: 10px;
+
+    & /deep/ .el-badge__content {
+      border-width: 0;
+    }
+  }
+
+  .btn-btn-comment-size {
+    font-size: 1.5em;
+  }
 
   .main {
     position: relative;

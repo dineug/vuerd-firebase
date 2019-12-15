@@ -80,12 +80,19 @@
               :timestamp="dateMinutesFormat(notification.createdAt)"
             >
               <el-card>
-                <p>{{ notification.message }}</p>
+                <p v-if="notification.action === 'comment'">
+                  <el-link type="warning" @click="onMove(notification)">
+                    {{ notification.message }}
+                  </el-link>
+                </p>
+                <p v-else>{{ notification.message }}</p>
                 <el-link
-                  v-if="notification.action === 'notification'"
+                  v-if="notification.action !== 'invitation'"
                   type="primary"
-                  >{{ $t("read") }}</el-link
+                  @click="onRead(notification)"
                 >
+                  {{ $t("read") }}
+                </el-link>
                 <el-button-group
                   v-else-if="notification.action === 'invitation'"
                 >
@@ -155,7 +162,6 @@ import {
   COLOR_SIDEBAR_ACTIVE,
   COLOR_SIDEBAR_TEXT
 } from "@/data/color";
-import { routes } from "@/router";
 import firebase, {
   auth,
   User,
@@ -176,7 +182,8 @@ import { User as UserInfo } from "@/api/UserModel";
 import { invitationAccept, invitationCancel } from "@/api/InvitationAPI";
 import { dateMinutesFormat } from "@/ts/filter";
 import { ElLoadingComponent } from "element-ui/types/loading";
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { routes } from "@/router";
+import { Component, Prop, Vue } from "vue-property-decorator";
 import NewNotebook from "@/components/common/NewNotebook.vue";
 
 const enum Provider {
@@ -213,24 +220,6 @@ export default class Sidebar extends Vue {
       return info.notification;
     }
     return 0;
-  }
-
-  @Watch("notificationCount")
-  private watchNotificationCount(value: number, old: number) {
-    if (value > old) {
-      findAllNotificationBy({
-        read: false,
-        limit: value - old
-      }).then(querySnapshot => {
-        querySnapshot.forEach(doc => {
-          const notification = new NotificationModelImpl(doc);
-          this.$notify({
-            title: this.$t(notification.action) as string,
-            message: notification.message
-          });
-        });
-      });
-    }
   }
 
   private dateMinutesFormat = dateMinutesFormat;
@@ -405,6 +394,32 @@ export default class Sidebar extends Vue {
         }
       })
       .finally(() => loading.close());
+  }
+
+  private onRead(notification: NotificationModel) {
+    const loading = this.$loading({
+      target: ".notification-popover"
+    });
+    notificationReadUpdate(notification)
+      .then(() => this.onNotification())
+      .catch(err =>
+        this.$notify.error({
+          title: "Error",
+          message: err.message
+        })
+      )
+      .finally(() => loading.close());
+  }
+
+  private onMove(notification: NotificationModel) {
+    if (notification.key !== null) {
+      this.$router.push({
+        name: routes.Document.name,
+        params: {
+          id: notification.key
+        }
+      });
+    }
   }
   // ==================== Event Handler END ===================
 

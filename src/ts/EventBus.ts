@@ -71,10 +71,16 @@ enum Setting {
   setInfo = "Setting.setInfo"
 }
 
+enum Comment {
+  drawerStart = "Comment.drawerStart",
+  drawerEnd = "Comment.drawerEnd"
+}
+
 export const Bus = {
   Editor,
   NewNotebook,
-  Setting
+  Setting,
+  Comment
 };
 
 export default new EventBus();

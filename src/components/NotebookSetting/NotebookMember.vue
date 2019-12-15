@@ -281,7 +281,8 @@ export default class NotebookMember extends Vue {
             .then(() => {
               this.$notify.success({
                 title: "Success",
-                message: this.$t("deleted") as string
+                message: this.$t("deleted") as string,
+                duration: 3000
               });
               if (member.id === this.$store.state.user.uid) {
                 this.$router.back();
