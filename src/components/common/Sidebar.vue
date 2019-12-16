@@ -109,7 +109,7 @@
               </el-card>
             </el-timeline-item>
           </el-timeline>
-          <el-menu-item index="Notification" slot="reference">
+          <el-menu-item index="notification" slot="reference">
             <el-badge
               v-if="notificationCount !== 0"
               class="badge-alarm"
@@ -149,6 +149,16 @@
             <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
           </el-menu-item>
         </el-popover>
+      </el-tooltip>
+      <el-tooltip
+        content="Github issues"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="github">
+          <font-awesome-icon class="font-awesome" :icon="['fab', 'github']" />
+          <span>github</span>
+        </el-menu-item>
       </el-tooltip>
     </el-menu>
     <new-notebook />
@@ -196,6 +206,7 @@ const enum Provider {
   }
 })
 export default class Sidebar extends Vue {
+  private githubIssues: HTMLAnchorElement = document.createElement("a");
   private openDelay: number = 0;
   private backgroundColor: string = COLOR_SIDEBAR;
   private textColor: string = COLOR_SIDEBAR_TEXT;
@@ -303,8 +314,12 @@ export default class Sidebar extends Vue {
         eventBus.$emit(Bus.NewNotebook.drawerStart);
         this.setActive();
         break;
+      case "github":
+        this.githubIssues.click();
+        this.setActive();
+        break;
       case "sign-in":
-      case "Notification":
+      case "notification":
         this.setActive();
         break;
     }
@@ -425,7 +440,16 @@ export default class Sidebar extends Vue {
 
   // ==================== Life Cycle ====================
   private created() {
+    this.githubIssues.setAttribute("target", "_blank");
+    this.githubIssues.setAttribute(
+      "href",
+      "https://github.com/vuerd/vuerd-firebase/issues"
+    );
     this.setActive();
+  }
+
+  private destroyed() {
+    this.githubIssues.remove();
   }
   // ==================== Life Cycle END ====================
 }
@@ -450,6 +474,7 @@ export default class Sidebar extends Vue {
 }
 .font-awesome {
   color: #909399;
+  font-size: 18px;
 }
 .sign-in-btn {
   width: 200px;

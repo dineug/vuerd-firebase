@@ -1,10 +1,15 @@
-const { functions, db } = require("../plugins/firebase");
-const { getTagsDocRef, getNotebooksDocRef } = require("../plugins/util");
+import { functions, db } from "../plugins/firebase";
+import {
+  getTagsDocRef,
+  getTreesColRef,
+  getMembersColRef
+} from "../plugins/util";
+import { Notebook } from "./NotebookModel";
 
-exports.createNotebook = functions.firestore
+export const createNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onCreate(async (snapshot, context) => {
-    const newNoteBook = snapshot.data();
+    const newNoteBook = snapshot.data() as Notebook;
     const batch = db.batch();
     for (const tag of newNoteBook.tags) {
       const doc = await getTagsDocRef(tag).get();
@@ -23,13 +28,13 @@ exports.createNotebook = functions.firestore
     batch.commit();
   });
 
-exports.updateNotebook = functions.firestore
+export const updateNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onUpdate(async (change, context) => {
-    const afterNoteBook = change.after.data();
-    const beforeNoteBook = change.before.data();
-    const minus = [];
-    const plus = [];
+    const afterNoteBook = change.after.data() as Notebook;
+    const beforeNoteBook = change.before.data() as Notebook;
+    const minus: string[] = [];
+    const plus: string[] = [];
     afterNoteBook.tags.forEach(after => {
       if (!beforeNoteBook.tags.some(before => after === before)) {
         plus.push(after);
@@ -73,10 +78,10 @@ exports.updateNotebook = functions.firestore
     }
   });
 
-exports.deleteNotebook = functions.firestore
+export const deleteNotebook = functions.firestore
   .document("notebooks/{notebookId}")
   .onDelete(async (snapshot, context) => {
-    const noteBook = snapshot.data();
+    const noteBook = snapshot.data() as Notebook;
     const batch = db.batch();
     for (const tag of noteBook.tags) {
       const doc = await getTagsDocRef(tag).get();
@@ -91,14 +96,18 @@ exports.deleteNotebook = functions.firestore
         }
       }
     }
-    const membersQuery = await getNotebooksDocRef(context.params.notebookId).collection("members").get();
-    membersQuery.forEach(doc => {
+    const querySnapshotMembers = await getMembersColRef(
+      context.params.notebookId
+    ).get();
+    querySnapshotMembers.forEach(doc => {
       if (doc.exists) {
         batch.delete(doc.ref);
       }
     });
-    const trresQuery = await getNotebooksDocRef(context.params.notebookId).collection("trees").get();
-    trresQuery.forEach(doc => {
+    const querySnapshotTrees = await getTreesColRef(
+      context.params.notebookId
+    ).get();
+    querySnapshotTrees.forEach(doc => {
       if (doc.exists) {
         batch.delete(doc.ref);
       }

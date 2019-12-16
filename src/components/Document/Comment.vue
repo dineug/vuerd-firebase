@@ -75,9 +75,10 @@
         <el-input
           type="textarea"
           :rows="5"
-          :placeholder="$t('writeComment')"
+          :placeholder="auth ? $t('writeComment') : $t('valid.signIn')"
           resize="none"
           ref="message"
+          :disabled="!auth"
           v-model="message"
         />
       </el-form-item>
@@ -119,6 +120,10 @@ export default class Comment extends Vue {
     return `height: ${height}px;`;
   }
 
+  get auth(): boolean {
+    return this.$store.state.user !== null;
+  }
+
   private reset() {
     this.message = "";
   }
@@ -146,7 +151,7 @@ export default class Comment extends Vue {
 
   // ==================== Event Handler ===================
   private onCreate() {
-    if (!this.$store.state.user) {
+    if (!this.auth) {
       this.$notify.warning({
         title: "Valid",
         message: this.$t("valid.signIn") as string
