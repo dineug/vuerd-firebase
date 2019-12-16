@@ -1,3 +1,4 @@
+import "./plugins/firebase";
 export * from "./service/UserService";
 export * from "./service/NotebookService";
 export * from "./service/NotebookMemberService";
