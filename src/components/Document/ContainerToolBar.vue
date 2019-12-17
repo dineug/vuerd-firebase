@@ -4,7 +4,13 @@
       <el-button type="info" size="mini" plain>
         <i class="el-icon-share" />
       </el-button>
-      <el-button type="info" size="mini" plain>
+      <el-button
+        type="info"
+        size="mini"
+        plain
+        :disabled="heartDisabled"
+        @click="onHeart"
+      >
         <font-awesome-icon
           v-if="heartCount === 0"
           class="font-awesome"
@@ -44,8 +50,13 @@ import log from "@/ts/Logger";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { CommentModel, CommentModelImpl } from "@/api/CommentModel";
 import { getCommentsColRef } from "@/api/CommentAPI";
-import { getHeartsColRef, heartDetail } from "@/api/NotebookAPI";
-import { Component, Prop, Vue } from "vue-property-decorator";
+import {
+  getHeartsColRef,
+  heartDetail,
+  heartAdd,
+  heartRemove
+} from "@/api/NotebookAPI";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Comment from "@/components/Document/Comment.vue";
 
 @Component({
@@ -61,14 +72,26 @@ export default class ContainerToolBar extends Vue {
   private commentCount: number = 0;
   private heart: boolean = false;
   private heartCount: number = 0;
+  private heartDisabled: boolean = false;
   private unsubscribeComment: { (): void; (): void } | null = null;
   private unsubscribeHeart: { (): void; (): void } | null = null;
 
+  get auth(): boolean {
+    return this.$store.state.user !== null;
+  }
+
+  @Watch("auth")
+  private watchAuth() {
+    this.getHeartStatus();
+  }
+
   private getHeartStatus() {
-    if (this.$store.state.user) {
+    if (this.auth) {
       heartDetail(this.$route.params.id).then(doc => {
         this.heart = doc.exists;
       });
+    } else {
+      this.heart = false;
     }
   }
 
@@ -108,6 +131,38 @@ export default class ContainerToolBar extends Vue {
   private onComment() {
     log.debug("Document onComment");
     eventBus.$emit(Bus.Comment.drawerStart);
+  }
+
+  private onHeart() {
+    if (this.auth) {
+      this.heartDisabled = true;
+      if (this.heart) {
+        heartRemove(this.$route.params.id)
+          .then(() => (this.heart = false))
+          .catch(err =>
+            this.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          )
+          .finally(() => (this.heartDisabled = false));
+      } else {
+        heartAdd(this.$route.params.id)
+          .then(() => (this.heart = true))
+          .catch(err =>
+            this.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          )
+          .finally(() => (this.heartDisabled = false));
+      }
+    } else {
+      this.$notify.warning({
+        title: "Valid",
+        message: this.$t("valid.signIn") as string
+      });
+    }
   }
   // ==================== Event Handler END ===================
 

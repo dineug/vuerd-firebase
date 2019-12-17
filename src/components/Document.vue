@@ -17,7 +17,7 @@
           height: `${contentViewHeight}px`
         }"
       >
-        <container-tool-bar />
+        <container-tool-bar :height="windowHeight" />
         <container-view
           :width="contentViewWidth"
           :height="contentViewHeight"

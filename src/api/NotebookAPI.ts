@@ -11,7 +11,8 @@ import {
   NotebookAdd,
   Member,
   MemberAdd,
-  Role
+  Role,
+  Heart
 } from "./NotebookModel";
 import store from "@/store";
 import moment from "moment";
@@ -207,4 +208,20 @@ export function heartDetail(notebookId: string): Promise<DocumentSnapshot> {
     throw new Error("not found user");
   }
   return getHeartsDocRef(notebookId, store.state.user.uid).get();
+}
+
+export function heartAdd(notebookId: string): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getHeartsDocRef(notebookId, store.state.user.uid).set({
+    createdAt: moment().unix()
+  } as Heart);
+}
+
+export function heartRemove(notebookId: string): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getHeartsDocRef(notebookId, store.state.user.uid).delete();
 }

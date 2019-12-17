@@ -98,6 +98,7 @@ import log from "@/ts/Logger";
 import { dateMinutesFormat } from "@/ts/filter";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { CommentModel } from "@/api/CommentModel";
+import AnimationFrame from "@/ts/AnimationFrame";
 import { commentAdd, commentModify, commentRemove } from "@/api/CommentAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -166,7 +167,13 @@ export default class Comment extends Vue {
           this.$nextTick(() => {
             const el = this.$refs.scroll as HTMLElement;
             if (el) {
-              el.scrollTop = el.scrollHeight;
+              new AnimationFrame(
+                { scrollTop: el.scrollTop },
+                { scrollTop: el.scrollHeight },
+                400
+              )
+                .update(value => (el.scrollTop = value.scrollTop))
+                .start();
             }
           });
         })
