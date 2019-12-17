@@ -29,7 +29,7 @@ export const createNotebookMember = functions.firestore
       batch.update(toDoc.ref, {
         notification: toData.notification + 1
       });
-      batch.commit();
+      await batch.commit();
     }
   });
 
@@ -82,7 +82,7 @@ export const updateNotebookMember = functions.firestore
       batch.update(notebookDoc.ref, {
         roles
       });
-      batch.commit();
+      await batch.commit();
     }
   });
 
@@ -119,7 +119,7 @@ export const deleteNotebookMember = functions.firestore
           members: members.filter(member => member !== context.params.memberId),
           roles
         });
-        batch.commit();
+        await batch.commit();
       }
     }
   });

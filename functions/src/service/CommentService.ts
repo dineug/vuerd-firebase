@@ -38,6 +38,6 @@ export const createNotebookComment = functions.firestore
           notification: toData.notification + 1
         });
       }
-      batch.commit();
+      await batch.commit();
     }
   });

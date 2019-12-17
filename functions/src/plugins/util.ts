@@ -1,4 +1,4 @@
-import { db, DocumentReference, CollectionReference } from "./firebase";
+import { DocumentReference, CollectionReference, db } from "./firebase";
 
 export function getTagsDocRef(tag: string): DocumentReference {
   return db.collection("tags").doc(tag);

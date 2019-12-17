@@ -26,7 +26,7 @@ export const createNotebook = functions.firestore
         });
       }
     }
-    batch.commit();
+    await batch.commit();
   });
 
 export const updateNotebook = functions.firestore
@@ -75,7 +75,7 @@ export const updateNotebook = functions.firestore
           });
         }
       }
-      batch.commit();
+      await batch.commit();
     }
   });
 
@@ -121,5 +121,5 @@ export const deleteNotebook = functions.firestore
         batch.delete(doc.ref);
       }
     });
-    batch.commit();
+    await batch.commit();
   });

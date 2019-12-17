@@ -8,6 +8,10 @@
     ],
     "rewrites": [
       {
+        "source": "/notebooks/*/document",
+        "function": "documentDetail"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }

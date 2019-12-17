@@ -20,7 +20,7 @@ export const deleteUser = functions.auth
         batch.delete(doc.ref);
       }
     });
-    batch.commit();
+    await batch.commit();
   });
 
 export const updateUser = functions.firestore
@@ -67,5 +67,5 @@ export const updateUser = functions.firestore
         batch.update(doc.ref, user);
       });
     }
-    batch.commit();
+    await batch.commit();
   });
