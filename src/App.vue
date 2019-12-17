@@ -77,4 +77,13 @@ body {
   height: 400px;
   overflow-y: auto;
 }
+
+.tag-box-popover {
+  .el-tag {
+    color: white;
+    background-color: $color-tag;
+    border: none;
+    margin: 2px;
+  }
+}
 </style>

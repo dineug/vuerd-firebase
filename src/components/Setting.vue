@@ -70,7 +70,7 @@ import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import { identicon } from "@/ts/util";
 import { User, UserModify, Language } from "@/api/UserModel";
-import { userUpdate } from "@/api/UserAPI";
+import { userModify } from "@/api/UserAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { MAX_SIZE } from "@/data/image";
@@ -227,7 +227,7 @@ export default class Setting extends Vue {
           if (this.previewImage === identicon(this.info.email)) {
             user.image = identicon(this.info.email);
           }
-          await userUpdate(user);
+          await userModify(user);
         } catch (err) {
           this.$notify.error({
             title: "Error",

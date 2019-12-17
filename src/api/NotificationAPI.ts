@@ -11,7 +11,7 @@ export function getNotificationDocRef(uid: string, id: string) {
   return getNotificationColRef(uid).doc(id);
 }
 
-export function findAllNotificationBy(
+export function notificationPaging(
   paging: NotificationPaging
 ): Promise<QuerySnapshot> {
   if (!store.state.user) {
@@ -38,7 +38,7 @@ export function findAllNotificationBy(
   return ref.get();
 }
 
-export async function notificationReadUpdate(
+export async function notificationReadModify(
   notification: NotificationModel
 ): Promise<void> {
   if (!store.state.user) {

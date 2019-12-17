@@ -22,39 +22,32 @@ export function getConfigDocRef(uid: string, id: string): DocumentReference {
     .doc(id);
 }
 
-export function editorSave(editor: Editor): Promise<void> {
+export function editorModify(editor: Editor): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
   return getConfigDocRef(store.state.user.uid, "editor").set(editor);
 }
 
-export function findEditorBy(): Promise<DocumentSnapshot> {
+export function editorDetail(): Promise<DocumentSnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
   return getConfigDocRef(store.state.user.uid, "editor").get();
 }
 
-export function findUserBy(): Promise<DocumentSnapshot> {
+export function userDetail(): Promise<DocumentSnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
   return getUsersDocRef(store.state.user.uid).get();
 }
 
-export function userSave(user: User): Promise<void> {
-  if (!store.state.user) {
-    throw new Error("not found user");
-  }
-  return getUsersDocRef(store.state.user.uid).set(user);
-}
-
 export async function signIn(): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  const doc = await findUserBy();
+  const doc = await userDetail();
   if (doc.data() === undefined) {
     const batch = db.batch();
     batch.set(getUsersDocRef(store.state.user.uid), {
@@ -75,7 +68,7 @@ export async function signIn(): Promise<void> {
   }
 }
 
-export function userUpdate(userModify: UserModify): Promise<void> {
+export function userModify(userModify: UserModify): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }

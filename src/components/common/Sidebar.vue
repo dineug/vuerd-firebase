@@ -185,8 +185,8 @@ import {
   NotificationPaging
 } from "@/api/NotificationModel";
 import {
-  findAllNotificationBy,
-  notificationReadUpdate
+  notificationPaging,
+  notificationReadModify
 } from "@/api/NotificationAPI";
 import { User as UserInfo } from "@/api/UserModel";
 import { invitationAccept, invitationCancel } from "@/api/InvitationAPI";
@@ -238,7 +238,7 @@ export default class Sidebar extends Vue {
   private getNotifications() {
     if (!this.notificationProcess && this.notificationPaging) {
       this.notificationProcess = true;
-      findAllNotificationBy(this.notificationPaging)
+      notificationPaging(this.notificationPaging)
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {
@@ -273,6 +273,15 @@ export default class Sidebar extends Vue {
         this.active = this.$route.name;
       }
     });
+  }
+
+  private notificationReload() {
+    this.notifications = [];
+    this.notificationPaging = {
+      last: null,
+      read: false
+    };
+    this.getNotifications();
   }
 
   // ==================== Event Handler ===================
@@ -349,15 +358,10 @@ export default class Sidebar extends Vue {
 
   private onNotification() {
     log.debug("Sidebar onNotification");
-    this.notifications = [];
-    this.notificationPaging = {
-      last: null,
-      read: false
-    };
     this.notificationLoading = this.$loading({
       target: ".notification-popover"
     });
-    this.getNotifications();
+    this.notificationReload();
     const el = document.querySelector(".notification-popover");
     if (el) {
       el.addEventListener("scroll", this.onScroll);
@@ -376,15 +380,15 @@ export default class Sidebar extends Vue {
       target: ".notification-popover"
     });
     invitationAccept(notification)
-      .then(() => this.onNotification())
+      .then(() => this.notificationReload())
       .catch((err: FirestoreError) => {
         this.$notify.error({
           title: "Error",
           message: err.message
         });
         if (err.code === "permission-denied") {
-          notificationReadUpdate(notification).then(() =>
-            this.onNotification()
+          notificationReadModify(notification).then(() =>
+            this.notificationReload()
           );
         }
       })
@@ -396,15 +400,15 @@ export default class Sidebar extends Vue {
       target: ".notification-popover"
     });
     invitationCancel(notification)
-      .then(() => this.onNotification())
+      .then(() => this.notificationReload())
       .catch((err: FirestoreError) => {
         this.$notify.error({
           title: "Error",
           message: err.message
         });
         if (err.code === "permission-denied") {
-          notificationReadUpdate(notification).then(() =>
-            this.onNotification()
+          notificationReadModify(notification).then(() =>
+            this.notificationReload()
           );
         }
       })
@@ -415,8 +419,8 @@ export default class Sidebar extends Vue {
     const loading = this.$loading({
       target: ".notification-popover"
     });
-    notificationReadUpdate(notification)
-      .then(() => this.onNotification())
+    notificationReadModify(notification)
+      .then(() => this.notificationReload())
       .catch(err =>
         this.$notify.error({
           title: "Error",

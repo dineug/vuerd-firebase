@@ -12,7 +12,9 @@ export function getInvitationColRef(): CollectionReference {
   return db.collection("invitation");
 }
 
-export function autocomplete(keyword: string): Promise<QuerySnapshot> {
+export function invitationAutocomplete(
+  keyword: string
+): Promise<QuerySnapshot> {
   return getInvitationColRef()
     .where("email", ">=", keyword)
     .limit(6)

@@ -31,6 +31,8 @@ import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Markdown from "@/components/Document/ContainerView/Markdown.vue";
 import Erd from "@/components/Document/ContainerView/ERD.vue";
 
+const MARGIN = 40;
+
 @Component({
   components: {
     Markdown,
@@ -50,7 +52,7 @@ export default class ContainerView extends Vue {
   get contentViewStyle(): string {
     return `
     width: ${this.width}px;
-    height: ${this.height}px;
+    height: ${this.height - MARGIN}px;
     `;
   }
 
@@ -68,6 +70,9 @@ export default class ContainerView extends Vue {
 <style scoped lang="scss">
 .container-view {
   box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 40px;
 
   .path {
     padding: 20px;

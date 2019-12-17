@@ -39,7 +39,7 @@
 
 <script lang="ts">
 import { COLOR_LOADING } from "@/data/color";
-import { findTreeById } from "@/api/TreeAPI";
+import { treeDetail } from "@/api/TreeAPI";
 import { TreeNodeModelImpl } from "@/api/TreeModel";
 import { Editor, treeNodeModelToEditor } from "@/models/Editor";
 import { fromEvent, Observable, Subscription } from "rxjs";
@@ -69,7 +69,7 @@ export default class Export extends Vue {
       lock: true,
       background: COLOR_LOADING
     });
-    findTreeById(this.$route.params.notebookId, this.$route.params.id)
+    treeDetail(this.$route.params.notebookId, this.$route.params.id)
       .then(doc => {
         if (doc.exists) {
           this.editor = treeNodeModelToEditor(new TreeNodeModelImpl(doc));

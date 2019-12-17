@@ -39,6 +39,8 @@
         type="textarea"
         :rows="5"
         placeholder="Notebook description"
+        maxlength="300"
+        show-word-limit
         resize="none"
         v-model="notebookModify.description"
       />
@@ -75,8 +77,8 @@
 import { COLOR_LOADING } from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookModel, NotebookAdd } from "@/api/NotebookModel";
-import { notebookUpdate, deleteById } from "@/api/NotebookAPI";
-import { autocomplete } from "@/api/TagAPI";
+import { notebookModify, notebookRemove } from "@/api/NotebookAPI";
+import { tagAutocomplete } from "@/api/TagAPI";
 import { FileType, upload } from "@/api/storageAPI";
 import { IMAGE, MAX_SIZE } from "@/data/image";
 import PictureAction from "@/models/PictureAction";
@@ -188,7 +190,7 @@ export default class NotebookInfo extends Vue {
 
   private onAutocompleteTag(keyword: string) {
     log.debug("NotebookInfo onAutocompleteTag", keyword);
-    autocomplete(keyword).then(querySnapshot => {
+    tagAutocomplete(keyword).then(querySnapshot => {
       this.autocompleteTags = querySnapshot.docs.map(
         doc =>
           ({
@@ -249,7 +251,7 @@ export default class NotebookInfo extends Vue {
           this.notebookModify.image = null;
         }
         this.notebookModify.tags = this.tags.map(tag => tag.text);
-        notebookUpdate(this.$route.params.id, this.notebookModify);
+        await notebookModify(this.$route.params.id, this.notebookModify);
       } catch (err) {
         this.$notify.error({
           title: "Error",
@@ -277,7 +279,7 @@ export default class NotebookInfo extends Vue {
           background: COLOR_LOADING,
           text: this.$t("loading.deleting") as string
         });
-        deleteById(this.notebook.id)
+        notebookRemove(this.notebook.id)
           .then(() => {
             this.$notify.success({
               title: "Success",

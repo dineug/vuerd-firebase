@@ -40,3 +40,7 @@ export function getMembersDocRef(
 ): DocumentReference {
   return getMembersColRef(notebookId).doc(uid);
 }
+
+export function getCommentColRef(notebookId: string): CollectionReference {
+  return getNotebooksDocRef(notebookId).collection("comments");
+}

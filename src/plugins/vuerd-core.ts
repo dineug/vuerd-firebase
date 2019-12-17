@@ -5,7 +5,12 @@ import eventBus, { Bus } from "@/ts/EventBus";
 import log from "@/ts/Logger";
 import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import { upload } from "@/api/storageAPI";
-import { findAllBy, deleteByBatch, saveBatch, moveBatch } from "@/api/TreeAPI";
+import {
+  treeList,
+  treeRemoveBatch,
+  treeSaveBatch,
+  treeMoveBatch
+} from "@/api/TreeAPI";
 import {
   convertTree,
   findTreeNodeByPath,
@@ -34,11 +39,11 @@ async function findTreeBy(): Promise<Tree> {
   if (!store.state.notebookId) {
     throw new Error("not found notebookId");
   }
-  const querySnapshot = await findAllBy(store.state.notebookId);
-  const treeList: TreeNodeModel[] = [];
-  querySnapshot.forEach(doc => treeList.push(new TreeNodeModelImpl(doc)));
-  store.commit(Commit.setTreeList, treeList);
-  return convertTree(treeList);
+  const querySnapshot = await treeList(store.state.notebookId);
+  const trees: TreeNodeModel[] = [];
+  querySnapshot.forEach(doc => trees.push(new TreeNodeModelImpl(doc)));
+  store.commit(Commit.setTreeList, trees);
+  return convertTree(trees);
 }
 
 async function save(treeSaves: TreeSave[]): Promise<void> {
@@ -46,7 +51,7 @@ async function save(treeSaves: TreeSave[]): Promise<void> {
   if (!store.state.notebookId) {
     throw new Error("not found notebookId");
   }
-  await saveBatch(store.state.notebookId, treeSaves);
+  await treeSaveBatch(store.state.notebookId, treeSaves);
 }
 
 async function deleteByPaths(paths: string[]): Promise<void> {
@@ -55,7 +60,7 @@ async function deleteByPaths(paths: string[]): Promise<void> {
     throw new Error("not found notebookId");
   }
   const deletePaths = findPathByPaths(store.state.treeList, paths);
-  await deleteByBatch(store.state.notebookId, deletePaths);
+  await treeRemoveBatch(store.state.notebookId, deletePaths);
 }
 
 async function move(treeMove: TreeMove): Promise<void> {
@@ -63,7 +68,7 @@ async function move(treeMove: TreeMove): Promise<void> {
   if (!store.state.notebookId) {
     throw new Error("not found notebookId");
   }
-  await moveBatch(store.state.notebookId, treeMove);
+  await treeMoveBatch(store.state.notebookId, treeMove);
 }
 
 VuerdCore.use({

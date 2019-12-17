@@ -5,7 +5,7 @@
 <script lang="ts">
 import "@/plugins/vuerd-core";
 import { Editor as ConfigEditor } from "@/api/UserModel";
-import { editorSave, findEditorBy } from "@/api/UserAPI";
+import { editorModify, editorDetail } from "@/api/UserAPI";
 import { getTreesColRef } from "@/api/TreeAPI";
 import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import log from "@/ts/Logger";
@@ -20,7 +20,7 @@ export default class Editor extends Vue {
   private unsubscribe: { (): void; (): void } | null = null;
 
   private getConfigEditor() {
-    findEditorBy().then(doc => {
+    editorDetail().then(doc => {
       if (doc.exists) {
         const editor = doc.data() as ConfigEditor;
         this.themeName = editor.themeName;
@@ -48,7 +48,7 @@ export default class Editor extends Vue {
   }
 
   private onChangeTheme(themeName: string) {
-    editorSave({ themeName });
+    editorModify({ themeName });
   }
 
   private onReload() {

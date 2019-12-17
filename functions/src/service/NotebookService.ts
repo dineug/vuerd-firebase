@@ -2,7 +2,8 @@ import { functions, db } from "../plugins/firebase";
 import {
   getTagsDocRef,
   getTreesColRef,
-  getMembersColRef
+  getMembersColRef,
+  getCommentColRef
 } from "../plugins/util";
 import { Notebook } from "./NotebookModel";
 
@@ -108,6 +109,14 @@ export const deleteNotebook = functions.firestore
       context.params.notebookId
     ).get();
     querySnapshotTrees.forEach(doc => {
+      if (doc.exists) {
+        batch.delete(doc.ref);
+      }
+    });
+    const querySnapshotComments = await getCommentColRef(
+      context.params.notebookId
+    ).get();
+    querySnapshotComments.forEach(doc => {
       if (doc.exists) {
         batch.delete(doc.ref);
       }

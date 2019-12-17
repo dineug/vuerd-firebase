@@ -29,18 +29,18 @@ export function getTreesDocRef(
   return getTreesColRef(notebookId).doc(treeId);
 }
 
-export function findTreeById(
+export function treeDetail(
   notebookId: string,
   treeId: string
 ): Promise<DocumentSnapshot> {
   return getTreesDocRef(notebookId, treeId).get();
 }
 
-export function findAllBy(notebookId: string): Promise<QuerySnapshot> {
+export function treeList(notebookId: string): Promise<QuerySnapshot> {
   return getTreesColRef(notebookId).get();
 }
 
-export function deleteByBatch(
+export function treeRemoveBatch(
   notebookId: string,
   paths: string[]
 ): Promise<void> {
@@ -74,7 +74,7 @@ export function deleteByBatch(
   return batch.commit();
 }
 
-export function saveBatch(
+export function treeSaveBatch(
   notebookId: string,
   treeSaves: TreeSave[]
 ): Promise<void> {
@@ -149,7 +149,7 @@ export function saveBatch(
   return batch.commit();
 }
 
-export function moveBatch(
+export function treeMoveBatch(
   notebookId: string,
   treeMove: TreeMove
 ): Promise<void> {

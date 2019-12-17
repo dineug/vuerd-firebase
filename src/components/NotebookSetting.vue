@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
-import { findById } from "@/api/NotebookAPI";
+import { notebookDetail } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookInfo from "@/components/NotebookSetting/NotebookInfo.vue";
@@ -34,7 +34,7 @@ export default class NotebookSetting extends Vue {
   private notebook: NotebookModel | null = null;
 
   private getNotebook() {
-    findById(this.$route.params.id)
+    notebookDetail(this.$route.params.id)
       .then(doc => {
         if (!doc.exists) {
           this.$notify.error({

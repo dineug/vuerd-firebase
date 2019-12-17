@@ -1,6 +1,6 @@
 <template>
   <el-drawer :title="$t('comment')" :visible.sync="drawer" size="50%">
-    <div class="comment-box" :style="commentBoxStyle">
+    <div class="comment-box" :style="commentBoxStyle" ref="scroll">
       <el-timeline>
         <el-timeline-item v-if="comments.length === 0" key="comment-none">
           <el-card>
@@ -76,6 +76,8 @@
           type="textarea"
           :rows="5"
           :placeholder="auth ? $t('writeComment') : $t('valid.signIn')"
+          maxlength="1000"
+          show-word-limit
           resize="none"
           ref="message"
           :disabled="!auth"
@@ -96,7 +98,7 @@ import log from "@/ts/Logger";
 import { dateMinutesFormat } from "@/ts/filter";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { CommentModel } from "@/api/CommentModel";
-import { save, commentUpdate, deleteById } from "@/api/CommentAPI";
+import { commentAdd, commentModify, commentRemove } from "@/api/CommentAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 const HEADER_HEIGHT = 45;
@@ -158,8 +160,16 @@ export default class Comment extends Vue {
       });
     } else if (this.valid()) {
       this.disabled = true;
-      save(this.$route.params.id, this.message)
-        .then(() => (this.message = ""))
+      commentAdd(this.$route.params.id, this.message)
+        .then(() => {
+          this.message = "";
+          this.$nextTick(() => {
+            const el = this.$refs.scroll as HTMLElement;
+            if (el) {
+              el.scrollTop = el.scrollHeight;
+            }
+          });
+        })
         .catch(err =>
           this.$notify.error({
             title: "Error",
@@ -177,7 +187,7 @@ export default class Comment extends Vue {
       type: "warning"
     })
       .then(() => {
-        deleteById(this.$route.params.id, comment.id)
+        commentRemove(this.$route.params.id, comment.id)
           .then(() =>
             this.$notify.success({
               title: "Success",
@@ -227,7 +237,7 @@ export default class Comment extends Vue {
         input.focus();
       }
     } else {
-      commentUpdate(this.$route.params.id, comment.id, this.editMessage)
+      commentModify(this.$route.params.id, comment.id, this.editMessage)
         .then(() => this.onEditCancel())
         .catch(err =>
           this.$notify.error({

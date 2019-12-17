@@ -2,22 +2,49 @@
   <el-card class="notebook-card" :body-style="{ padding: '0px' }">
     <div class="image-box">
       <image-lazy v-if="notebook.image" :src="notebook.image" lazy />
-      <el-button-group class="btn-box">
-        <el-button icon="el-icon-view" @click="onClick('document')" />
-        <el-button v-if="edit" icon="el-icon-edit" @click="onClick('editor')" />
+      <el-button-group
+        class="btn-box"
+        :style="notebook.image ? `bottom: -20px;` : ''"
+      >
+        <el-button
+          type="info"
+          plain
+          icon="el-icon-view"
+          @click="onClick('document')"
+        />
+        <el-button
+          v-if="edit"
+          type="info"
+          plain
+          icon="el-icon-edit"
+          @click="onClick('editor')"
+        />
         <el-button
           v-if="setting"
+          type="info"
+          plain
           icon="el-icon-s-tools"
           @click="onClick('setting')"
         />
       </el-button-group>
     </div>
     <div class="content-box scrollbar" :style="contentBoxStyle">
-      <div class="title-box">{{ notebook.title }}</div>
-      <div class="title-box">{{ notebook.description }}</div>
-      <div class="tag-box">
-        <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
+      <div class="title-box">
+        <h3>{{ notebook.title }}</h3>
       </div>
+      <div class="title-box">{{ notebook.description }}</div>
+      <el-popover v-if="notebook.tags.length !== 0" trigger="hover" width="100">
+        <div class="tag-box-popover">
+          <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
+        </div>
+        <el-button
+          class="tag-btn"
+          type="warning"
+          icon="el-icon-price-tag"
+          circle
+          slot="reference"
+        />
+      </el-popover>
     </div>
   </el-card>
 </template>
@@ -85,7 +112,8 @@ export default class NotebookCard extends Vue {
   height: 400px;
   display: inline-block;
   margin: 6px;
-  overflow: hidden;
+  /*overflow: hidden;*/
+  position: relative;
 
   .image-box {
     position: relative;
@@ -107,13 +135,9 @@ export default class NotebookCard extends Vue {
       white-space: pre-line;
     }
 
-    .tag-box {
-      .el-tag {
-        color: white;
-        background-color: $color-tag;
-        border: none;
-        margin: 2px;
-      }
+    .tag-btn {
+      position: absolute;
+      top: -5px;
     }
   }
 }

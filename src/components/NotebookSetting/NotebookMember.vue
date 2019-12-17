@@ -84,12 +84,12 @@ import {
   MemberModelImpl as InvitationMemberModelImpl
 } from "@/api/InvitationModel";
 import {
-  findAllMemberBy,
+  memberList,
   memberInvitation,
-  deleteMemberById,
-  memberRoleUpdate
+  memberRemove,
+  memberRoleModify
 } from "@/api/NotebookAPI";
-import { autocomplete } from "@/api/InvitationAPI";
+import { invitationAutocomplete } from "@/api/InvitationAPI";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
 import { Tag, Validation } from "@/models/vue-tags-input";
@@ -201,7 +201,7 @@ export default class NotebookMember extends Vue {
 
   private getMembers() {
     log.debug("NotebookMember getMembers");
-    findAllMemberBy(this.$route.params.id).then(querySnapshot => {
+    memberList(this.$route.params.id).then(querySnapshot => {
       this.members = [];
       querySnapshot.docs.forEach(doc => {
         this.members.push(new MemberModelImpl(doc));
@@ -277,7 +277,7 @@ export default class NotebookMember extends Vue {
             background: COLOR_LOADING,
             text: this.$t("loading.deleting") as string
           });
-          deleteMemberById(this.notebook.id, member.id)
+          memberRemove(this.notebook.id, member.id)
             .then(() => {
               this.$notify.success({
                 title: "Success",
@@ -306,7 +306,7 @@ export default class NotebookMember extends Vue {
     log.debug("NotebookMember onChangeRole", role);
     if (this.validRole(role, member)) {
       member.role = role;
-      memberRoleUpdate(this.notebook.id, member.id, role)
+      memberRoleModify(this.notebook.id, member.id, role)
         .then(() => {
           this.notebook.roles[member.id] = role;
           this.getMembers();
@@ -322,7 +322,7 @@ export default class NotebookMember extends Vue {
 
   private onAutocompleteEmail(keyword: string) {
     log.debug("NotebookMember onAutocompleteEmail", keyword);
-    autocomplete(keyword).then(querySnapshot => {
+    invitationAutocomplete(keyword).then(querySnapshot => {
       this.tempInvitationMembers = [];
       this.autocompleteEmails = querySnapshot.docs.map(doc => {
         const user = new InvitationMemberModelImpl(doc);

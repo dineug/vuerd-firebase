@@ -2,8 +2,9 @@ import {
   db,
   QuerySnapshot,
   DocumentReference,
-  Paging,
-  CollectionReference
+  DocumentSnapshot,
+  CollectionReference,
+  Paging
 } from "@/plugins/firebase";
 import {
   Notebook,
@@ -15,23 +16,18 @@ import {
 import store from "@/store";
 import moment from "moment";
 import { getTreesColRef } from "./TreeAPI";
-import { User } from "./UserModel";
 import { TreeNode } from "./TreeModel";
-import { findUserBy } from "./UserAPI";
 
 export function getNotebooksColRef(): CollectionReference {
   return db.collection("notebooks");
 }
 
-export function getNotebookDocRef(id: string): DocumentReference {
+export function getNotebooksDocRef(id: string): DocumentReference {
   return getNotebooksColRef().doc(id);
 }
 
 export function getMembersColRef(notebookId: string): CollectionReference {
-  return db
-    .collection("notebooks")
-    .doc(notebookId)
-    .collection("members");
+  return getNotebooksDocRef(notebookId).collection("members");
 }
 
 export function getMembersDocRef(
@@ -41,10 +37,21 @@ export function getMembersDocRef(
   return getMembersColRef(notebookId).doc(uid);
 }
 
-export async function save(
+export function getHeartsColRef(notebookId: string): CollectionReference {
+  return getNotebooksDocRef(notebookId).collection("hearts");
+}
+
+export function getHeartsDocRef(
+  notebookId: string,
+  uid: string
+): DocumentReference {
+  return getHeartsColRef(notebookId).doc(uid);
+}
+
+export async function notebookAdd(
   notebookAdd: NotebookAdd
 ): Promise<DocumentReference> {
-  if (!store.state.user) {
+  if (!store.state.user || !store.state.info) {
     throw new Error("not found user");
   }
   const notebook = notebookAdd as Notebook;
@@ -60,8 +67,8 @@ export async function save(
     updatedAt: moment().unix(),
     createdAt: moment().unix()
   } as TreeNode);
-  const docUser = await findUserBy();
-  const user = docUser.data() as User;
+
+  const user = store.state.info;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({
     uid: store.state.user.uid,
     name: user.name,
@@ -75,7 +82,7 @@ export async function save(
   return docRef;
 }
 
-export function findByPaging(paging: Paging): Promise<QuerySnapshot> {
+export function notebookPaging(paging: Paging): Promise<QuerySnapshot> {
   if (!paging.limit) {
     paging.limit = 20;
   }
@@ -95,7 +102,7 @@ export function findByPaging(paging: Paging): Promise<QuerySnapshot> {
   return ref.get();
 }
 
-export function findByPagingAndMember(paging: Paging): Promise<QuerySnapshot> {
+export function myNotebookPaging(paging: Paging): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
@@ -118,21 +125,28 @@ export function findByPagingAndMember(paging: Paging): Promise<QuerySnapshot> {
   return ref.get();
 }
 
-export function findById(id: string) {
-  return getNotebookDocRef(id).get();
+export function notebookDetail(id: string): Promise<DocumentSnapshot> {
+  return getNotebooksDocRef(id).get();
 }
 
-export function notebookUpdate(
+export function notebookModify(
   id: string,
   notebookAdd: NotebookAdd
 ): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getNotebookDocRef(id).update(notebookAdd);
+  return getNotebooksDocRef(id).update(notebookAdd);
 }
 
-export function findAllMemberBy(id: string): Promise<QuerySnapshot> {
+export function notebookRemove(notebookId: string): Promise<void> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getNotebooksDocRef(notebookId).delete();
+}
+
+export function memberList(id: string): Promise<QuerySnapshot> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
@@ -165,14 +179,7 @@ export function memberInvitation(
   return batch.commit();
 }
 
-export function deleteById(notebookId: string): Promise<void> {
-  if (!store.state.user) {
-    throw new Error("not found user");
-  }
-  return getNotebookDocRef(notebookId).delete();
-}
-
-export function deleteMemberById(
+export function memberRemove(
   notebookId: string,
   memberId: string
 ): Promise<void> {
@@ -182,7 +189,7 @@ export function deleteMemberById(
   return getMembersDocRef(notebookId, memberId).delete();
 }
 
-export function memberRoleUpdate(
+export function memberRoleModify(
   notebookId: string,
   memberId: string,
   role: Role
@@ -193,4 +200,11 @@ export function memberRoleUpdate(
   return getMembersDocRef(notebookId, memberId).update({
     role
   });
+}
+
+export function heartDetail(notebookId: string): Promise<DocumentSnapshot> {
+  if (!store.state.user) {
+    throw new Error("not found user");
+  }
+  return getHeartsDocRef(notebookId, store.state.user.uid).get();
 }

@@ -3,28 +3,28 @@ import store from "@/store";
 import moment from "moment";
 import { Comment } from "./CommentModel";
 
-export function getCommentColRef(notebookId: string): CollectionReference {
+export function getCommentsColRef(notebookId: string): CollectionReference {
   return db
     .collection("notebooks")
     .doc(notebookId)
     .collection("comments");
 }
 
-export function getCommentDocRef(
+export function getCommentsDocRef(
   notebookId: string,
   commentId: string
 ): DocumentReference {
-  return getCommentColRef(notebookId).doc(commentId);
+  return getCommentsColRef(notebookId).doc(commentId);
 }
 
-export function save(
+export function commentAdd(
   notebookId: string,
   message: string
 ): Promise<DocumentReference> {
   if (!store.state.user || !store.state.info) {
     throw new Error("not found user");
   }
-  return getCommentColRef(notebookId).add({
+  return getCommentsColRef(notebookId).add({
     uid: store.state.user.uid,
     name: store.state.info.name,
     nickname: store.state.info.nickname,
@@ -36,17 +36,17 @@ export function save(
   } as Comment);
 }
 
-export function deleteById(
+export function commentRemove(
   notebookId: string,
   commentId: string
 ): Promise<void> {
   if (!store.state.user || !store.state.info) {
     throw new Error("not found user");
   }
-  return getCommentDocRef(notebookId, commentId).delete();
+  return getCommentsDocRef(notebookId, commentId).delete();
 }
 
-export function commentUpdate(
+export function commentModify(
   notebookId: string,
   commentId: string,
   message: string
@@ -54,7 +54,7 @@ export function commentUpdate(
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getCommentDocRef(notebookId, commentId).update({
+  return getCommentsDocRef(notebookId, commentId).update({
     message,
     updatedAt: moment().unix()
   } as Comment);

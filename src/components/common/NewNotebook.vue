@@ -29,6 +29,8 @@
           type="textarea"
           :rows="5"
           placeholder="Notebook description"
+          maxlength="300"
+          show-word-limit
           resize="none"
           v-model="description"
         />
@@ -64,8 +66,8 @@ import log from "@/ts/Logger";
 import { NotebookAdd } from "@/api/NotebookModel";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { routes } from "@/router";
-import { save } from "@/api/NotebookAPI";
-import { autocomplete } from "@/api/TagAPI";
+import { notebookAdd } from "@/api/NotebookAPI";
+import { tagAutocomplete } from "@/api/TagAPI";
 import { upload, FileType } from "@/api/storageAPI";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
@@ -151,7 +153,7 @@ export default class NewNotebook extends Vue {
 
   private onAutocompleteTag(keyword: string) {
     log.debug("NewNotebook onAutocompleteTag", keyword);
-    autocomplete(keyword).then(querySnapshot => {
+    tagAutocomplete(keyword).then(querySnapshot => {
       this.autocompleteTags = querySnapshot.docs.map(
         doc =>
           ({
@@ -173,7 +175,7 @@ export default class NewNotebook extends Vue {
         background: COLOR_LOADING,
         text: this.$t("loading.creating") as string
       });
-      const notebookAdd: NotebookAdd = {
+      const notebook: NotebookAdd = {
         title: this.title,
         description: this.description,
         published: this.published,
@@ -182,9 +184,9 @@ export default class NewNotebook extends Vue {
       };
       try {
         if (this.file) {
-          notebookAdd.image = await upload(this.file);
+          notebook.image = await upload(this.file);
         }
-        const docRef = await save(notebookAdd);
+        const docRef = await notebookAdd(notebook);
         this.$router.push({
           name: routes.Editor.name,
           params: {

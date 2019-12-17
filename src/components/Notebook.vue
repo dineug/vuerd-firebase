@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
-import { findByPaging } from "@/api/NotebookAPI";
+import { notebookPaging } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { routes } from "@/router";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -41,7 +41,7 @@ export default class Notebook extends Vue {
   private getNotebooks() {
     if (!this.listProcess && this.paging) {
       this.listProcess = true;
-      findByPaging(this.paging)
+      notebookPaging(this.paging)
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {

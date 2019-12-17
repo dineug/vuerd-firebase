@@ -105,3 +105,7 @@ export class MemberModelImpl implements MemberModel {
     this.createdAt = data.createdAt;
   }
 }
+
+export interface Heart {
+  createdAt: number;
+}
