@@ -5,10 +5,20 @@ import { ElLoadingComponent } from "element-ui/types/loading";
 import { COLOR_LOADING } from "@/data/color";
 import { performance, Trace } from "@/plugins/firebase";
 
-function loadView(view: string) {
-  return () =>
-    import(/* webpackChunkName: "[request]" */ `@/components/${view}.vue`);
-}
+const Notebook = () =>
+  import(/* webpackChunkName: "user" */ `@/components/Notebook.vue`);
+const MyNotebook = () =>
+  import(/* webpackChunkName: "user" */ `@/components/MyNotebook.vue`);
+const Setting = () =>
+  import(/* webpackChunkName: "user" */ `@/components/Setting.vue`);
+const NotebookSetting = () =>
+  import(/* webpackChunkName: "user" */ `@/components/NotebookSetting.vue`);
+const Document = () =>
+  import(/* webpackChunkName: "user" */ `@/components/Document.vue`);
+const Editor = () =>
+  import(/* webpackChunkName: "editor" */ `@/components/Editor.vue`);
+const Export = () =>
+  import(/* webpackChunkName: "export" */ `@/components/Export.vue`);
 
 Vue.use(VueRouter);
 
@@ -19,24 +29,30 @@ export const routes = {
   Notebook: {
     path: "/",
     name: "Notebook",
-    component: loadView("Notebook")
+    component: Notebook
   },
   MyNotebook: {
     path: "/notebooks/me",
     name: "MyNotebook",
-    component: loadView("MyNotebook"),
+    component: MyNotebook,
+    beforeEnter: signIn
+  },
+  Setting: {
+    path: "/setting",
+    name: "Setting",
+    component: Setting,
     beforeEnter: signIn
   },
   NotebookSetting: {
     path: "/notebooks/:id/setting",
     name: "NotebookSetting",
-    component: loadView("NotebookSetting"),
+    component: NotebookSetting,
     beforeEnter: signIn
   },
   Document: {
     path: "/notebooks/:id/document",
     name: "Document",
-    component: loadView("Document"),
+    component: Document,
     props: (route: Route) => ({
       treeActiveId: route.query.active
     })
@@ -44,7 +60,7 @@ export const routes = {
   Editor: {
     path: "/notebooks/:id/editor",
     name: "Editor",
-    component: loadView("Editor"),
+    component: Editor,
     beforeEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
       traceEditorLoad = performance.trace("editorLoad");
       traceEditorLoad.start();
@@ -55,16 +71,10 @@ export const routes = {
       signIn(to, from, next);
     }
   },
-  Setting: {
-    path: "/setting",
-    name: "Setting",
-    component: loadView("Setting"),
-    beforeEnter: signIn
-  },
   Export: {
     path: "/notebooks/:notebookId/export/:id",
     name: "Export",
-    component: loadView("Export")
+    component: Export
   },
   Redirect: {
     path: "*",
