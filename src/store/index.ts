@@ -3,7 +3,7 @@ import Vuex from "vuex";
 import { User } from "@/plugins/firebase";
 import { TreeNodeModel } from "@/api/TreeModel";
 import { User as UserInfo } from "@/api/UserModel";
-import { getUsersDocRef, signIn } from "@/api/UserAPI";
+import { getUsersDocRef, userSignIn } from "@/api/UserAPI";
 import i18n from "@/plugins/vue-i18n";
 import eventBus, { Bus } from "@/ts/EventBus";
 
@@ -41,7 +41,7 @@ export default new Vuex.Store<State>({
   mutations: {
     signIn(state: State, user: User) {
       state.user = user;
-      signIn();
+      userSignIn();
       state.unsubscribe = getUsersDocRef(user.uid).onSnapshot(doc => {
         if (doc.exists) {
           const info = doc.data() as UserInfo;

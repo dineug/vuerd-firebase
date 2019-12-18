@@ -24,7 +24,9 @@ export async function upload(file: File | Blob): Promise<string> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  const ref = storage.ref(`${store.state.user.uid}/${getFileName(file)}`);
+  const ref = storage.ref(
+    `public/users/${store.state.user.uid}/${getFileName(file)}`
+  );
   const snapshot = await ref.put(file);
   return snapshot.ref.getDownloadURL();
 }

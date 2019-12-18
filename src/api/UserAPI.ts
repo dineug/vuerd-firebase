@@ -43,7 +43,7 @@ export function userDetail(): Promise<DocumentSnapshot> {
   return getUsersDocRef(store.state.user.uid).get();
 }
 
-export async function signIn(): Promise<void> {
+export async function userSignIn(): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }

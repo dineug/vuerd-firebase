@@ -45,8 +45,8 @@ export type OrderBy = "createdAt" | "updatedAt" | "title";
 
 auth.onAuthStateChanged((user: User | null) => {
   if (user) {
-    store.commit(Commit.signIn, user);
     analytics.setUserId(user.uid);
+    store.commit(Commit.signIn, user);
     if (
       store.state.referer !== "/" &&
       router.currentRoute.path !== store.state.referer
