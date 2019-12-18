@@ -3,6 +3,7 @@ import VueRouter, { RawLocation, Route } from "vue-router";
 import { signIn } from "./Guard";
 import { ElLoadingComponent } from "element-ui/types/loading";
 import { COLOR_LOADING } from "@/data/color";
+import { performance, Trace } from "@/plugins/firebase";
 
 function loadView(view: string) {
   return () =>
@@ -12,6 +13,7 @@ function loadView(view: string) {
 Vue.use(VueRouter);
 
 let loading: ElLoadingComponent | null = null;
+let traceEditorLoad: Trace | null = null;
 
 export const routes = {
   Notebook: {
@@ -44,6 +46,8 @@ export const routes = {
     name: "Editor",
     component: loadView("Editor"),
     beforeEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
+      traceEditorLoad = performance.trace("editorLoad");
+      traceEditorLoad.start();
       loading = Vue.prototype.$loading({
         lock: true,
         background: COLOR_LOADING
@@ -75,6 +79,10 @@ const router = new VueRouter({
 });
 
 router.afterEach((to, from) => {
+  if (traceEditorLoad !== null) {
+    traceEditorLoad.stop();
+    traceEditorLoad = null;
+  }
   if (loading !== null) {
     loading.close();
     loading = null;

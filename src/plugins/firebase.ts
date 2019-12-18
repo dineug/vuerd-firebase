@@ -3,6 +3,7 @@ import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
 import "firebase/analytics";
+import "firebase/performance";
 import store, { Commit } from "@/store";
 import router from "@/router";
 
@@ -23,6 +24,7 @@ export const db = firebase.firestore();
 export const auth = firebase.auth();
 export const storage = firebase.storage();
 export const analytics = firebase.analytics();
+export const performance = firebase.performance();
 
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
@@ -31,6 +33,7 @@ export type CollectionReference = firebase.firestore.CollectionReference;
 export type FirestoreError = firebase.firestore.FirestoreError;
 export type AuthError = firebase.auth.AuthError;
 export type User = firebase.User;
+export type Trace = firebase.performance.Trace;
 export interface Paging {
   limit?: number;
   last?: DocumentSnapshot | null;
