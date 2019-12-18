@@ -59,6 +59,7 @@ export async function notebookAdd(
   notebook.roles = {};
   notebook.roles[store.state.user.uid] = "owner";
   notebook.members = [store.state.user.uid];
+  notebook.heartCount = 0;
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await getNotebooksColRef().add(notebook);

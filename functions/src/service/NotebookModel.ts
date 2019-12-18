@@ -10,6 +10,7 @@ export interface Notebook {
   description: string;
   image: string | null;
   tags: string[];
+  heartCount: number;
   updatedAt: number;
   createdAt: number;
 }

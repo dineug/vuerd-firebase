@@ -3,7 +3,7 @@ import {
   getTagsDocRef,
   getTreesColRef,
   getMembersColRef,
-  getCommentColRef
+  getCommentsColRef
 } from "../plugins/util";
 import { Notebook } from "./NotebookModel";
 
@@ -113,7 +113,7 @@ export const deleteNotebook = functions.firestore
         batch.delete(doc.ref);
       }
     });
-    const querySnapshotComments = await getCommentColRef(
+    const querySnapshotComments = await getCommentsColRef(
       context.params.notebookId
     ).get();
     querySnapshotComments.forEach(doc => {

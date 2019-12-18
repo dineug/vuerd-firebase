@@ -53,7 +53,6 @@ import Explorer from "@/components/Document/Explorer.vue";
 import Sash from "@/components/common/Sash.vue";
 import ContainerView from "@/components/Document/ContainerView.vue";
 import ContainerToolBar from "@/components/Document/ContainerToolBar.vue";
-import Comment from "@/components/Document/Comment.vue";
 
 const SIDEBAR_WIDTH = 64;
 const MARGIN = 10;
@@ -70,8 +69,7 @@ const enum Direction {
     Explorer,
     Sash,
     ContainerView,
-    ContainerToolBar,
-    Comment
+    ContainerToolBar
   }
 })
 export default class Document extends Vue {

@@ -11,6 +11,7 @@ export interface Notebook {
   description: string;
   image: string | null;
   tags: string[];
+  heartCount: number;
   updatedAt: number;
   createdAt: number;
 }
@@ -36,6 +37,7 @@ export class NotebookModelImpl implements NotebookModel {
   public description: string;
   public image: string | null;
   public tags: string[];
+  public heartCount: number;
   public updatedAt: number;
   public createdAt: number;
 
@@ -49,6 +51,7 @@ export class NotebookModelImpl implements NotebookModel {
     this.description = data.description;
     this.image = data.image;
     this.tags = data.tags;
+    this.heartCount = data.heartCount;
     this.updatedAt = data.updatedAt;
     this.createdAt = data.createdAt;
   }

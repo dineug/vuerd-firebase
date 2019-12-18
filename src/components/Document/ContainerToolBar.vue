@@ -51,11 +51,12 @@ import eventBus, { Bus } from "@/ts/EventBus";
 import { CommentModel, CommentModelImpl } from "@/api/CommentModel";
 import { getCommentsColRef } from "@/api/CommentAPI";
 import {
-  getHeartsColRef,
+  getNotebooksDocRef,
   heartDetail,
   heartAdd,
   heartRemove
 } from "@/api/NotebookAPI";
+import { Notebook } from "@/api/NotebookModel";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Comment from "@/components/Document/Comment.vue";
 
@@ -96,9 +97,14 @@ export default class ContainerToolBar extends Vue {
   }
 
   private getHeartCount() {
-    this.unsubscribeHeart = getHeartsColRef(this.$route.params.id).onSnapshot(
+    this.unsubscribeHeart = getNotebooksDocRef(
+      this.$route.params.id
+    ).onSnapshot(
       snapshot => {
-        this.heartCount = snapshot.size;
+        if (snapshot.exists) {
+          const notebook = snapshot.data() as Notebook;
+          this.heartCount = notebook.heartCount;
+        }
       },
       err =>
         this.$notify.error({
@@ -138,7 +144,10 @@ export default class ContainerToolBar extends Vue {
       this.heartDisabled = true;
       if (this.heart) {
         heartRemove(this.$route.params.id)
-          .then(() => (this.heart = false))
+          .then(() => {
+            this.heart = false;
+            this.heartCount--;
+          })
           .catch(err =>
             this.$notify.error({
               title: "Error",
@@ -148,7 +157,10 @@ export default class ContainerToolBar extends Vue {
           .finally(() => (this.heartDisabled = false));
       } else {
         heartAdd(this.$route.params.id)
-          .then(() => (this.heart = true))
+          .then(() => {
+            this.heart = true;
+            this.heartCount++;
+          })
           .catch(err =>
             this.$notify.error({
               title: "Error",

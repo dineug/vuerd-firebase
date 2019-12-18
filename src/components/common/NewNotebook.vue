@@ -187,7 +187,7 @@ export default class NewNotebook extends Vue {
           notebook.image = await upload(this.file);
         }
         const docRef = await notebookAdd(notebook);
-        this.$router.push({
+        await this.$router.push({
           name: routes.Editor.name,
           params: {
             id: docRef.id

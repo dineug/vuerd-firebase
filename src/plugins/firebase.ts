@@ -2,6 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
+import "firebase/analytics";
 import store, { Commit } from "@/store";
 import router from "@/router";
 
@@ -21,6 +22,7 @@ export default firebase;
 export const db = firebase.firestore();
 export const auth = firebase.auth();
 export const storage = firebase.storage();
+export const analytics = firebase.analytics();
 
 export type QuerySnapshot = firebase.firestore.QuerySnapshot;
 export type DocumentReference = firebase.firestore.DocumentReference;
@@ -41,6 +43,7 @@ export type OrderBy = "createdAt" | "updatedAt" | "title";
 auth.onAuthStateChanged((user: User | null) => {
   if (user) {
     store.commit(Commit.signIn, user);
+    analytics.setUserId(user.uid);
     if (
       store.state.referer !== "/" &&
       router.currentRoute.path !== store.state.referer

@@ -41,6 +41,6 @@ export function getMembersDocRef(
   return getMembersColRef(notebookId).doc(uid);
 }
 
-export function getCommentColRef(notebookId: string): CollectionReference {
+export function getCommentsColRef(notebookId: string): CollectionReference {
   return getNotebooksDocRef(notebookId).collection("comments");
 }
