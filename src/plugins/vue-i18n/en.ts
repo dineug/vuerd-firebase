@@ -36,6 +36,7 @@ export default {
   noComment: "There's no comment",
   writeComment: "Write a comment",
   description: "Description",
+  linkCopy: "Link has been copied",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",

@@ -32,24 +32,31 @@ app.get("/notebooks/:id/document", async (req, res) => {
         `<title>${notebook.title}</title>`
       );
       html = html.replace(
-        /<meta name=description(.*?)content=https:\/\/vuerd.io\/vuerd.png>/,
+        /<meta name=description(.*?)<meta property=og:image content=https:\/\/vuerd.io\/vuerd.png>/,
         ""
       );
 
       const meta: string[] = [];
       meta.push(`
-        <meta property=og:type content=article />
-        <meta property=og:title content="${notebook.title}">
-        <meta property=og:url content="https://vuerd.io${req.path}">
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="${notebook.title}" />
+        <meta property="og:url" content="https://vuerd.io/notebooks/${req.params.id}/document" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@dineug2" />
+        <meta name="twitter:title" content="${notebook.title}" />
       `);
       if (notebook.description.trim() !== "") {
         meta.push(`
-          <meta name=description content="${notebook.description}">
-          <meta property=og:description content="${notebook.description}">
+          <meta name="description" content="${notebook.description}" />
+          <meta property="og:description" content="${notebook.description}" />
+          <meta name="twitter:description" content="${notebook.description}" />
         `);
       }
       if (notebook.image) {
-        meta.push(`<meta property=og:image content="${notebook.image}">`);
+        meta.push(`
+          <meta property="og:image" content="${notebook.image}" />
+          <meta name="twitter:image" content="${notebook.image}" />
+        `);
       }
       meta.push("</head>");
       html = html.replace(/<\/head>/, meta.join(""));

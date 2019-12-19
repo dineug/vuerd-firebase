@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <!-- ======================= SEO ======================= -->
     <meta name="description" content="공유 블로그 vuerd" />
+    <!-- twitter -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@dineug2" />
+    <meta name="twitter:title" content="vuerd" />
+    <meta name="twitter:description" content="공유 블로그 vuerd" />
+    <meta name="twitter:image" content="https://vuerd.io/vuerd.png" />
+    <!-- twitter END -->
     <!-- opengraph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="vuerd" />
@@ -14,6 +21,7 @@
     <meta property="og:description" content="공유 블로그 vuerd" />
     <meta property="og:image" content="https://vuerd.io/vuerd.png" />
     <!-- opengraph END -->
+    <meta property="fb:app_id" content="990143934699529" />
     <!-- ======================= SEO END ======================= -->
     <title>vuerd</title>
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
@@ -32,7 +40,22 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <!-- dependencies -->
-    <script src="https://cdn.jsdelivr.net/npm/jdenticon@2.2.0" async></script>
+    <!-- facebook SDK -->
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId: 990143934699529,
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: "v5.0"
+        });
+      };
+    </script>
+    <script
+      async
+      defer
+      src="https://connect.facebook.net/en_US/sdk.js"
+    ></script>
     <!-- dependencies END -->
   </body>
 </html>

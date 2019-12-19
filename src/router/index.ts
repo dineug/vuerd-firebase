@@ -6,19 +6,19 @@ import { COLOR_LOADING } from "@/data/color";
 import { performance, Trace } from "@/plugins/firebase";
 
 const Notebook = () =>
-  import(/* webpackChunkName: "user" */ `@/components/Notebook.vue`);
+  import(/* webpackChunkName: "user" */ "@/components/Notebook.vue");
 const MyNotebook = () =>
-  import(/* webpackChunkName: "user" */ `@/components/MyNotebook.vue`);
+  import(/* webpackChunkName: "user" */ "@/components/MyNotebook.vue");
 const Setting = () =>
-  import(/* webpackChunkName: "user" */ `@/components/Setting.vue`);
+  import(/* webpackChunkName: "user" */ "@/components/Setting.vue");
 const NotebookSetting = () =>
-  import(/* webpackChunkName: "user" */ `@/components/NotebookSetting.vue`);
+  import(/* webpackChunkName: "user" */ "@/components/NotebookSetting.vue");
 const Document = () =>
-  import(/* webpackChunkName: "user" */ `@/components/Document.vue`);
+  import(/* webpackChunkName: "user" */ "@/components/Document.vue");
 const Editor = () =>
-  import(/* webpackChunkName: "editor" */ `@/components/Editor.vue`);
+  import(/* webpackChunkName: "editor" */ "@/components/Editor.vue");
 const Export = () =>
-  import(/* webpackChunkName: "export" */ `@/components/Export.vue`);
+  import(/* webpackChunkName: "export" */ "@/components/Export.vue");
 
 Vue.use(VueRouter);
 

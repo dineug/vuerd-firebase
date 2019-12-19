@@ -1,12 +1,9 @@
 <template>
   <div class="container-tool-bar">
     <el-button-group>
-      <el-button type="info" size="mini" plain>
-        <i class="el-icon-share" />
-      </el-button>
       <el-button
         type="info"
-        size="mini"
+        size="small"
         plain
         :disabled="heartDisabled"
         @click="onHeart"
@@ -26,7 +23,7 @@
       <el-button
         class="btn-comment"
         type="info"
-        size="mini"
+        size="small"
         plain
         @click="onComment"
       >
@@ -40,6 +37,27 @@
           <i class="el-icon-chat-dot-round" />
         </el-badge>
       </el-button>
+      <el-popover popper-class="share-popper">
+        <div class="facebook-btn">
+          <font-awesome-icon
+            :icon="['fab', 'facebook']"
+            @click="onShareFacebook"
+          />
+        </div>
+        <el-button type="info" size="small" circle @click="onShareTwitter">
+          <font-awesome-icon class="font-awesome" :icon="['fab', 'twitter']" />
+        </el-button>
+        <el-button
+          type="info"
+          size="small"
+          circle
+          icon="el-icon-link"
+          @click="onShareLinkCopy"
+        />
+        <el-button type="info" size="small" plain slot="reference">
+          <i class="el-icon-share" />
+        </el-button>
+      </el-popover>
     </el-button-group>
     <comment :height="height" :comments="comments" />
   </div>
@@ -47,6 +65,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import { popupData } from "@/ts/util";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { CommentModel, CommentModelImpl } from "@/api/CommentModel";
 import { getCommentsColRef } from "@/api/CommentAPI";
@@ -76,6 +95,8 @@ export default class ContainerToolBar extends Vue {
   private heartDisabled: boolean = false;
   private unsubscribeComment: { (): void; (): void } | null = null;
   private unsubscribeHeart: { (): void; (): void } | null = null;
+  private notebook: Notebook | null = null;
+  private popup: Window | null = null;
 
   get auth(): boolean {
     return this.$store.state.user !== null;
@@ -102,8 +123,8 @@ export default class ContainerToolBar extends Vue {
     ).onSnapshot(
       snapshot => {
         if (snapshot.exists) {
-          const notebook = snapshot.data() as Notebook;
-          this.heartCount = notebook.heartCount;
+          this.notebook = snapshot.data() as Notebook;
+          this.heartCount = this.notebook.heartCount;
         }
       },
       err =>
@@ -176,6 +197,44 @@ export default class ContainerToolBar extends Vue {
       });
     }
   }
+
+  private onShareLinkCopy() {
+    const textarea = document.createElement("textarea");
+    textarea.value = location.href;
+    document.body.append(textarea);
+    textarea.select();
+    textarea.setSelectionRange(0, 999);
+    document.execCommand("copy");
+    textarea.remove();
+    this.$notify.success({
+      title: "Success",
+      message: this.$t("linkCopy") as string,
+      duration: 3000
+    });
+  }
+
+  private onShareFacebook() {
+    window.FB.ui({
+      method: "share",
+      href: location.href,
+      hashtag: "#vuerd"
+    });
+  }
+
+  private onShareTwitter() {
+    const params: string[] = [
+      `url=${encodeURI(location.href)}`,
+      "hashtags=vuerd"
+    ];
+    if (this.notebook !== null) {
+      params.push(`text=${encodeURI(this.notebook.title)}`);
+    }
+    this.popup = open(
+      `https://twitter.com/intent/tweet?${params.join("&")}`,
+      "share",
+      popupData(600, 450).toString()
+    );
+  }
   // ==================== Event Handler END ===================
 
   // ==================== Life Cycle ====================
@@ -192,6 +251,9 @@ export default class ContainerToolBar extends Vue {
     if (this.unsubscribeHeart !== null) {
       this.unsubscribeHeart();
     }
+    if (this.popup !== null) {
+      this.popup.close();
+    }
   }
   // ==================== Life Cycle END ====================
 }
@@ -207,18 +269,15 @@ export default class ContainerToolBar extends Vue {
   box-sizing: border-box;
   border-bottom: 1px solid #e5e5e5;
 
-  i {
-    font-size: 1.5rem;
-  }
-
   .btn-comment {
     & /deep/ .el-badge__content {
       border-width: 0;
     }
   }
 
+  i,
   .font-awesome {
-    font-size: 24px;
+    font-size: 20px;
   }
 }
 </style>

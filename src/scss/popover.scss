@@ -1,0 +1,39 @@
+.notification-popover {
+  height: 400px;
+  overflow-y: auto;
+}
+
+.tag-box-popover {
+  .el-tag {
+    color: white;
+    background-color: $color-tag;
+    border: none;
+    margin: 2px;
+  }
+}
+
+.share-popper {
+  display: flex;
+  justify-content: center;
+
+  i,
+  .font-awesome {
+    font-size: 20px;
+  }
+  .facebook-btn {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    font-size: 40px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    margin-right: 10px;
+    color: #909399;
+    background-color: white;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

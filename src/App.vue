@@ -20,6 +20,7 @@ export default class App extends Vue {
 @import "~highlight.js/styles/monokai-sublime.css";
 @import "~github-markdown-css";
 @import "~vuerd-plugin-erd/dist/vuerd-plugin-erd.css";
+@import "scss/popover";
 
 body {
   font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;
@@ -70,20 +71,6 @@ body {
   .tag-box .duplication.ti-selected-item {
     background-color: $color-tag-duplication;
     text-decoration: line-through;
-  }
-}
-
-.notification-popover {
-  height: 400px;
-  overflow-y: auto;
-}
-
-.tag-box-popover {
-  .el-tag {
-    color: white;
-    background-color: $color-tag;
-    border: none;
-    margin: 2px;
   }
 }
 </style>

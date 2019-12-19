@@ -36,6 +36,7 @@ export default {
   noComment: "댓글이 없습니다",
   writeComment: "댓글쓰기",
   description: "설명",
+  linkCopy: "링크가 복사되었습니다",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

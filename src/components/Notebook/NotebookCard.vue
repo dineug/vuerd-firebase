@@ -8,22 +8,22 @@
       >
         <el-button
           type="info"
-          plain
           icon="el-icon-view"
+          plain
           @click="onClick('document')"
         />
         <el-button
           v-if="edit"
           type="info"
-          plain
           icon="el-icon-edit"
+          plain
           @click="onClick('editor')"
         />
         <el-button
           v-if="setting"
           type="info"
-          plain
           icon="el-icon-s-tools"
+          plain
           @click="onClick('setting')"
         />
       </el-button-group>
@@ -33,17 +33,24 @@
         <h3>{{ notebook.title }}</h3>
       </div>
       <div class="title-box">{{ notebook.description }}</div>
-      <el-popover v-if="notebook.tags.length !== 0" trigger="hover" width="100">
+      <el-popover
+        v-if="notebook.tags.length !== 0"
+        trigger="hover"
+        width="150"
+        placement="bottom-start"
+      >
         <div class="tag-box-popover">
           <el-tag v-for="tag in notebook.tags" :key="tag">{{ tag }}</el-tag>
         </div>
         <el-button
           class="tag-btn"
           type="warning"
-          icon="el-icon-price-tag"
+          size="small"
           circle
           slot="reference"
-        />
+        >
+          <i class="el-icon-price-tag" />
+        </el-button>
       </el-popover>
     </div>
   </el-card>
@@ -137,7 +144,11 @@ export default class NotebookCard extends Vue {
 
     .tag-btn {
       position: absolute;
-      top: -5px;
+      top: -6px;
+
+      i {
+        font-size: 20px;
+      }
     }
   }
 }
