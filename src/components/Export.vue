@@ -18,7 +18,7 @@
       <el-tooltip effect="dark" content="Full Screen" placement="top-end">
         <a class="link" :href="currentHref" target="_blank">
           <el-button
-            type="primary"
+            type="warning"
             icon="el-icon-full-screen"
             size="mini"
             circle
@@ -27,7 +27,7 @@
       </el-tooltip>
       <el-link
         class="link"
-        type="primary"
+        type="warning"
         href="https://vuerd.io"
         target="_blank"
       >

@@ -5,14 +5,24 @@
     :visible.sync="drawer"
     size="700px"
   >
-    <el-form class="export-iframe-form" :style="exportIframeStyle" label-position="left" inline>
+    <el-form
+      class="export-iframe-form"
+      :style="exportIframeStyle"
+      label-position="left"
+      inline
+    >
       <el-form-item v-for="tree in treeList" :key="tree.id" :label="tree.path">
         <div class="markdown-body" v-html="markdownToHtml(tree)" />
-        <div class="export-iframe-copy-btn">
-          <el-button type="info" size="medium" @click="onIframeCopy(tree)">
-            {{ $t("copy") }}
-          </el-button>
-        </div>
+        <el-tooltip effect="dark" :content="$t('copy')" placement="left">
+          <el-button
+            class="export-iframe-copy-btn"
+            type="warning"
+            size="medium"
+            circle
+            icon="el-icon-document-copy"
+            @click="onIframeCopy(tree)"
+          />
+        </el-tooltip>
       </el-form-item>
     </el-form>
   </el-drawer>

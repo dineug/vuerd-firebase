@@ -5,12 +5,16 @@
   .el-form-item {
     .el-form-item__label {
       display: block;
+      font-weight: bold;
     }
     .el-form-item__content {
       display: block;
+      position: relative;
 
       .export-iframe-copy-btn {
-        text-align: right;
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
       }
     }
   }
