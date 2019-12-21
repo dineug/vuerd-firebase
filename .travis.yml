@@ -16,5 +16,6 @@ script:
   - cd functions
   - npm install
   - cd ..
+  - yarn
   - yarn lint
   - yarn build
