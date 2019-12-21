@@ -8,16 +8,33 @@
           <el-form-item :label="$t('picture')">
             <el-avatar :src="previewImage" :size="100" />
             <el-button-group>
-              <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
               <el-button
-                icon="el-icon-refresh-left"
+                class="custom-icon-btn"
+                type="info"
+                size="mini"
+                plain
+                @click="onPicture('Edit')"
+              >
+                <i class="el-icon-upload" />
+              </el-button>
+              <el-button
+                class="custom-icon-btn"
+                type="info"
+                size="mini"
+                plain
                 @click="onPicture('Restore')"
-              />
+              >
+                <i class="el-icon-refresh-left" />
+              </el-button>
               <el-button
-                type="danger"
-                icon="el-icon-delete"
+                class="custom-icon-btn"
+                type="info"
+                size="mini"
+                plain
                 @click="onPicture('Clean')"
-              />
+              >
+                <i class="el-icon-delete" />
+              </el-button>
             </el-button-group>
           </el-form-item>
           <el-form-item :label="$t('name')">
@@ -52,7 +69,11 @@
             />
           </el-form-item>
           <el-form-item :label="$t('invitationActive')">
-            <el-switch v-model="info.published" />
+            <el-switch
+              :active-color="COLOR_SWITCH_ACTIVE"
+              :inactive-color="COLOR_SWITCH_INACTIVE"
+              v-model="info.published"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="onUpdate">
@@ -66,7 +87,11 @@
 </template>
 
 <script lang="ts">
-import { COLOR_LOADING } from "@/data/color";
+import {
+  COLOR_LOADING,
+  COLOR_SWITCH_ACTIVE,
+  COLOR_SWITCH_INACTIVE
+} from "@/data/color";
 import log from "@/ts/Logger";
 import { identicon } from "@/ts/util";
 import { User, UserModify, Language } from "@/api/UserModel";
@@ -86,6 +111,8 @@ import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
   }
 })
 export default class Setting extends Vue {
+  private COLOR_SWITCH_ACTIVE = COLOR_SWITCH_ACTIVE;
+  private COLOR_SWITCH_INACTIVE = COLOR_SWITCH_INACTIVE;
   private inputFile: HTMLInputElement = document.createElement("input");
   private previewImage: string = "";
   private file: File | null = null;
@@ -275,4 +302,10 @@ export default class Setting extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-icon-btn {
+  i {
+    font-size: 18px;
+  }
+}
+</style>

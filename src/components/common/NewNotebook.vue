@@ -4,12 +4,24 @@
       <el-form-item :label="$t('picture')">
         <image-lazy :src="previewImage" />
         <el-button-group>
-          <el-button icon="el-icon-edit" @click="onPicture('Edit')" />
           <el-button
-            type="danger"
-            icon="el-icon-delete"
+            class="custom-icon-btn"
+            type="info"
+            size="mini"
+            plain
+            @click="onPicture('Edit')"
+          >
+            <i class="el-icon-upload" />
+          </el-button>
+          <el-button
+            class="custom-icon-btn"
+            type="info"
+            size="mini"
+            plain
             @click="onPicture('Clean')"
-          />
+          >
+            <i class="el-icon-delete" />
+          </el-button>
         </el-button-group>
       </el-form-item>
       <el-form-item :label="$t('title')">
@@ -36,7 +48,11 @@
         />
       </el-form-item>
       <el-form-item :label="$t('published')">
-        <el-switch v-model="published" />
+        <el-switch
+          :active-color="COLOR_SWITCH_ACTIVE"
+          :inactive-color="COLOR_SWITCH_INACTIVE"
+          v-model="published"
+        />
       </el-form-item>
       <el-form-item :label="$t('tag')">
         <vue-tags-input
@@ -49,19 +65,25 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="onCreate">
-          {{ $t("create") }}
-        </el-button>
-        <el-button @click="onDrawerEnd">
-          {{ $t("cancel") }}
-        </el-button>
+        <el-button-group>
+          <el-button type="primary" @click="onCreate">
+            {{ $t("create") }}
+          </el-button>
+          <el-button type="info" plain @click="onDrawerEnd">
+            {{ $t("cancel") }}
+          </el-button>
+        </el-button-group>
       </el-form-item>
     </el-form>
   </el-drawer>
 </template>
 
 <script lang="ts">
-import { COLOR_LOADING } from "@/data/color";
+import {
+  COLOR_LOADING,
+  COLOR_SWITCH_ACTIVE,
+  COLOR_SWITCH_INACTIVE
+} from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookAdd } from "@/api/NotebookModel";
 import eventBus, { Bus } from "@/ts/EventBus";
@@ -85,6 +107,8 @@ import ImageLazy from "@/components/Notebook/ImageLazy.vue";
   }
 })
 export default class NewNotebook extends Vue {
+  private COLOR_SWITCH_ACTIVE = COLOR_SWITCH_ACTIVE;
+  private COLOR_SWITCH_INACTIVE = COLOR_SWITCH_INACTIVE;
   private drawer: boolean = false;
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
@@ -151,6 +175,7 @@ export default class NewNotebook extends Vue {
     return result;
   }
 
+  // ==================== Event Handler ===================
   private onAutocompleteTag(keyword: string) {
     log.debug("NewNotebook onAutocompleteTag", keyword);
     tagAutocomplete(keyword).then(querySnapshot => {
@@ -236,7 +261,9 @@ export default class NewNotebook extends Vue {
       this.inputFile.value = "";
     }
   }
+  // ==================== Event Handler END ===================
 
+  // ==================== Life Cycle ====================
   private created() {
     this.inputFile.setAttribute("type", "file");
     this.inputFile.setAttribute("accept", ".png,.jpg,.jpeg");
@@ -258,7 +285,14 @@ export default class NewNotebook extends Vue {
     eventBus.$off(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
     this.subAutocompleteTag.unsubscribe();
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-icon-btn {
+  i {
+    font-size: 18px;
+  }
+}
+</style>

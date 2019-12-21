@@ -1,5 +1,12 @@
 <template>
-  <vuerd-core v-if="load" :themeName="themeName" @changeTheme="onChangeTheme" />
+  <div>
+    <vuerd-core
+      v-if="load"
+      :themeName="themeName"
+      @changeTheme="onChangeTheme"
+    />
+    <export-iframe :height="windowHeight" />
+  </div>
 </template>
 
 <script lang="ts">
@@ -11,13 +18,22 @@ import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import log from "@/ts/Logger";
 import { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
+import { fromEvent, Observable, Subscription } from "rxjs";
 import { Component, Prop, Vue } from "vue-property-decorator";
+import ExportIframe from "@/components/Editor/ExportIframe.vue";
 
-@Component
+@Component({
+  components: {
+    ExportIframe
+  }
+})
 export default class Editor extends Vue {
   private themeName: string = "VSCode";
   private load: boolean = true;
   private unsubscribe: { (): void; (): void } | null = null;
+  private windowHeight: number = window.innerHeight;
+  private resize$: Observable<Event> = fromEvent(window, "resize");
+  private subResize!: Subscription;
 
   private getConfigEditor() {
     editorDetail().then(doc => {
@@ -47,6 +63,11 @@ export default class Editor extends Vue {
     );
   }
 
+  // ==================== Event Handler ===================
+  private onResize() {
+    this.windowHeight = window.innerHeight;
+  }
+
   private onChangeTheme(themeName: string) {
     editorModify({ themeName });
   }
@@ -57,7 +78,9 @@ export default class Editor extends Vue {
       this.load = true;
     });
   }
+  // ==================== Event Handler END ===================
 
+  // ==================== Life Cycle ====================
   private created() {
     log.debug("Editor created", this.$route.params.id);
     this.$store.commit(Commit.setNotebookId, this.$route.params.id);
@@ -66,14 +89,21 @@ export default class Editor extends Vue {
     eventBus.$on(Bus.Editor.reload, this.onReload);
   }
 
+  private mounted() {
+    this.subResize = this.resize$.subscribe(this.onResize);
+    window.dispatchEvent(new Event("resize"));
+  }
+
   private destroyed() {
     log.debug("Editor destroyed");
+    this.subResize.unsubscribe();
     this.$store.commit(Commit.setTreeList, []);
     eventBus.$off(Bus.Editor.reload, this.onReload);
     if (this.unsubscribe) {
       this.unsubscribe();
     }
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

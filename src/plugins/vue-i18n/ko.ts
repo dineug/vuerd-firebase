@@ -37,6 +37,8 @@ export default {
   writeComment: "댓글쓰기",
   description: "설명",
   linkCopy: "링크가 복사되었습니다",
+  iframeCopy: "iframe 복사되었습니다",
+  copy: "복사",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

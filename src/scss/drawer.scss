@@ -1,0 +1,17 @@
+.export-iframe-drawer {
+  .export-iframe-form {
+    overflow-y: auto;
+  }
+  .el-form-item {
+    .el-form-item__label {
+      display: block;
+    }
+    .el-form-item__content {
+      display: block;
+
+      .export-iframe-copy-btn {
+        text-align: right;
+      }
+    }
+  }
+}

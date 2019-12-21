@@ -1,5 +1,9 @@
 <template>
-  <div class="markdown-body" :style="`width: ${width}px;`" v-html="md" />
+  <div
+    class="markdown-body"
+    :style="`width: ${width}px;`"
+    v-html="markdownToHtml"
+  />
 </template>
 
 <script lang="ts">
@@ -13,7 +17,7 @@ export default class Markdown extends Vue {
   @Prop({ type: Number, default: 0 })
   private width!: number;
 
-  get md(): string {
+  get markdownToHtml(): string {
     return marked(this.value);
   }
 }

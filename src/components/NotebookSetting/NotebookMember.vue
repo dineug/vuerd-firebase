@@ -58,8 +58,11 @@
         <el-table-column width="80">
           <template slot-scope="scope">
             <el-button
+              class="custom-icon-btn"
               type="danger"
+              size="medium"
               icon="el-icon-delete"
+              circle
               :disabled="leaveRole(scope.row)"
               @click="onDeleteMember(scope.row)"
             />
@@ -385,4 +388,10 @@ export default class NotebookMember extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-icon-btn {
+  i {
+    font-size: 18px;
+  }
+}
+</style>

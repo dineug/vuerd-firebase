@@ -4,21 +4,35 @@
       <image-lazy :src="previewImage" />
       <el-button-group>
         <el-button
-          icon="el-icon-edit"
+          class="custom-icon-btn"
+          type="info"
+          size="mini"
+          plain
           :disabled="readerRole"
           @click="onPicture('Edit')"
-        />
+        >
+          <i class="el-icon-upload" />
+        </el-button>
         <el-button
-          icon="el-icon-refresh-left"
+          class="custom-icon-btn"
+          type="info"
+          size="mini"
+          plain
           :disabled="readerRole"
           @click="onPicture('Restore')"
-        />
+        >
+          <i class="el-icon-refresh-left" />
+        </el-button>
         <el-button
-          type="danger"
-          icon="el-icon-delete"
+          class="custom-icon-btn"
+          type="info"
+          size="mini"
+          plain
           :disabled="readerRole"
           @click="onPicture('Clean')"
-        />
+        >
+          <i class="el-icon-delete" />
+        </el-button>
       </el-button-group>
     </el-form-item>
     <el-form-item :label="$t('title')">
@@ -46,7 +60,12 @@
       />
     </el-form-item>
     <el-form-item :label="$t('published')">
-      <el-switch v-model="notebookModify.published" :disabled="ownerRole" />
+      <el-switch
+        :active-color="COLOR_SWITCH_ACTIVE"
+        :inactive-color="COLOR_SWITCH_INACTIVE"
+        v-model="notebookModify.published"
+        :disabled="ownerRole"
+      />
     </el-form-item>
     <el-form-item :label="$t('tag')">
       <vue-tags-input
@@ -60,21 +79,32 @@
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" :disabled="readerRole" @click="onUpdate">
-        {{ $t("update") }}
-      </el-button>
-      <el-button :disabled="ownerRole" @click="onDeleteNotebook">
-        {{ $t("delete") }}
-      </el-button>
-      <el-button @click="onBack">
-        {{ $t("cancel") }}
-      </el-button>
+      <el-button-group>
+        <el-button type="primary" :disabled="readerRole" @click="onUpdate">
+          {{ $t("update") }}
+        </el-button>
+        <el-button
+          type="info"
+          plain
+          :disabled="ownerRole"
+          @click="onDeleteNotebook"
+        >
+          {{ $t("delete") }}
+        </el-button>
+        <el-button type="info" plain @click="onBack">
+          {{ $t("cancel") }}
+        </el-button>
+      </el-button-group>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts">
-import { COLOR_LOADING } from "@/data/color";
+import {
+  COLOR_LOADING,
+  COLOR_SWITCH_ACTIVE,
+  COLOR_SWITCH_INACTIVE
+} from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookModel, NotebookAdd } from "@/api/NotebookModel";
 import { notebookModify, notebookRemove } from "@/api/NotebookAPI";
@@ -99,6 +129,8 @@ export default class NotebookInfo extends Vue {
   @Prop({ type: Object })
   private notebook!: NotebookModel;
 
+  private COLOR_SWITCH_ACTIVE = COLOR_SWITCH_ACTIVE;
+  private COLOR_SWITCH_INACTIVE = COLOR_SWITCH_INACTIVE;
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
   private tag: string = "";
@@ -327,4 +359,10 @@ export default class NotebookInfo extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.custom-icon-btn {
+  i {
+    font-size: 18px;
+  }
+}
+</style>

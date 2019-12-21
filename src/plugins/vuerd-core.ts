@@ -99,6 +99,14 @@ VuerdCore.use({
               }
             ]
           }
+        ],
+        explorerContextmenu: [
+          {
+            name: "Export iframe",
+            execute(selectPaths: string[]): void {
+              eventBus.$emit(Bus.ExportIframe.drawerStart);
+            }
+          }
         ]
       }
     });

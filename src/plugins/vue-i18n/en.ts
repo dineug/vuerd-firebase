@@ -37,6 +37,8 @@ export default {
   writeComment: "Write a comment",
   description: "Description",
   linkCopy: "Link has been copied",
+  iframeCopy: "Iframe has been copied",
+  copy: "copy",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",

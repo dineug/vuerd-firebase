@@ -98,11 +98,17 @@
                 >
                   <el-button
                     type="primary"
+                    size="small"
                     @click="onInvitationAccept(notification)"
                   >
                     {{ $t("accept") }}
                   </el-button>
-                  <el-button @click="onInvitationCancel(notification)">
+                  <el-button
+                    type="info"
+                    size="small"
+                    plain
+                    @click="onInvitationCancel(notification)"
+                  >
                     {{ $t("cancel") }}
                   </el-button>
                 </el-button-group>

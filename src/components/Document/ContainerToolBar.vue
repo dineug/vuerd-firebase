@@ -52,11 +52,11 @@
         >
           <font-awesome-icon class="font-awesome" :icon="['fab', 'twitter']" />
         </el-button>
-        <div id="share-kakao-btn" class="kakao-btn" @click="onShareKakao">
-          <img src="@/assets/kakao-logo.png" />
-        </div>
         <div class="kakao-story-btn" @click="onShareKakaoStory">
           <img src="@/assets/kakao-story-logo.png" />
+        </div>
+        <div id="share-kakao-btn" class="kakao-btn" @click="onShareKakao">
+          <img src="@/assets/kakao-logo.png" />
         </div>
         <el-button
           type="info"

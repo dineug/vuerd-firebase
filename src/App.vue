@@ -5,22 +5,18 @@
 </template>
 
 <script lang="ts">
-import eventBus from "@/ts/EventBus";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
-export default class App extends Vue {
-  private destroyed() {
-    eventBus.destroyed();
-  }
-}
+export default class App extends Vue {}
 </script>
 
 <style lang="scss">
 @import "~highlight.js/styles/monokai-sublime.css";
 @import "~github-markdown-css";
 @import "~vuerd-plugin-erd/dist/vuerd-plugin-erd.css";
-@import "scss/popover";
+@import "scss/popover.scss";
+@import "scss/drawer.scss";
 
 body {
   font-family: "Noto Sans", "Noto Sans JP", "Noto Sans KR", sans-serif;

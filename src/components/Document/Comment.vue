@@ -46,23 +46,35 @@
                   editComment.id === comment.id
               "
             >
-              <el-button type="primary" size="small" @click="onUpdate(comment)">
+              <el-button
+                class="custom-icon-btn"
+                type="primary"
+                size="small"
+                @click="onUpdate(comment)"
+              >
                 {{ $t("update") }}
               </el-button>
-              <el-button size="small" @click="onEditCancel">
+              <el-button
+                class="custom-icon-btn"
+                size="small"
+                @click="onEditCancel"
+              >
                 {{ $t("cancel") }}
               </el-button>
             </el-button-group>
             <el-button-group v-else-if="myComment(comment)">
               <el-button
+                type="info"
                 icon="el-icon-edit"
-                size="small"
+                size="mini"
+                plain
                 @click="onEdit(comment)"
               />
               <el-button
-                type="danger"
+                type="info"
                 icon="el-icon-delete"
-                size="small"
+                size="mini"
+                plain
                 @click="onDelete(comment)"
               />
             </el-button-group>
