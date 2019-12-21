@@ -6551,7 +6551,7 @@ jest@^24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
-jquery@^3.3.1:
+jquery@^3.3.1, jquery@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -10110,6 +10110,11 @@ stylehacks@^4.0.0:
     postcss "^7.0.0"
     postcss-selector-parser "^3.0.0"
 
+summernote@^0.8.12:
+  version "0.8.12"
+  resolved "https://registry.yarnpkg.com/summernote/-/summernote-0.8.12.tgz#563502ed882abde9daab9db1e7eba330d37ac020"
+  integrity sha512-RVEJoIyztwPpopTwZvjag1WOvbmhUGFe6Mc9RADzzcX1ogG8pIXCB88icu/vjNYihITrzj2zZsoFMcDRHSlhEA==
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -11003,6 +11008,20 @@ vuerd-plugin-erd@^0.2.6:
     vue-property-decorator "^8.3.0"
     vuerd-core "^0.4.2"
     vuex "^3.1.2"
+
+vuerd-plugin-summernote@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/vuerd-plugin-summernote/-/vuerd-plugin-summernote-0.1.1.tgz#7f835044966d75220d440e30a8b5e41eaef34e10"
+  integrity sha512-KM+cvmtdsbzf46vkngrhlTWfFmKGbv1TUSLigQH0Kbrly1bjno654rxVUXNzYNHkZdu3jkE8AOhgQljZNflf6g==
+  dependencies:
+    core-js "^3.4.3"
+    jquery "^3.4.1"
+    rxjs "^6.5.3"
+    summernote "^0.8.12"
+    vue "^2.6.10"
+    vue-class-component "^7.0.2"
+    vue-property-decorator "^8.3.0"
+    vuerd-core "^0.4.4"
 
 vuerd-plugin-tui.editor@^0.2.3:
   version "0.2.3"
