@@ -1,3 +1,4 @@
 export const IMAGE =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mM8cOTMfwAH7QNRoi5FXwAAAABJRU5ErkJggg==";
 export const MAX_SIZE = 1024 * 1024 * 2;
+export const MAX_SIZE_EDITOR = 1024 * 1024 * 5;

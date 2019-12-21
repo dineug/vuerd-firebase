@@ -1,10 +1,12 @@
 import Vue from "vue";
 import router from "@/router";
+import { MAX_SIZE_EDITOR } from "@/data/image";
 import store, { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
+import i18n from "./vue-i18n";
 import log from "@/ts/Logger";
 import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
-import { upload } from "@/api/storageAPI";
+import { FileType, upload } from "@/api/storageAPI";
 import {
   treeList,
   treeRemoveBatch,
@@ -19,6 +21,7 @@ import {
 import VuerdCore, { Command, Tree, TreeMove, TreeSave } from "vuerd-core";
 import ERD from "vuerd-plugin-erd";
 import TuiEditor from "vuerd-plugin-tui.editor";
+import Summernote from "./vuerd-core/summernote";
 import "vuerd-core/dist/vuerd-core.css";
 import "vuerd-plugin-tui.editor/dist/vuerd-plugin-tui.editor.css";
 
@@ -113,11 +116,58 @@ VuerdCore.use({
   }
 });
 
+function valid(file: File | Blob): boolean {
+  let result = false;
+  const isJPG = file.type === FileType.jpg;
+  const isPNG = file.type === FileType.png;
+  const isGIF = file.type === FileType.gif;
+  if (!(isJPG || isPNG || isGIF)) {
+    Vue.prototype.$notify.warning({
+      title: "Valid",
+      message: i18n.t("valid.editorImageType") as string
+    });
+  } else if (file.size > MAX_SIZE_EDITOR) {
+    Vue.prototype.$notify.warning({
+      title: "Valid",
+      message: i18n.t("valid.editorImageSize") as string
+    });
+  } else {
+    result = true;
+  }
+  return result;
+}
+
 VuerdCore.use(ERD);
 VuerdCore.use(TuiEditor, {
+  scope: [/\.(md|tui.editor.md)$/i],
   imageUpload(blob, callback) {
-    upload(blob).then(string => callback(string));
-  },
-  scope: [/\.(md|tui.editor.md)$/i]
+    if (valid(blob)) {
+      upload(blob)
+        .then(url => callback(url))
+        .catch(err =>
+          Vue.prototype.$notify.error({
+            title: "Error",
+            message: err.message
+          })
+        );
+    }
+  }
+});
+VuerdCore.use(Summernote, {
+  scope: [/\.(rich|summernote.rich)$/i],
+  imageUpload(files, callback) {
+    Array.from(files).forEach(file => {
+      if (valid(file)) {
+        upload(file)
+          .then(url => callback(url))
+          .catch(err =>
+            Vue.prototype.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          );
+      }
+    });
+  }
 });
 Vue.use(VuerdCore);

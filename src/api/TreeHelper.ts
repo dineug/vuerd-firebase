@@ -225,7 +225,7 @@ function findParentTreeByPaths(
 }
 
 export function isEditor(name: string): boolean {
-  return /\.(md|vuerd)$/i.test(name);
+  return /\.(md|vuerd|rich)$/i.test(name);
 }
 
 export function treeModelToTreeNodeModel(

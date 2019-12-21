@@ -11,6 +11,11 @@
       :width="windowWidth"
       :height="windowHeight"
     />
+    <rich
+      v-else-if="editor && editor.type === 'rich'"
+      :value="editor.value"
+      :width="windowWidth"
+    />
     <h1 v-else class="none">
       {{ message }}
     </h1>
@@ -47,11 +52,13 @@ import { FirestoreError } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Markdown from "@/components/Document/ContainerView/Markdown.vue";
 import Erd from "@/components/Export/ERD.vue";
+import Rich from "@/components/Document/ContainerView/Rich.vue";
 
 @Component({
   components: {
     Markdown,
-    Erd
+    Erd,
+    Rich
   }
 })
 export default class Export extends Vue {

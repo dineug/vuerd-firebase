@@ -19,6 +19,11 @@
         :value="editor.value"
         :width="width"
       />
+      <rich
+        v-else-if="editor.type === 'rich'"
+        :value="editor.value"
+        :width="width"
+      />
     </div>
   </div>
 </template>
@@ -30,13 +35,15 @@ import { Editor, treeNodeModelToEditor } from "@/models/Editor";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Markdown from "@/components/Document/ContainerView/Markdown.vue";
 import Erd from "@/components/Document/ContainerView/ERD.vue";
+import Rich from "@/components/Document/ContainerView/Rich.vue";
 
 const MARGIN = 40;
 
 @Component({
   components: {
     Markdown,
-    Erd
+    Erd,
+    Rich
   }
 })
 export default class ContainerView extends Vue {

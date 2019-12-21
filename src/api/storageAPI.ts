@@ -4,7 +4,8 @@ import { uuid } from "@/ts/util";
 
 export const enum FileType {
   jpg = "image/jpeg",
-  png = "image/png"
+  png = "image/png",
+  gif = "image/gif"
 }
 
 function getFileName(file: File | Blob): string {
@@ -15,6 +16,9 @@ function getFileName(file: File | Blob): string {
       break;
     case FileType.png:
       ext = ".png";
+      break;
+    case FileType.gif:
+      ext = ".gif";
       break;
   }
   return `${uuid()}${ext}`;

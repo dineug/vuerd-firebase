@@ -1,6 +1,6 @@
 import { TreeNodeModel } from "@/api/TreeModel";
 
-type ViewType = "markdown" | "vuerd" | null;
+type ViewType = "markdown" | "vuerd" | "rich" | null;
 
 export interface Editor extends TreeNodeModel {
   type: ViewType;
@@ -12,6 +12,8 @@ export function treeNodeModelToEditor(tree: TreeNodeModel): Editor {
     editor.type = "markdown";
   } else if (/\.vuerd$/i.test(tree.name)) {
     editor.type = "vuerd";
+  } else if (/\.rich$/i.test(tree.name)) {
+    editor.type = "rich";
   } else {
     editor.type = null;
   }
