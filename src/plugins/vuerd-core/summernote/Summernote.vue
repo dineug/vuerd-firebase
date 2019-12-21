@@ -3,6 +3,8 @@
 </template>
 
 <script lang="ts">
+import { Subject, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component
@@ -16,10 +18,12 @@ export default class Summernote extends Vue {
   private currentValue: string = "";
   public imageUpload!: (files: File[], callback: (url: string) => void) => void;
 
+  private height$: Subject<void> = new Subject();
+  private subHeight!: Subscription;
+
   @Watch("height")
   private watchHeight() {
-    this.$editor.summernote("destroy");
-    this.setupEditor();
+    this.height$.next();
   }
 
   @Watch("value")
@@ -49,6 +53,17 @@ export default class Summernote extends Vue {
     this.$editor.summernote("code", this.value);
   }
 
+  private onHeight() {
+    this.$editor.summernote("destroy");
+    this.setupEditor();
+  }
+
+  private created() {
+    this.subHeight = this.height$
+      .pipe(debounceTime(300))
+      .subscribe(this.onHeight);
+  }
+
   private mounted() {
     // @ts-ignore
     this.$editor = window.$(this.$refs.editor as HTMLElement);
@@ -57,6 +72,7 @@ export default class Summernote extends Vue {
 
   private destroyed() {
     this.$editor.summernote("destroy");
+    this.subHeight.unsubscribe();
   }
 }
 </script>

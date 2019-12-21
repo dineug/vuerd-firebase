@@ -154,7 +154,7 @@ VuerdCore.use(TuiEditor, {
   }
 });
 VuerdCore.use(Summernote, {
-  scope: [/\.(rich|summernote.rich)$/i],
+  scope: [/\.(summernote.rich)$/i],
   imageUpload(files, callback) {
     Array.from(files).forEach(file => {
       if (valid(file)) {
