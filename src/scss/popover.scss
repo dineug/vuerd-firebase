@@ -28,11 +28,65 @@
     border-radius: 50%;
     box-sizing: border-box;
     margin-right: 10px;
-    color: #909399;
+    color: #4267b2;
     background-color: white;
     cursor: pointer;
 
     &:hover {
+      opacity: 0.8;
+    }
+  }
+
+  .kakao-btn {
+    display: inline-flex;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .kakao-story-btn {
+    display: inline-flex;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    box-sizing: border-box;
+    margin-right: 10px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .twitter-btn {
+    color: white;
+    background-color: #1da1f2;
+    border: solid 1px white;
+    margin-right: 10px;
+
+    &:hover {
+      color: white;
+      background-color: #1da1f2;
+      border: solid 1px white;
       opacity: 0.8;
     }
   }

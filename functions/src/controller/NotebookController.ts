@@ -57,6 +57,11 @@ app.get("/notebooks/:id/document", async (req, res) => {
           <meta property="og:image" content="${notebook.image}" />
           <meta name="twitter:image" content="${notebook.image}" />
         `);
+      } else {
+        meta.push(`
+          <meta property="og:image" content="https://vuerd.io/vuerd.png" />
+          <meta name="twitter:image" content="https://vuerd.io/vuerd.png" />
+        `);
       }
       meta.push("</head>");
       html = html.replace(/<\/head>/, meta.join(""));

@@ -44,9 +44,20 @@
             @click="onShareFacebook"
           />
         </div>
-        <el-button type="info" size="small" circle @click="onShareTwitter">
+        <el-button
+          class="twitter-btn"
+          size="small"
+          circle
+          @click="onShareTwitter"
+        >
           <font-awesome-icon class="font-awesome" :icon="['fab', 'twitter']" />
         </el-button>
+        <div id="share-kakao-btn" class="kakao-btn" @click="onShareKakao">
+          <img src="@/assets/kakao-logo.png" />
+        </div>
+        <div class="kakao-story-btn" @click="onShareKakaoStory">
+          <img src="@/assets/kakao-story-logo.png" />
+        </div>
         <el-button
           type="info"
           size="small"
@@ -97,6 +108,7 @@ export default class ContainerToolBar extends Vue {
   private unsubscribeHeart: { (): void; (): void } | null = null;
   private notebook: Notebook | null = null;
   private popup: Window | null = null;
+  private kakao = window.Kakao;
 
   get auth(): boolean {
     return this.$store.state.user !== null;
@@ -234,6 +246,47 @@ export default class ContainerToolBar extends Vue {
       "share",
       popupData(600, 450).toString()
     );
+  }
+
+  private onShareKakao() {
+    if (this.notebook) {
+      this.kakao.Link.sendDefault({
+        objectType: "feed",
+        content: {
+          title: this.notebook.title,
+          description: this.notebook.description,
+          imageUrl: this.notebook.image
+            ? this.notebook.image
+            : "https://vuerd.io/vuerd.png",
+          link: {
+            mobileWebUrl: location.href,
+            webUrl: location.href
+          }
+        },
+        social: {
+          likeCount: this.heartCount,
+          commentCount: this.commentCount
+        },
+        buttons: [
+          {
+            title: "웹으로 보기",
+            link: {
+              mobileWebUrl: location.href,
+              webUrl: location.href
+            }
+          }
+        ]
+      });
+    }
+  }
+
+  private onShareKakaoStory() {
+    if (this.notebook) {
+      this.kakao.Story.share({
+        url: location.href,
+        text: `${this.notebook.title} #vuerd`
+      });
+    }
   }
   // ==================== Event Handler END ===================
 
