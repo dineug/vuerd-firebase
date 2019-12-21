@@ -34,12 +34,6 @@ export default class Summernote extends Vue {
     this.$editor.summernote({
       height: this.height,
       tabsize: 2,
-      codemirror: {
-        mode: "text/html",
-        htmlMode: true,
-        lineNumbers: true,
-        theme: "monokai"
-      },
       callbacks: {
         onChange: (value: string) => {
           this.currentValue = value;
