@@ -120,6 +120,7 @@
               v-if="notificationCount !== 0"
               class="badge-alarm"
               :value="notificationCount"
+              :max="999"
             >
               <i class="el-icon-message-solid"></i>
             </el-badge>

@@ -49,14 +49,16 @@
               <el-button
                 class="custom-icon-btn"
                 type="primary"
-                size="small"
+                size="mini"
                 @click="onUpdate(comment)"
               >
                 {{ $t("update") }}
               </el-button>
               <el-button
                 class="custom-icon-btn"
-                size="small"
+                type="info"
+                size="mini"
+                plain
                 @click="onEditCancel"
               >
                 {{ $t("cancel") }}
@@ -97,8 +99,13 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" :disabled="disabled" @click="onCreate">
-          {{ $t("create") }}
+        <el-button
+          type="primary"
+          size="medium"
+          :disabled="disabled"
+          @click="onCreate"
+        >
+          {{ $t("writing") }}
         </el-button>
       </el-form-item>
     </el-form>

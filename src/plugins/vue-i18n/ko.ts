@@ -39,6 +39,7 @@ export default {
   linkCopy: "링크가 복사되었습니다",
   iframeCopy: "iframe 복사되었습니다",
   copy: "복사",
+  writing: "쓰기",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

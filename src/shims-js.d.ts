@@ -34,7 +34,7 @@ interface KakaoLinkOption {
     link: { mobileWebUrl: string; webUrl: string };
   };
   social: { likeCount?: number; commentCount?: number; sharedCount?: number };
-  buttons: [
+  buttons?: [
     {
       title: string;
       link: {

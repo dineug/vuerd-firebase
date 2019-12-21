@@ -39,6 +39,7 @@ export default {
   linkCopy: "Link has been copied",
   iframeCopy: "Iframe has been copied",
   copy: "copy",
+  writing: "Writing",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",

@@ -13,7 +13,13 @@
           class="font-awesome"
           :icon="[heart ? 'fas' : 'far', 'heart']"
         />
-        <el-badge v-else class="btn-comment" type="primary" :value="heartCount">
+        <el-badge
+          v-else
+          class="btn-comment"
+          type="primary"
+          :value="heartCount"
+          :max="999"
+        >
           <font-awesome-icon
             class="font-awesome"
             :icon="[heart ? 'fas' : 'far', 'heart']"
@@ -33,6 +39,7 @@
           class="btn-comment"
           type="primary"
           :value="commentCount"
+          :max="999"
         >
           <i class="el-icon-chat-dot-round" />
         </el-badge>
@@ -266,16 +273,7 @@ export default class ContainerToolBar extends Vue {
         social: {
           likeCount: this.heartCount,
           commentCount: this.commentCount
-        },
-        buttons: [
-          {
-            title: "웹으로 보기",
-            link: {
-              mobileWebUrl: location.href,
-              webUrl: location.href
-            }
-          }
-        ]
+        }
       });
     }
   }
