@@ -75,37 +75,37 @@ export async function notebookAdd(
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hellow.vuerd",
-      name: "hellow.vuerd",
+      path: "example/hello.vuerd",
+      name: "hello.vuerd",
       value: "",
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hellow.md",
-      name: "hellow.md",
-      value: "# hellow [tui.editor](https://github.com/nhn/tui.editor)",
+      path: "example/hello.md",
+      name: "hello.md",
+      value: "# hello [tui.editor](https://github.com/nhn/tui.editor)",
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hellow.rich",
-      name: "hellow.rich",
-      value: `<h1>hellow</h1><h2><a href="https://github.com/quill/quill">quill</a></h2>`,
+      path: "example/hello.rich",
+      name: "hello.rich",
+      value: `<h1>hello</h1><h2><a href="https://github.com/quill/quill">quill</a></h2>`,
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hellow.summernote.rich",
-      name: "hellow.summernote.rich",
-      value: `<h1>hellow</h1><h2><a href="https://github.com/summernote/summernote">summernote</a></h2>`,
+      path: "example/hello.summernote.rich",
+      name: "hello.summernote.rich",
+      value: `<h1>hello</h1><h2><a href="https://github.com/summernote/summernote">summernote</a></h2>`,
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hellow.medium-editor.rich",
-      name: "hellow.medium-editor.rich",
-      value: `<h1>hellow</h1><h2><a href="https://github.com/yabwe/medium-editor">medium-editor</a></h2>`,
+      path: "example/hello.medium-editor.rich",
+      name: "hello.medium-editor.rich",
+      value: `<h1>hello</h1><h2><a href="https://github.com/yabwe/medium-editor">medium-editor</a></h2>`,
       updatedAt: moment().unix(),
       createdAt: moment().unix()
     } as TreeNode);
