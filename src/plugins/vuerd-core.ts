@@ -23,10 +23,12 @@ import ERD from "vuerd-plugin-erd";
 import TuiEditor from "vuerd-plugin-tui.editor";
 import Summernote from "vuerd-plugin-summernote";
 import Quill from "vuerd-plugin-quill";
+import MediumEditor from "vuerd-plugin-medium-editor";
 import "vuerd-core/dist/vuerd-core.css";
 import "vuerd-plugin-tui.editor/dist/vuerd-plugin-tui.editor.css";
 import "vuerd-plugin-summernote/dist/vuerd-plugin-summernote.css";
 import "vuerd-plugin-quill/dist/vuerd-plugin-quill.css";
+import "vuerd-plugin-medium-editor/dist/vuerd-plugin-medium-editor.css";
 
 async function findFileByPath(path: string): Promise<string> {
   log.debug(`vuerd-core findFileByPath`);
@@ -189,5 +191,8 @@ VuerdCore.use(Quill, {
       }
     });
   }
+});
+VuerdCore.use(MediumEditor, {
+  scope: [/\.(medium-editor.rich)$/i]
 });
 Vue.use(VuerdCore);
