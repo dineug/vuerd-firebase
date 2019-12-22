@@ -22,9 +22,11 @@ import VuerdCore, { Command, Tree, TreeMove, TreeSave } from "vuerd-core";
 import ERD from "vuerd-plugin-erd";
 import TuiEditor from "vuerd-plugin-tui.editor";
 import Summernote from "vuerd-plugin-summernote";
+import Quill from "vuerd-plugin-quill";
 import "vuerd-core/dist/vuerd-core.css";
 import "vuerd-plugin-tui.editor/dist/vuerd-plugin-tui.editor.css";
 import "vuerd-plugin-summernote/dist/vuerd-plugin-summernote.css";
+import "vuerd-plugin-quill/dist/vuerd-plugin-quill.css";
 
 async function findFileByPath(path: string): Promise<string> {
   log.debug(`vuerd-core findFileByPath`);
@@ -156,6 +158,23 @@ VuerdCore.use(TuiEditor, {
 });
 VuerdCore.use(Summernote, {
   scope: [/\.(summernote.rich)$/i],
+  imageUpload(files, callback) {
+    files.forEach(file => {
+      if (valid(file)) {
+        upload(file)
+          .then(url => callback(url))
+          .catch(err =>
+            Vue.prototype.$notify.error({
+              title: "Error",
+              message: err.message
+            })
+          );
+      }
+    });
+  }
+});
+VuerdCore.use(Quill, {
+  scope: [/\.(rich|quill.rich)$/i],
   imageUpload(files, callback) {
     files.forEach(file => {
       if (valid(file)) {
