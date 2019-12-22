@@ -3,7 +3,6 @@ import router from "@/router";
 import { MAX_SIZE_EDITOR } from "@/data/image";
 import store, { Commit } from "@/store";
 import eventBus, { Bus } from "@/ts/EventBus";
-import i18n from "./vue-i18n";
 import log from "@/ts/Logger";
 import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import { FileType, upload } from "@/api/storageAPI";
@@ -129,12 +128,12 @@ function valid(file: File | Blob): boolean {
   if (!(isJPG || isPNG || isGIF)) {
     Vue.prototype.$notify.warning({
       title: "Valid",
-      message: i18n.t("valid.editorImageType") as string
+      message: "Picture must be JPG, PNG, GIF format"
     });
   } else if (file.size > MAX_SIZE_EDITOR) {
     Vue.prototype.$notify.warning({
       title: "Valid",
-      message: i18n.t("valid.editorImageSize") as string
+      message: "Picture size can not exceed 5MB"
     });
   } else {
     result = true;
@@ -142,12 +141,13 @@ function valid(file: File | Blob): boolean {
   return result;
 }
 
-VuerdCore.use(ERD);
-VuerdCore.use(TuiEditor, {
-  scope: [/\.(md|tui.editor.md)$/i],
-  imageUpload(blob, callback) {
-    if (valid(blob)) {
-      upload(blob)
+function uploadProcess(
+  files: File[] | Blob[],
+  callback: (url: string) => void
+) {
+  files.forEach(file => {
+    if (valid(file)) {
+      upload(file)
         .then(url => callback(url))
         .catch(err =>
           Vue.prototype.$notify.error({
@@ -156,43 +156,32 @@ VuerdCore.use(TuiEditor, {
           })
         );
     }
+  });
+}
+
+VuerdCore.use(ERD);
+VuerdCore.use(TuiEditor, {
+  scope: [/\.(md|tui.editor.md)$/i],
+  imageUpload(blob, callback) {
+    uploadProcess([blob], callback);
   }
 });
 VuerdCore.use(Quill, {
   scope: [/\.(rich|quill.rich)$/i],
   imageUpload(files, callback) {
-    files.forEach(file => {
-      if (valid(file)) {
-        upload(file)
-          .then(url => callback(url))
-          .catch(err =>
-            Vue.prototype.$notify.error({
-              title: "Error",
-              message: err.message
-            })
-          );
-      }
-    });
+    uploadProcess(files, callback);
   }
 });
 VuerdCore.use(Summernote, {
   scope: [/\.(summernote.rich)$/i],
   imageUpload(files, callback) {
-    files.forEach(file => {
-      if (valid(file)) {
-        upload(file)
-          .then(url => callback(url))
-          .catch(err =>
-            Vue.prototype.$notify.error({
-              title: "Error",
-              message: err.message
-            })
-          );
-      }
-    });
+    uploadProcess(files, callback);
   }
 });
 VuerdCore.use(MediumEditor, {
-  scope: [/\.(medium-editor.rich)$/i]
+  scope: [/\.(medium-editor.rich)$/i],
+  imageUpload(file, callback) {
+    uploadProcess([file], callback);
+  }
 });
 Vue.use(VuerdCore);

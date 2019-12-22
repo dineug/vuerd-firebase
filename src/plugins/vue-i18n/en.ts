@@ -48,8 +48,6 @@ export default {
     member: "Please enter a member",
     imageType: "Picture must be JPG, PNG format",
     imageSize: "Picture size can not exceed 2MB",
-    editorImageType: "Picture must be JPG, PNG, GIF format",
-    editorImageSize: "Picture size can not exceed 5MB",
     memberDelete: "least one member",
     memberRole: "least one owner",
     comments: "Please enter comments",
