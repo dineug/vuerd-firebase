@@ -16,7 +16,7 @@
         <el-tooltip effect="dark" :content="$t('copy')" placement="left">
           <el-button
             class="export-iframe-copy-btn"
-            type="warning"
+            type="info"
             size="medium"
             circle
             icon="el-icon-document-copy"
@@ -47,7 +47,7 @@ export default class ExportIframe extends Vue {
 
   get treeList(): TreeNodeModel[] {
     const list = this.$store.state.treeList as TreeNodeModel[];
-    return list.filter(tree => isEditor(tree.name));
+    return list.filter(tree => tree.value !== undefined && isEditor(tree.name));
   }
 
   get exportIframeStyle(): string {

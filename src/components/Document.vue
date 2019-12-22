@@ -159,7 +159,7 @@ export default class Document extends Vue {
         querySnapshot.forEach(doc => {
           const treeNode = new TreeNodeModelImpl(doc);
           list.push(treeNode);
-          if (isEditor(treeNode.name)) {
+          if (treeNode.value !== undefined && isEditor(treeNode.name)) {
             target.push(treeNode);
           }
         });
