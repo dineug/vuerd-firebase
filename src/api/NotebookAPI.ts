@@ -12,7 +12,8 @@ import {
   Member,
   MemberAdd,
   Role,
-  Heart
+  Heart,
+  EditorTemplate
 } from "./NotebookModel";
 import store from "@/store";
 import moment from "moment";
@@ -50,7 +51,8 @@ export function getHeartsDocRef(
 }
 
 export async function notebookAdd(
-  notebookAdd: NotebookAdd
+  notebookAdd: NotebookAdd,
+  editorTemplate: EditorTemplate
 ): Promise<DocumentReference> {
   if (!store.state.user || !store.state.info) {
     throw new Error("not found user");
@@ -63,12 +65,59 @@ export async function notebookAdd(
   notebook.updatedAt = moment().unix();
   notebook.createdAt = moment().unix();
   const docRef = await getNotebooksColRef().add(notebook);
-  await getTreesColRef(docRef.id).add({
-    path: "unnamed",
-    name: "unnamed",
-    updatedAt: moment().unix(),
-    createdAt: moment().unix()
-  } as TreeNode);
+
+  if (editorTemplate === "all-editor-sample") {
+    const batch = db.batch();
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example",
+      name: "example",
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example/hellow.vuerd",
+      name: "hellow.vuerd",
+      value: "",
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example/hellow.md",
+      name: "hellow.md",
+      value: "# hellow [tui.editor](https://github.com/nhn/tui.editor)",
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example/hellow.rich",
+      name: "hellow.rich",
+      value: `<h1>hellow</h1><h2><a href="https://github.com/quill/quill">quill</a></h2>`,
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example/hellow.summernote.rich",
+      name: "hellow.summernote.rich",
+      value: `<h1>hellow</h1><h2><a href="https://github.com/summernote/summernote">summernote</a></h2>`,
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    batch.set(getTreesColRef(docRef.id).doc(), {
+      path: "example/hellow.medium-editor.rich",
+      name: "hellow.medium-editor.rich",
+      value: `<h1>hellow</h1><h2><a href="https://github.com/yabwe/medium-editor">medium-editor</a></h2>`,
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+    await batch.commit();
+  } else {
+    await getTreesColRef(docRef.id).add({
+      path: "unnamed",
+      name: "unnamed",
+      updatedAt: moment().unix(),
+      createdAt: moment().unix()
+    } as TreeNode);
+  }
 
   const user = store.state.info;
   await getMembersDocRef(docRef.id, store.state.user.uid).set({

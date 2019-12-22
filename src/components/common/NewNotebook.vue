@@ -64,6 +64,12 @@
           @tags-changed="onChangeTags"
         />
       </el-form-item>
+      <el-form-item :label="$t('editorTemplate')">
+        <editor-template-select
+          :value="editorTemplate"
+          @change="onChangeEditorTemplate"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button-group>
           <el-button type="primary" @click="onCreate">
@@ -85,7 +91,7 @@ import {
   COLOR_SWITCH_INACTIVE
 } from "@/data/color";
 import log from "@/ts/Logger";
-import { NotebookAdd } from "@/api/NotebookModel";
+import { NotebookAdd, EditorTemplate } from "@/api/NotebookModel";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { routes } from "@/router";
 import { notebookAdd } from "@/api/NotebookAPI";
@@ -99,11 +105,13 @@ import { Tag } from "@/models/vue-tags-input";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import VueTagsInput from "@johmun/vue-tags-input";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
+import EditorTemplateSelect from "@/components/common/EditorTemplateSelect.vue";
 
 @Component({
   components: {
     VueTagsInput,
-    ImageLazy
+    ImageLazy,
+    EditorTemplateSelect
   }
 })
 export default class NewNotebook extends Vue {
@@ -121,6 +129,7 @@ export default class NewNotebook extends Vue {
   private inputFile: HTMLInputElement = document.createElement("input");
   private previewImage: string = IMAGE;
   private file: File | null = null;
+  private editorTemplate: EditorTemplate = "none";
 
   @Watch("tag")
   private watchTag() {
@@ -135,6 +144,7 @@ export default class NewNotebook extends Vue {
     this.tags = [];
     this.autocompleteTags = [];
     this.previewImage = IMAGE;
+    this.editorTemplate = "none";
   }
 
   private valid(): boolean {
@@ -188,6 +198,10 @@ export default class NewNotebook extends Vue {
     });
   }
 
+  private onChangeEditorTemplate(template: EditorTemplate) {
+    this.editorTemplate = template;
+  }
+
   private onChangeTags(newTags: Tag[]) {
     this.tags = newTags;
     this.autocompleteTags = [];
@@ -211,7 +225,7 @@ export default class NewNotebook extends Vue {
         if (this.file) {
           notebook.image = await upload(this.file);
         }
-        const docRef = await notebookAdd(notebook);
+        const docRef = await notebookAdd(notebook, this.editorTemplate);
         await this.$router.push({
           name: routes.Editor.name,
           params: {

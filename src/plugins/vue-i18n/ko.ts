@@ -40,6 +40,7 @@ export default {
   iframeCopy: "iframe 복사되었습니다",
   copy: "복사",
   writing: "쓰기",
+  editorTemplate: "Editor 템플릿",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

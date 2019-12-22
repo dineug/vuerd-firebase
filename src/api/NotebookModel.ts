@@ -2,6 +2,7 @@ import { DocumentSnapshot } from "@/plugins/firebase";
 
 export type Role = "owner" | "writer" | "reader";
 export type Status = "invitation" | "accept";
+export type EditorTemplate = "none" | "all-editor-sample";
 
 export interface Notebook {
   roles: { [key: string]: Role };

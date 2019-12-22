@@ -40,6 +40,7 @@ export default {
   iframeCopy: "Iframe has been copied",
   copy: "copy",
   writing: "Writing",
+  editorTemplate: "Editor Template",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",
