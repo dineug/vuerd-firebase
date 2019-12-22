@@ -158,8 +158,8 @@ VuerdCore.use(TuiEditor, {
     }
   }
 });
-VuerdCore.use(Summernote, {
-  scope: [/\.(summernote.rich)$/i],
+VuerdCore.use(Quill, {
+  scope: [/\.(rich|quill.rich)$/i],
   imageUpload(files, callback) {
     files.forEach(file => {
       if (valid(file)) {
@@ -175,8 +175,8 @@ VuerdCore.use(Summernote, {
     });
   }
 });
-VuerdCore.use(Quill, {
-  scope: [/\.(rich|quill.rich)$/i],
+VuerdCore.use(Summernote, {
+  scope: [/\.(summernote.rich)$/i],
   imageUpload(files, callback) {
     files.forEach(file => {
       if (valid(file)) {
