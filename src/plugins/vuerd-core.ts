@@ -179,7 +179,7 @@ VuerdCore.use(Summernote, {
   }
 });
 VuerdCore.use(MediumEditor, {
-  scope: [/\.(medium-editor.rich)$/i],
+  scope: [/\.(medium.rich)$/i],
   imageUpload(file, callback) {
     uploadProcess([file], callback);
   }

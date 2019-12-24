@@ -103,8 +103,8 @@ export async function notebookAdd(
       createdAt: moment().unix()
     } as TreeNode);
     batch.set(getTreesColRef(docRef.id).doc(), {
-      path: "example/hello.medium-editor.rich",
-      name: "hello.medium-editor.rich",
+      path: "example/hello.medium.rich",
+      name: "hello.medium.rich",
       value: `<h1>hello</h1><h2><a href="https://github.com/yabwe/medium-editor">medium-editor</a></h2>`,
       updatedAt: moment().unix(),
       createdAt: moment().unix()
