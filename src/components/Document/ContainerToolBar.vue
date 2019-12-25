@@ -15,7 +15,7 @@
         />
         <el-badge
           v-else
-          class="btn-comment"
+          class="btn-badge"
           type="primary"
           :value="heartCount"
           :max="999"
@@ -27,7 +27,7 @@
         </el-badge>
       </el-button>
       <el-button
-        class="btn-comment"
+        class="btn-badge"
         type="info"
         size="small"
         plain
@@ -36,7 +36,7 @@
         <i v-if="commentCount === 0" class="el-icon-chat-dot-round" />
         <el-badge
           v-else
-          class="btn-comment"
+          class="btn-badge"
           type="primary"
           :value="commentCount"
           :max="999"
@@ -77,6 +77,26 @@
         </el-button>
       </el-popover>
     </el-button-group>
+    <el-button-group>
+      <el-popover popper-class="member-popper">
+        <div class="user-info" v-for="member in members" :key="member.id">
+          <el-avatar :src="member.image" />
+          <el-tooltip effect="dark" :content="member.email" placement="right">
+            <div class="user-nickname">{{ member.nickname }}</div>
+          </el-tooltip>
+        </div>
+        <el-button type="info" size="small" plain slot="reference">
+          <el-badge
+            class="btn-badge"
+            type="primary"
+            :value="members.length"
+            :max="999"
+          >
+            <i class="el-icon-chicken" />
+          </el-badge>
+        </el-button>
+      </el-popover>
+    </el-button-group>
     <comment :height="height" :comments="comments" />
   </div>
 </template>
@@ -93,7 +113,8 @@ import {
   heartAdd,
   heartRemove
 } from "@/api/NotebookAPI";
-import { Notebook } from "@/api/NotebookModel";
+import { Notebook, MemberModel, MemberModelImpl } from "@/api/NotebookModel";
+import { memberList } from "@/api/NotebookAPI";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Comment from "@/components/Document/Comment.vue";
 
@@ -116,6 +137,7 @@ export default class ContainerToolBar extends Vue {
   private notebook: Notebook | null = null;
   private popup: Window | null = null;
   private kakao = window.Kakao;
+  private members: MemberModel[] = [];
 
   get auth(): boolean {
     return this.$store.state.user !== null;
@@ -173,9 +195,21 @@ export default class ContainerToolBar extends Vue {
       );
   }
 
+  private getMembers() {
+    memberList(this.$route.params.id).then(querySnapshot => {
+      this.members = [];
+      querySnapshot.docs.forEach(doc => {
+        const member = new MemberModelImpl(doc);
+        if (member.status === "accept") {
+          this.members.push(member);
+        }
+      });
+    });
+  }
+
   // ==================== Event Handler ===================
   private onComment() {
-    log.debug("Document onComment");
+    log.debug("ContainerToolBar onComment");
     eventBus.$emit(Bus.Comment.drawerStart);
   }
 
@@ -293,6 +327,7 @@ export default class ContainerToolBar extends Vue {
     this.getComments();
     this.getHeartCount();
     this.getHeartStatus();
+    this.getMembers();
   }
 
   private destroyed() {
@@ -320,7 +355,7 @@ export default class ContainerToolBar extends Vue {
   box-sizing: border-box;
   border-bottom: 1px solid #e5e5e5;
 
-  .btn-comment {
+  .btn-badge {
     & /deep/ .el-badge__content {
       border-width: 0;
     }

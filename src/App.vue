@@ -52,12 +52,12 @@ body {
     scrollbar-color: $color-scrollbar-thumb $color-opacity;
     scrollbar-width: thin;
   }
-}
-.app {
+
   .el-avatar {
     background-color: white;
   }
-
+}
+.app {
   .tag-box .ti-tag,
   .tag-box .ti-selected-item {
     background-color: $color-tag;

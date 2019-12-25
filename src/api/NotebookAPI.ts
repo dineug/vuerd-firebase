@@ -198,9 +198,6 @@ export function notebookRemove(notebookId: string): Promise<void> {
 }
 
 export function memberList(id: string): Promise<QuerySnapshot> {
-  if (!store.state.user) {
-    throw new Error("not found user");
-  }
   return getMembersColRef(id)
     .orderBy("createdAt", "asc")
     .get();

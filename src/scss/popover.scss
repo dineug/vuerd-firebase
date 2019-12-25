@@ -91,3 +91,17 @@
     }
   }
 }
+
+.member-popper {
+  .user-info {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    box-sizing: border-box;
+
+    .user-nickname {
+      display: inline-block;
+      margin-left: 5px;
+    }
+  }
+}

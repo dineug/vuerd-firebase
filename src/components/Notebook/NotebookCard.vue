@@ -8,7 +8,7 @@
       >
         <el-button
           type="info"
-          icon="el-icon-view"
+          icon="el-icon-reading"
           plain
           @click="onClick('document')"
         />
