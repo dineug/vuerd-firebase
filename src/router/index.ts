@@ -4,6 +4,7 @@ import { signIn } from "./Guard";
 import { ElLoadingComponent } from "element-ui/types/loading";
 import { COLOR_LOADING } from "@/data/color";
 import { performance, Trace } from "@/plugins/firebase";
+import store, { Commit } from "@/store";
 
 const Notebook = () =>
   import(/* webpackChunkName: "user" */ "@/components/Notebook.vue");
@@ -29,13 +30,34 @@ export const routes = {
   Notebook: {
     path: "/",
     name: "Notebook",
-    component: Notebook
+    component: Notebook,
+    beforeEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
+      if (
+        from.name !== "NotebookSetting" &&
+        from.name !== "Document" &&
+        from.name !== "Editor" &&
+        from.name !== "MyNotebook"
+      ) {
+        store.commit(Commit.resetNotebook);
+      }
+      next();
+    }
   },
   MyNotebook: {
     path: "/notebooks/me",
     name: "MyNotebook",
     component: MyNotebook,
-    beforeEnter: signIn
+    beforeEnter(to: Route, from: Route, next: (to?: RawLocation) => void) {
+      if (
+        from.name !== "NotebookSetting" &&
+        from.name !== "Document" &&
+        from.name !== "Editor" &&
+        from.name !== "Notebook"
+      ) {
+        store.commit(Commit.resetMyNotebook);
+      }
+      signIn(to, from, next);
+    }
   },
   Setting: {
     path: "/setting",

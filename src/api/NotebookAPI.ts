@@ -15,7 +15,7 @@ import {
   Heart,
   EditorTemplate
 } from "./NotebookModel";
-import store from "@/store";
+import store, { Commit } from "@/store";
 import moment from "moment";
 import { getTreesColRef } from "./TreeAPI";
 import { TreeNode } from "./TreeModel";
@@ -130,6 +130,8 @@ export async function notebookAdd(
     status: "accept",
     createdAt: moment().unix()
   } as Member);
+  store.commit(Commit.resetNotebook);
+  store.commit(Commit.resetMyNotebook);
   return docRef;
 }
 

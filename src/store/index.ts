@@ -1,13 +1,24 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { User } from "@/plugins/firebase";
+import { User, Paging } from "@/plugins/firebase";
 import { TreeNodeModel } from "@/api/TreeModel";
 import { User as UserInfo } from "@/api/UserModel";
 import { getUsersDocRef, userSignIn } from "@/api/UserAPI";
+import { NotebookModel } from "@/api/NotebookModel";
 import i18n from "@/plugins/vue-i18n";
 import eventBus, { Bus } from "@/ts/EventBus";
 
 Vue.use(Vuex);
+
+export interface Notebook {
+  list: NotebookModel[];
+  paging: Paging | null;
+}
+
+export interface MyNotebook {
+  list: NotebookModel[];
+  paging: Paging | null;
+}
 
 export interface State {
   user: User | null;
@@ -17,6 +28,8 @@ export interface State {
   treeList: TreeNodeModel[];
   unsubscribe: { (): void; (): void } | null;
   treeActiveId: string | null;
+  notebook: Notebook;
+  myNotebook: MyNotebook;
 }
 
 export const enum Commit {
@@ -25,7 +38,11 @@ export const enum Commit {
   referer = "referer",
   setNotebookId = "setNotebookId",
   setTreeList = "setTreeList",
-  setTreeActiveId = "setTreeActiveId"
+  setTreeActiveId = "setTreeActiveId",
+  setNotebook = "setNotebook",
+  setMyNotebook = "setMyNotebook",
+  resetNotebook = "resetNotebook",
+  resetMyNotebook = "resetMyNotebook"
 }
 
 export default new Vuex.Store<State>({
@@ -36,7 +53,19 @@ export default new Vuex.Store<State>({
     notebookId: null,
     treeList: [],
     unsubscribe: null,
-    treeActiveId: null
+    treeActiveId: null,
+    notebook: {
+      list: [],
+      paging: {
+        last: null
+      }
+    },
+    myNotebook: {
+      list: [],
+      paging: {
+        last: null
+      }
+    }
   },
   mutations: {
     signIn(state: State, user: User) {
@@ -64,6 +93,12 @@ export default new Vuex.Store<State>({
       state.info = null;
       state.notebookId = null;
       state.treeList = [];
+      state.myNotebook = {
+        list: [],
+        paging: {
+          last: null
+        }
+      };
     },
     referer(state: State, referer: string) {
       state.referer = referer;
@@ -76,7 +111,42 @@ export default new Vuex.Store<State>({
     },
     setTreeActiveId(state: State, treeActiveId: string | null) {
       state.treeActiveId = treeActiveId;
+    },
+    setNotebook(
+      state: State,
+      payload: { list?: NotebookModel[]; paging: Paging | null }
+    ) {
+      const { list, paging } = payload;
+      if (list !== undefined && list.length !== 0) {
+        state.notebook.list.push.apply(state.notebook.list, list);
+      }
+      state.notebook.paging = paging;
+    },
+    setMyNotebook(
+      state: State,
+      payload: { list?: NotebookModel[]; paging: Paging | null }
+    ) {
+      const { list, paging } = payload;
+      if (list !== undefined && list.length !== 0) {
+        state.myNotebook.list.push.apply(state.myNotebook.list, list);
+      }
+      state.myNotebook.paging = paging;
+    },
+    resetNotebook(state: State) {
+      state.notebook = {
+        list: [],
+        paging: {
+          last: null
+        }
+      };
+    },
+    resetMyNotebook(state: State) {
+      state.myNotebook = {
+        list: [],
+        paging: {
+          last: null
+        }
+      };
     }
-  },
-  actions: {}
+  }
 });

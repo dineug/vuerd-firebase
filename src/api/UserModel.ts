@@ -4,7 +4,7 @@ export interface User {
   name: string | null;
   nickname: string | null;
   email: string | null;
-  image: string | null;
+  image: string;
   notification: number;
   language: Language;
   published: boolean;
@@ -13,7 +13,7 @@ export interface User {
 export interface UserModify {
   name: string;
   nickname: string;
-  image: string | null;
+  image: string;
   language: Language;
   published: boolean;
 }

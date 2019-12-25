@@ -48,16 +48,14 @@ export async function userSignIn(): Promise<void> {
     throw new Error("not found user");
   }
   const doc = await userDetail();
-  if (doc.data() === undefined) {
+  if (!doc.exists) {
     const batch = db.batch();
     batch.set(getUsersDocRef(store.state.user.uid), {
       email: store.state.user.email,
       name: store.state.user.displayName,
       nickname: store.state.user.displayName,
       notification: 0,
-      image: store.state.user.photoURL
-        ? store.state.user.photoURL
-        : identicon(store.state.user.email),
+      image: identicon(store.state.user.uid),
       language: "en",
       published: false
     } as User);

@@ -117,10 +117,10 @@ export default class Setting extends Vue {
   private previewImage: string = "";
   private file: File | null = null;
   private info: User = {
-    name: null,
-    nickname: null,
-    email: null,
-    image: null,
+    name: "",
+    nickname: "",
+    email: "",
+    image: "",
     language: "en",
     published: false,
     notification: 0
@@ -128,17 +128,7 @@ export default class Setting extends Vue {
 
   private valid(): boolean {
     let result = false;
-    if (this.info.name === null || this.info.name.trim() === "") {
-      this.info.name = "";
-      this.$notify.warning({
-        title: "Valid",
-        message: this.$t("valid.name") as string
-      });
-      (this.$refs.name as HTMLInputElement).focus();
-    } else if (
-      this.info.nickname === null ||
-      this.info.nickname.trim() === ""
-    ) {
+    if (this.info.nickname === null || this.info.nickname.trim() === "") {
       this.info.nickname = "";
       this.$notify.warning({
         title: "Valid",
@@ -190,7 +180,7 @@ export default class Setting extends Vue {
       if (info.image) {
         this.previewImage = info.image;
       } else {
-        this.previewImage = identicon(info.email);
+        this.previewImage = identicon(this.$store.state.user.uid);
       }
     }
   }
@@ -209,13 +199,13 @@ export default class Setting extends Vue {
         if (this.info.image) {
           this.previewImage = this.info.image;
         } else {
-          this.previewImage = identicon(this.info.email);
+          this.previewImage = identicon(this.$store.state.user.uid);
         }
         this.inputFile.value = "";
         this.file = null;
         break;
       case PictureAction.Clean:
-        this.previewImage = identicon(this.info.email);
+        this.previewImage = identicon(this.$store.state.user.uid);
         this.inputFile.value = "";
         this.file = null;
         break;
@@ -234,7 +224,7 @@ export default class Setting extends Vue {
 
   private async onUpdate() {
     if (this.valid()) {
-      if (this.info.name && this.info.nickname) {
+      if (this.info.name !== null && this.info.nickname !== null) {
         const loading = this.$loading({
           lock: true,
           background: COLOR_LOADING,
@@ -251,8 +241,8 @@ export default class Setting extends Vue {
           if (this.file) {
             user.image = await upload(this.file);
           }
-          if (this.previewImage === identicon(this.info.email)) {
-            user.image = identicon(this.info.email);
+          if (this.previewImage === identicon(this.$store.state.user.uid)) {
+            user.image = identicon(this.$store.state.user.uid);
           }
           await userModify(user);
         } catch (err) {

@@ -21,6 +21,7 @@ import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
 import { myNotebookPaging } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { routes } from "@/router";
+import { Commit } from "@/store";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
@@ -32,11 +33,15 @@ import NotebookCard from "./Notebook/NotebookCard.vue";
   }
 })
 export default class MyNotebook extends Vue {
-  private notebooks: NotebookModel[] = [];
-  private paging: Paging | null = {
-    last: null
-  };
   private listProcess: boolean = false;
+
+  get notebooks(): NotebookModel[] {
+    return this.$store.state.myNotebook.list;
+  }
+
+  get paging(): Paging | null {
+    return this.$store.state.myNotebook.paging;
+  }
 
   private getNotebooks() {
     if (!this.listProcess && this.paging) {
@@ -45,12 +50,18 @@ export default class MyNotebook extends Vue {
         .then(querySnapshot => {
           const len = querySnapshot.docs.length;
           if (len === 0) {
-            this.paging = null;
+            this.$store.commit(Commit.setMyNotebook, {
+              paging: null
+            });
           } else if (this.paging) {
-            this.paging.last = querySnapshot.docs[len - 1];
-            querySnapshot.forEach(doc =>
-              this.notebooks.push(new NotebookModelImpl(doc))
-            );
+            const list: NotebookModel[] = [];
+            querySnapshot.forEach(doc => list.push(new NotebookModelImpl(doc)));
+            this.$store.commit(Commit.setMyNotebook, {
+              list,
+              paging: {
+                last: querySnapshot.docs[len - 1]
+              }
+            });
           }
         })
         .catch(err =>
@@ -101,7 +112,9 @@ export default class MyNotebook extends Vue {
   }
 
   private created() {
-    this.getNotebooks();
+    if (this.notebooks.length === 0) {
+      this.getNotebooks();
+    }
     window.addEventListener("scroll", this.onScroll);
   }
 
