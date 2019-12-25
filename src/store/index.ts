@@ -42,6 +42,10 @@ export default new Vuex.Store<State>({
     signIn(state: State, user: User) {
       state.user = user;
       userSignIn();
+      if (state.unsubscribe !== null) {
+        state.unsubscribe();
+        state.unsubscribe = null;
+      }
       state.unsubscribe = getUsersDocRef(user.uid).onSnapshot(doc => {
         if (doc.exists) {
           const info = doc.data() as UserInfo;

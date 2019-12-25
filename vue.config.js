@@ -10,7 +10,7 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    config.output.chunkFilename("js/[name].js?ver=[chunkhash]");
+    config.output.chunkFilename("js/[name].js?[chunkhash]=chunkhash");
     config.plugins.delete("prefetch");
   }
 };
