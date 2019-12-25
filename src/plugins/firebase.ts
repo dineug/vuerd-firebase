@@ -9,7 +9,7 @@ import router from "@/router";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbknapvaSLGiJkzPmwO-lg8NNgKOUlrOM",
-  authDomain: "vuerd-547c3.firebaseapp.com",
+  authDomain: "vuerd.io",
   databaseURL: "https://vuerd-547c3.firebaseio.com",
   projectId: "vuerd-547c3",
   storageBucket: "vuerd-547c3.appspot.com",

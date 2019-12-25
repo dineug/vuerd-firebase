@@ -4915,7 +4915,7 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-firebase@^7.5.2:
+firebase@^7.6.1:
   version "7.6.1"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.6.1.tgz#ef9bf74d9d0d9fc2b3ac5945769c3d62ca076458"
   integrity sha512-rrKp2cWmrH3gdxr+3t97t6eGye4VJTOYo6U98jvGi+OA4ZSKTSrCMXN6nZkAVOkSCvn/fgw//oHV+7VsJskB/Q==
@@ -11030,6 +11030,25 @@ vue@^2.6.10:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
+
+vuerd-core@^0.4.11:
+  version "0.4.11"
+  resolved "https://registry.yarnpkg.com/vuerd-core/-/vuerd-core-0.4.11.tgz#91542f4eaf4dc85ac7c36259f2a093372daa00b7"
+  integrity sha512-hqu7g48N2/u9dt0y4UoveaJE7aDEK6Yj2YVoEBKSCULC2qcxCtiH9bRSH2AqEY9Nhr1NlTL2tBBfteylxbcz/A==
+  dependencies:
+    "@tweenjs/tween.js" "^18.4.2"
+    core-js "^3.4.8"
+    github-markdown-css "^3.0.1"
+    highlight.js "^9.16.2"
+    marked "^0.7.0"
+    rxjs "^6.5.3"
+    undo-manager "^1.0.5"
+    uuid "^3.3.3"
+    vscode-icons-js "^9.3.0"
+    vue "^2.6.10"
+    vue-class-component "^7.1.0"
+    vue-property-decorator "^8.3.0"
+    vuex "^3.1.2"
 
 vuerd-core@^0.4.9:
   version "0.4.9"
