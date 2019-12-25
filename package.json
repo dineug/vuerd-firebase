@@ -7,7 +7,7 @@
     "build": "vue-cli-service build && cp -r dist/index.html functions/",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "deploy": "yarn build && firebase deploy --only hosting"
+    "deploy": "vue-cli-service build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.25",
