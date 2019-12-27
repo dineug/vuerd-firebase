@@ -10,3 +10,13 @@ export function tagAutocomplete(keyword: string): Promise<QuerySnapshot> {
     .limit(6)
     .get();
 }
+
+export function tagTopCount(limit?: number): Promise<QuerySnapshot> {
+  if (limit === undefined) {
+    limit = 10;
+  }
+  return getTagsColRef()
+    .orderBy("count", "desc")
+    .limit(limit)
+    .get();
+}

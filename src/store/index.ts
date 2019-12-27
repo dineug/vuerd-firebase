@@ -4,7 +4,8 @@ import { User, Paging } from "@/plugins/firebase";
 import { TreeNodeModel } from "@/api/TreeModel";
 import { User as UserInfo } from "@/api/UserModel";
 import { getUsersDocRef, userSignIn } from "@/api/UserAPI";
-import { NotebookModel } from "@/api/NotebookModel";
+import { NotebookPaging, NotebookModel } from "@/api/NotebookModel";
+import { Tag } from "@/models/vue-tags-input";
 import i18n from "@/plugins/vue-i18n";
 import eventBus, { Bus } from "@/ts/EventBus";
 
@@ -12,12 +13,15 @@ Vue.use(Vuex);
 
 export interface Notebook {
   list: NotebookModel[];
-  paging: Paging | null;
+  paging: NotebookPaging | null;
+  scrollTop: number;
+  tags: Tag[];
 }
 
 export interface MyNotebook {
   list: NotebookModel[];
   paging: Paging | null;
+  scrollTop: number;
 }
 
 export interface State {
@@ -57,14 +61,18 @@ export default new Vuex.Store<State>({
     notebook: {
       list: [],
       paging: {
-        last: null
-      }
+        last: null,
+        tags: []
+      },
+      scrollTop: 0,
+      tags: []
     },
     myNotebook: {
       list: [],
       paging: {
         last: null
-      }
+      },
+      scrollTop: 0
     }
   },
   mutations: {
@@ -97,7 +105,8 @@ export default new Vuex.Store<State>({
         list: [],
         paging: {
           last: null
-        }
+        },
+        scrollTop: 0
       };
     },
     referer(state: State, referer: string) {
@@ -114,30 +123,54 @@ export default new Vuex.Store<State>({
     },
     setNotebook(
       state: State,
-      payload: { list?: NotebookModel[]; paging: Paging | null }
+      payload: {
+        list?: NotebookModel[];
+        paging?: NotebookPaging | null;
+        scrollTop?: number;
+        tags?: Tag[];
+      }
     ) {
-      const { list, paging } = payload;
+      const { list, paging, scrollTop, tags } = payload;
+      if (paging !== undefined) {
+        state.notebook.paging = paging;
+      }
+      if (state.notebook.paging && tags !== undefined) {
+        state.notebook.tags = tags;
+        state.notebook.paging.tags = tags;
+      }
       if (list !== undefined && list.length !== 0) {
         state.notebook.list.push.apply(state.notebook.list, list);
       }
-      state.notebook.paging = paging;
+      if (scrollTop !== undefined) {
+        state.notebook.scrollTop = scrollTop;
+      }
     },
     setMyNotebook(
       state: State,
-      payload: { list?: NotebookModel[]; paging: Paging | null }
+      payload: {
+        list?: NotebookModel[];
+        paging: Paging | null;
+        scrollTop?: number;
+      }
     ) {
-      const { list, paging } = payload;
+      const { list, paging, scrollTop } = payload;
+      state.myNotebook.paging = paging;
       if (list !== undefined && list.length !== 0) {
         state.myNotebook.list.push.apply(state.myNotebook.list, list);
       }
-      state.myNotebook.paging = paging;
+      if (scrollTop !== undefined) {
+        state.myNotebook.scrollTop = scrollTop;
+      }
     },
     resetNotebook(state: State) {
       state.notebook = {
         list: [],
         paging: {
-          last: null
-        }
+          last: null,
+          tags: []
+        },
+        scrollTop: 0,
+        tags: []
       };
     },
     resetMyNotebook(state: State) {
@@ -145,7 +178,8 @@ export default new Vuex.Store<State>({
         list: [],
         paging: {
           last: null
-        }
+        },
+        scrollTop: 0
       };
     }
   }

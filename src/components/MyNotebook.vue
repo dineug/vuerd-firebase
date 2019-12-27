@@ -22,6 +22,8 @@ import { myNotebookPaging } from "@/api/NotebookAPI";
 import { Paging } from "@/plugins/firebase";
 import { routes } from "@/router";
 import { Commit } from "@/store";
+import { Subject, Subscription } from "rxjs";
+import { debounceTime } from "rxjs/operators";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "./common/Sidebar.vue";
 import NotebookCard from "./Notebook/NotebookCard.vue";
@@ -34,6 +36,8 @@ import NotebookCard from "./Notebook/NotebookCard.vue";
 })
 export default class MyNotebook extends Vue {
   private listProcess: boolean = false;
+  private scroll$ = new Subject<number>();
+  private subScroll!: Subscription;
 
   get notebooks(): NotebookModel[] {
     return this.$store.state.myNotebook.list;
@@ -41,6 +45,10 @@ export default class MyNotebook extends Vue {
 
   get paging(): Paging | null {
     return this.$store.state.myNotebook.paging;
+  }
+
+  get scrollTop(): number {
+    return this.$store.state.myNotebook.scrollTop;
   }
 
   private getNotebooks() {
@@ -74,6 +82,7 @@ export default class MyNotebook extends Vue {
     }
   }
 
+  // ==================== Event Handler ===================
   private onDocument(notebook: NotebookModel) {
     this.$router.push({
       name: routes.Document.name,
@@ -109,18 +118,34 @@ export default class MyNotebook extends Vue {
     if (currentScroll + 400 >= scrollHeight) {
       this.getNotebooks();
     }
+    this.scroll$.next(scrollTop);
   }
 
+  private onScrollTop(scrollTop: number) {
+    this.$store.commit(Commit.setMyNotebook, { scrollTop });
+  }
+  // ==================== Event Handler END ===================
+
+  // ==================== Life Cycle ====================
   private created() {
     if (this.notebooks.length === 0) {
       this.getNotebooks();
     }
     window.addEventListener("scroll", this.onScroll);
+    this.subScroll = this.scroll$
+      .pipe(debounceTime(300))
+      .subscribe(this.onScrollTop);
+  }
+
+  private mounted() {
+    document.documentElement.scrollTop = this.scrollTop;
   }
 
   private destroyed() {
     window.removeEventListener("scroll", this.onScroll);
+    this.subScroll.unsubscribe();
   }
+  // ==================== Life Cycle END ====================
 }
 </script>
 

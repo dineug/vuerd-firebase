@@ -1,4 +1,9 @@
-import { DocumentSnapshot } from "@/plugins/firebase";
+import { DocumentSnapshot, Paging } from "@/plugins/firebase";
+import { Tag } from "@/models/vue-tags-input";
+
+export interface NotebookPaging extends Paging {
+  tags: Tag[];
+}
 
 export type Role = "owner" | "writer" | "reader";
 export type Status = "invitation" | "accept";

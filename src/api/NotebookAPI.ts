@@ -7,6 +7,7 @@ import {
   Paging
 } from "@/plugins/firebase";
 import {
+  NotebookPaging,
   Notebook,
   NotebookAdd,
   Member,
@@ -135,7 +136,7 @@ export async function notebookAdd(
   return docRef;
 }
 
-export function notebookPaging(paging: Paging): Promise<QuerySnapshot> {
+export function notebookPaging(paging: NotebookPaging): Promise<QuerySnapshot> {
   if (!paging.limit) {
     paging.limit = 20;
   }
@@ -149,6 +150,13 @@ export function notebookPaging(paging: Paging): Promise<QuerySnapshot> {
     .where("published", "==", true)
     .orderBy(paging.orderBy, paging.sort)
     .limit(paging.limit);
+  if (paging.tags.length !== 0) {
+    ref = ref.where(
+      "tags",
+      "array-contains-any",
+      paging.tags.map(tag => tag.text)
+    );
+  }
   if (paging.last) {
     ref = ref.startAfter(paging.last);
   }
@@ -182,14 +190,16 @@ export function notebookDetail(id: string): Promise<DocumentSnapshot> {
   return getNotebooksDocRef(id).get();
 }
 
-export function notebookModify(
+export async function notebookModify(
   id: string,
   notebookAdd: NotebookAdd
 ): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getNotebooksDocRef(id).update(notebookAdd);
+  await getNotebooksDocRef(id).update(notebookAdd);
+  store.commit(Commit.resetNotebook);
+  store.commit(Commit.resetMyNotebook);
 }
 
 export function notebookRemove(notebookId: string): Promise<void> {
