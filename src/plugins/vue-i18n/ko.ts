@@ -42,6 +42,7 @@ export default {
   writing: "쓰기",
   editorTemplate: "Editor 템플릿",
   leave: "탈퇴",
+  help: "도움말",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",

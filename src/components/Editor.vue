@@ -28,7 +28,7 @@ import ExportIframe from "@/components/Editor/ExportIframe.vue";
   }
 })
 export default class Editor extends Vue {
-  private themeName: string = "VSCode";
+  private themeName: string = "AtomOneDark";
   private load: boolean = true;
   private unsubscribe: { (): void; (): void } | null = null;
   private windowHeight: number = window.innerHeight;

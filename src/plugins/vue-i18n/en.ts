@@ -42,6 +42,7 @@ export default {
   writing: "Writing",
   editorTemplate: "Editor Template",
   leave: "Leave",
+  help: "Help",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",

@@ -158,6 +158,15 @@
         </el-menu-item>
       </el-tooltip>
       <el-tooltip
+        :content="$t('help')"
+        placement="left"
+        :open-delay="openDelay"
+      >
+        <el-menu-item index="help">
+          <i class="el-icon-s-help" />
+        </el-menu-item>
+      </el-tooltip>
+      <el-tooltip
         content="Github issues"
         placement="left"
         :open-delay="openDelay"
@@ -369,6 +378,17 @@ export default class NavMenu extends Vue {
       case "notification":
         this.setActive();
         break;
+      case "help":
+        this.$router.push({
+          name: routes.Document.name,
+          params: {
+            id: "w6uWzA3KdN1SsyXasIjU"
+          },
+          query: {
+            active: "5fY5DUYlFybVROdFjHNh"
+          }
+        });
+        break;
     }
   }
 
@@ -517,7 +537,6 @@ export default class NavMenu extends Vue {
 .font-awesome {
   color: #909399;
   font-size: 18px;
-  margin-right: 5px;
 }
 .sign-in-btn {
   width: 200px;

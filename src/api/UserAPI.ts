@@ -56,11 +56,11 @@ export async function userSignIn(): Promise<void> {
       nickname: store.state.user.displayName,
       notification: 0,
       image: identicon(store.state.user.uid),
-      language: "en",
+      language: "ko",
       published: false
     } as User);
     batch.set(getConfigDocRef(store.state.user.uid, "editor"), {
-      themeName: "VSCode"
+      themeName: "AtomOneDark"
     });
     await batch.commit();
   }
