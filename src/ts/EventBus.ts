@@ -4,9 +4,9 @@ enum Editor {
   reload = "Editor.reload"
 }
 
-enum NewNotebook {
-  drawerStart = "NewNotebook.drawerStart",
-  drawerEnd = "NewNotebook.drawerEnd"
+enum NewNotebookDrawer {
+  drawerStart = "NewNotebookDrawer.drawerStart",
+  drawerEnd = "NewNotebookDrawer.drawerEnd"
 }
 
 enum Setting {
@@ -23,12 +23,24 @@ enum ExportIframe {
   drawerEnd = "ExportLink.drawerEnd"
 }
 
+enum Sidebar {
+  show = "Sidebar.show",
+  hide = "Sidebar.hide"
+}
+
+enum NavHeader {
+  show = "NavHeader.show",
+  hide = "NavHeader.hide"
+}
+
 export const Bus = {
   Editor,
-  NewNotebook,
+  NewNotebookDrawer,
   Setting,
   Comment,
-  ExportIframe
+  ExportIframe,
+  Sidebar,
+  NavHeader
 };
 
 export default new Vue();

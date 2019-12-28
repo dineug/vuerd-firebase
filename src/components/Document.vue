@@ -3,6 +3,7 @@
     <sidebar />
     <el-container class="document-container">
       <explorer
+        v-if="show"
         :width="explorerWidth"
         :height="windowHeight"
         :trees="trees"
@@ -24,6 +25,7 @@
           :tree="treeActive"
         />
         <sash
+          v-if="show"
           vertical
           :left="sashLeft"
           @mousemove="onMousemoveSash"
@@ -48,7 +50,7 @@ import { TreeModel, TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import { fromEvent, Observable, Subscription } from "rxjs";
 import { Commit } from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Sidebar from "./common/Sidebar.vue";
+import Sidebar from "@/components/common/Sidebar.vue";
 import Explorer from "@/components/Document/Explorer.vue";
 import Sash from "@/components/common/Sash.vue";
 import ContainerView from "@/components/Document/ContainerView.vue";
@@ -57,6 +59,7 @@ import ContainerToolBar from "@/components/Document/ContainerToolBar.vue";
 const SIDEBAR_WIDTH = 64;
 const MARGIN = 10;
 const EXPLORER_WIDTH = 200;
+const WIDTH_MIN = 768;
 
 const enum Direction {
   left = "left",
@@ -88,9 +91,11 @@ export default class Document extends Vue {
   private trees: TreeModel[] = [];
   private search: string = "";
   private treeActive: TreeModel | null = null;
+  private sidebarWidth: number = SIDEBAR_WIDTH;
+  private show: boolean = true;
 
   get contentViewWidth(): number {
-    return this.windowWidth - this.explorerWidth - SIDEBAR_WIDTH - MARGIN;
+    return this.windowWidth - this.explorerWidth - this.sidebarWidth - MARGIN;
   }
 
   get contentViewHeight(): number {
@@ -98,7 +103,7 @@ export default class Document extends Vue {
   }
 
   get sashLeft(): number {
-    return this.explorerWidth + SIDEBAR_WIDTH;
+    return this.explorerWidth + this.sidebarWidth;
   }
 
   @Watch("treeList")
@@ -185,13 +190,24 @@ export default class Document extends Vue {
   private onResize() {
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;
+    this.show = this.windowWidth > WIDTH_MIN;
+    if (this.show) {
+      this.sidebarWidth = SIDEBAR_WIDTH;
+      if (this.explorerWidth === 10) {
+        this.explorerWidth = EXPLORER_WIDTH;
+      }
+    } else {
+      this.explorerWidth = 10;
+      this.sidebarWidth = 0;
+    }
   }
 
   private onMousemoveSash(event: MouseEvent) {
     const direction: Direction =
       event.movementX < 0 ? Direction.left : Direction.right;
     const width = this.explorerWidth + event.movementX;
-    const contentViewWidth = this.windowWidth - width - SIDEBAR_WIDTH - MARGIN;
+    const contentViewWidth =
+      this.windowWidth - width - this.sidebarWidth - MARGIN;
     switch (direction) {
       case Direction.left:
         if (10 < width && event.x < this.x) {
@@ -224,10 +240,10 @@ export default class Document extends Vue {
     log.debug("Document created");
     this.$store.commit(Commit.setTreeActiveId, null);
     this.getTrees();
+    this.subResize = this.resize$.subscribe(this.onResize);
   }
 
   private mounted() {
-    this.subResize = this.resize$.subscribe(this.onResize);
     window.dispatchEvent(new Event("resize"));
   }
 

@@ -2,11 +2,14 @@
   <el-container>
     <sidebar />
     <el-container>
+      <el-header style="padding: 0; height: auto;">
+        <nav-header />
+      </el-header>
       <el-main>
         <el-form inline>
           <el-form-item>
             <vue-tags-input
-              style="width: 450px;"
+              style="width: 310px;"
               placeholder="Tag Filter"
               v-model="filterTag"
               :tags="tags"
@@ -20,6 +23,7 @@
               v-for="tag in topTags"
               :key="tag.id"
               :value="tag.count"
+              :max="999"
               type="primary"
             >
               <el-tag @click="onTagAdd(tag)">
@@ -57,13 +61,15 @@ import { Subject, Subscription } from "rxjs";
 import { debounceTime, filter } from "rxjs/operators";
 import { Tag } from "@/models/vue-tags-input";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Sidebar from "./common/Sidebar.vue";
-import NotebookCard from "./Notebook/NotebookCard.vue";
+import Sidebar from "@/components/common/Sidebar.vue";
+import NavHeader from "@/components/common/NavHeader.vue";
+import NotebookCard from "@/components/Notebook/NotebookCard.vue";
 import VueTagsInput from "@johmun/vue-tags-input";
 
 @Component({
   components: {
     Sidebar,
+    NavHeader,
     NotebookCard,
     VueTagsInput
   }

@@ -1,5 +1,5 @@
 <template>
-  <el-drawer :title="$t('comment')" :visible.sync="drawer" size="50%">
+  <el-drawer :title="$t('comment')" :visible.sync="drawer" size="90%">
     <div class="comment-box" :style="commentBoxStyle" ref="scroll">
       <el-timeline>
         <el-timeline-item v-if="comments.length === 0" key="comment-none">

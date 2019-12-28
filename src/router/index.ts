@@ -16,6 +16,8 @@ const NotebookSetting = () =>
   import(/* webpackChunkName: "user" */ "@/components/NotebookSetting.vue");
 const Document = () =>
   import(/* webpackChunkName: "user" */ "@/components/Document.vue");
+const NewNotebook = () =>
+  import(/* webpackChunkName: "user" */ "@/components/NewNotebook.vue");
 const Editor = () =>
   import(/* webpackChunkName: "editor" */ "@/components/Editor.vue");
 const Export = () =>
@@ -78,6 +80,12 @@ export const routes = {
     props: (route: Route) => ({
       treeActiveId: route.query.active
     })
+  },
+  NewNotebook: {
+    path: "/notebooks/new",
+    name: "NewNotebook",
+    component: NewNotebook,
+    beforeEnter: signIn
   },
   Editor: {
     path: "/notebooks/:id/editor",

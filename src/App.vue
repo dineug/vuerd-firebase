@@ -5,10 +5,39 @@
 </template>
 
 <script lang="ts">
+import eventBus, { Bus } from "@/ts/EventBus";
+import { fromEvent, Observable, Subscription } from "rxjs";
 import { Component, Vue } from "vue-property-decorator";
 
+const WIDTH_MIN = 768;
+
 @Component
-export default class App extends Vue {}
+export default class App extends Vue {
+  private resize$: Observable<Event> = fromEvent(window, "resize");
+  private subResize!: Subscription;
+
+  private onResize() {
+    if (window.innerWidth > WIDTH_MIN) {
+      eventBus.$emit(Bus.Sidebar.show);
+      eventBus.$emit(Bus.NavHeader.hide);
+    } else {
+      eventBus.$emit(Bus.Sidebar.hide);
+      eventBus.$emit(Bus.NavHeader.show);
+    }
+  }
+
+  private created() {
+    this.subResize = this.resize$.subscribe(this.onResize);
+  }
+
+  private mounted() {
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  private destroyed() {
+    this.subResize.unsubscribe();
+  }
+}
 </script>
 
 <style lang="scss">

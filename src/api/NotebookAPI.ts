@@ -150,7 +150,7 @@ export function notebookPaging(paging: NotebookPaging): Promise<QuerySnapshot> {
     .where("published", "==", true)
     .orderBy(paging.orderBy, paging.sort)
     .limit(paging.limit);
-  if (paging.tags.length !== 0) {
+  if (paging.tags && paging.tags.length !== 0) {
     ref = ref.where(
       "tags",
       "array-contains-any",

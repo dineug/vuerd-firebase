@@ -34,6 +34,7 @@ import {
   PageHeader,
   Breadcrumb,
   BreadcrumbItem,
+  Header,
   Loading,
   MessageBox,
   Notification
@@ -80,6 +81,7 @@ const components = [
   PageHeader,
   Breadcrumb,
   BreadcrumbItem,
+  Header,
   Loading
 ];
 

@@ -2,6 +2,9 @@
   <el-container>
     <sidebar />
     <el-container>
+      <el-header style="padding: 0; height: auto;">
+        <nav-header />
+      </el-header>
       <el-main>
         <notebook-card
           v-for="notebook in notebooks"
@@ -25,12 +28,14 @@ import { Commit } from "@/store";
 import { Subject, Subscription } from "rxjs";
 import { debounceTime } from "rxjs/operators";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Sidebar from "./common/Sidebar.vue";
-import NotebookCard from "./Notebook/NotebookCard.vue";
+import Sidebar from "@/components/common/Sidebar.vue";
+import NavHeader from "@/components/common/NavHeader.vue";
+import NotebookCard from "@/components/Notebook/NotebookCard.vue";
 
 @Component({
   components: {
     Sidebar,
+    NavHeader,
     NotebookCard
   }
 })

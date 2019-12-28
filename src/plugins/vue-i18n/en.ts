@@ -1,5 +1,5 @@
 export default {
-  notebook: "notebook",
+  notebook: "Notebook",
   myNotebook: "My Notebook",
   newNotebook: "New Notebook",
   notebookSetting: "Notebook Setting",

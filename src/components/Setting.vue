@@ -2,6 +2,9 @@
   <el-container>
     <sidebar />
     <el-container>
+      <el-header style="padding: 0; height: auto;">
+        <nav-header />
+      </el-header>
       <el-main class="main">
         <el-page-header @back="onBack" title="" :content="$t('setting')" />
         <el-form style="padding: 20px;" label-width="150px">
@@ -101,12 +104,14 @@ import eventBus, { Bus } from "@/ts/EventBus";
 import { MAX_SIZE } from "@/data/image";
 import PictureAction from "@/models/PictureAction";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Sidebar from "./common/Sidebar.vue";
+import Sidebar from "@/components/common/Sidebar.vue";
+import NavHeader from "@/components/common/NavHeader.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
 
 @Component({
   components: {
     Sidebar,
+    NavHeader,
     LanguageSelect
   }
 })

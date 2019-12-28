@@ -2,6 +2,9 @@
   <el-container>
     <sidebar />
     <el-container>
+      <el-header style="padding: 0; height: auto;">
+        <nav-header />
+      </el-header>
       <el-main class="main">
         <el-page-header
           @back="onBack"
@@ -19,13 +22,15 @@
 import { NotebookModel, NotebookModelImpl } from "@/api/NotebookModel";
 import { notebookDetail } from "@/api/NotebookAPI";
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Sidebar from "./common/Sidebar.vue";
+import Sidebar from "@/components/common/Sidebar.vue";
+import NavHeader from "@/components/common/NavHeader.vue";
 import NotebookInfo from "@/components/NotebookSetting/NotebookInfo.vue";
 import NotebookMember from "@/components/NotebookSetting/NotebookMember.vue";
 
 @Component({
   components: {
     Sidebar,
+    NavHeader,
     NotebookInfo,
     NotebookMember
   }

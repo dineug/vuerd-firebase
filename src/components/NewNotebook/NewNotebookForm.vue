@@ -1,87 +1,85 @@
 <template>
-  <el-drawer :title="$t('newNotebook')" :visible.sync="drawer" size="700px">
-    <el-form style="padding: 0 20px;" label-width="120px">
-      <el-form-item :label="$t('picture')">
-        <image-lazy :src="previewImage" />
-        <el-button-group>
-          <el-button
-            class="custom-icon-btn"
-            type="info"
-            size="mini"
-            plain
-            @click="onPicture('Edit')"
-          >
-            <i class="el-icon-upload" />
-          </el-button>
-          <el-button
-            class="custom-icon-btn"
-            type="info"
-            size="mini"
-            plain
-            @click="onPicture('Clean')"
-          >
-            <i class="el-icon-delete" />
-          </el-button>
-        </el-button-group>
-      </el-form-item>
-      <el-form-item :label="$t('title')">
-        <el-input
-          style="width: 450px;"
-          v-model="title"
-          placeholder="Notebook Title"
-          clearable
-          maxlength="100"
-          show-word-limit
-          ref="title"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('description')">
-        <el-input
-          style="width: 450px;"
-          type="textarea"
-          :rows="5"
-          placeholder="Notebook description"
-          maxlength="300"
-          show-word-limit
-          resize="none"
-          v-model="description"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('published')">
-        <el-switch
-          :active-color="COLOR_SWITCH_ACTIVE"
-          :inactive-color="COLOR_SWITCH_INACTIVE"
-          v-model="published"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('tag')">
-        <vue-tags-input
-          class="tag-box"
-          v-model="tag"
-          :tags="tags"
-          :autocomplete-items="autocompleteTags"
-          allow-edit-tags
-          @tags-changed="onChangeTags"
-        />
-      </el-form-item>
-      <el-form-item :label="$t('editorTemplate')">
-        <editor-template-select
-          :value="editorTemplate"
-          @change="onChangeEditorTemplate"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button-group>
-          <el-button type="primary" @click="onCreate">
-            {{ $t("create") }}
-          </el-button>
-          <el-button type="info" plain @click="onDrawerEnd">
-            {{ $t("cancel") }}
-          </el-button>
-        </el-button-group>
-      </el-form-item>
-    </el-form>
-  </el-drawer>
+  <el-form style="padding: 20px;" label-width="120px">
+    <el-form-item :label="$t('picture')">
+      <image-lazy :src="previewImage" />
+      <el-button-group>
+        <el-button
+          class="custom-icon-btn"
+          type="info"
+          size="mini"
+          plain
+          @click="onPicture('Edit')"
+        >
+          <i class="el-icon-upload" />
+        </el-button>
+        <el-button
+          class="custom-icon-btn"
+          type="info"
+          size="mini"
+          plain
+          @click="onPicture('Clean')"
+        >
+          <i class="el-icon-delete" />
+        </el-button>
+      </el-button-group>
+    </el-form-item>
+    <el-form-item :label="$t('title')">
+      <el-input
+        style="width: 450px;"
+        v-model="title"
+        placeholder="Notebook Title"
+        clearable
+        maxlength="100"
+        show-word-limit
+        ref="title"
+      />
+    </el-form-item>
+    <el-form-item :label="$t('description')">
+      <el-input
+        style="width: 450px;"
+        type="textarea"
+        :rows="5"
+        placeholder="Notebook description"
+        maxlength="300"
+        show-word-limit
+        resize="none"
+        v-model="description"
+      />
+    </el-form-item>
+    <el-form-item :label="$t('published')">
+      <el-switch
+        :active-color="COLOR_SWITCH_ACTIVE"
+        :inactive-color="COLOR_SWITCH_INACTIVE"
+        v-model="published"
+      />
+    </el-form-item>
+    <el-form-item :label="$t('tag')">
+      <vue-tags-input
+        class="tag-box"
+        v-model="tag"
+        :tags="tags"
+        :autocomplete-items="autocompleteTags"
+        allow-edit-tags
+        @tags-changed="onChangeTags"
+      />
+    </el-form-item>
+    <el-form-item :label="$t('editorTemplate')">
+      <editor-template-select
+        :value="editorTemplate"
+        @change="onChangeEditorTemplate"
+      />
+    </el-form-item>
+    <el-form-item>
+      <el-button-group>
+        <el-button type="primary" @click="onCreate">
+          {{ $t("create") }}
+        </el-button>
+        <el-button type="info" plain @click="onCancel">
+          {{ $t("cancel") }}
+        </el-button>
+      </el-button-group>
+    </el-form-item>
+  </el-form>
 </template>
 
 <script lang="ts">
@@ -92,7 +90,6 @@ import {
 } from "@/data/color";
 import log from "@/ts/Logger";
 import { NotebookAdd, EditorTemplate } from "@/api/NotebookModel";
-import eventBus, { Bus } from "@/ts/EventBus";
 import { routes } from "@/router";
 import { notebookAdd } from "@/api/NotebookAPI";
 import { tagAutocomplete } from "@/api/TagAPI";
@@ -105,7 +102,7 @@ import { Tag } from "@/models/vue-tags-input";
 import { Component, Prop, Watch, Vue } from "vue-property-decorator";
 import VueTagsInput from "@johmun/vue-tags-input";
 import ImageLazy from "@/components/Notebook/ImageLazy.vue";
-import EditorTemplateSelect from "@/components/common/EditorTemplateSelect.vue";
+import EditorTemplateSelect from "@/components/NewNotebook/EditorTemplateSelect.vue";
 
 @Component({
   components: {
@@ -114,10 +111,9 @@ import EditorTemplateSelect from "@/components/common/EditorTemplateSelect.vue";
     EditorTemplateSelect
   }
 })
-export default class NewNotebook extends Vue {
+export default class NewNotebookForm extends Vue {
   private COLOR_SWITCH_ACTIVE = COLOR_SWITCH_ACTIVE;
   private COLOR_SWITCH_INACTIVE = COLOR_SWITCH_INACTIVE;
-  private drawer: boolean = false;
   private autocompleteTag$: Subject<string> = new Subject();
   private subAutocompleteTag!: Subscription;
   private title: string = "";
@@ -136,7 +132,7 @@ export default class NewNotebook extends Vue {
     this.autocompleteTag$.next(this.tag);
   }
 
-  private reset() {
+  public reset() {
     this.title = "";
     this.description = "";
     this.published = false;
@@ -242,20 +238,6 @@ export default class NewNotebook extends Vue {
     }
   }
 
-  private onDrawerStart() {
-    log.debug("NewNotebook onDrawerStart");
-    this.reset();
-    this.drawer = true;
-    setTimeout(() => {
-      (this.$refs.title as HTMLInputElement).focus();
-    }, 100);
-  }
-
-  private onDrawerEnd() {
-    log.debug("NewNotebook onDrawerEnd");
-    this.drawer = false;
-  }
-
   private onPicture(action: PictureAction) {
     if (action === PictureAction.Edit) {
       this.inputFile.click();
@@ -275,6 +257,10 @@ export default class NewNotebook extends Vue {
       this.inputFile.value = "";
     }
   }
+
+  private onCancel() {
+    this.$emit("cancel");
+  }
   // ==================== Event Handler END ===================
 
   // ==================== Life Cycle ====================
@@ -282,8 +268,6 @@ export default class NewNotebook extends Vue {
     this.inputFile.setAttribute("type", "file");
     this.inputFile.setAttribute("accept", ".png,.jpg,.jpeg");
     this.inputFile.addEventListener("change", this.onChangeFile);
-    eventBus.$on(Bus.NewNotebook.drawerStart, this.onDrawerStart);
-    eventBus.$on(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
     this.subAutocompleteTag = this.autocompleteTag$
       .pipe(
         filter(keyword => keyword.length >= 2),
@@ -295,8 +279,6 @@ export default class NewNotebook extends Vue {
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
     this.inputFile.remove();
-    eventBus.$off(Bus.NewNotebook.drawerStart, this.onDrawerStart);
-    eventBus.$off(Bus.NewNotebook.drawerEnd, this.onDrawerEnd);
     this.subAutocompleteTag.unsubscribe();
   }
   // ==================== Life Cycle END ====================
