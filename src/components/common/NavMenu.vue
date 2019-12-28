@@ -238,13 +238,13 @@ export default class NavMenu extends Vue {
       height: 100vh;
       border: 0;
       position: fixed;
-      z-index: 9999999;
+      z-index: 2000;
       `;
     } else {
       return `
       width: 100%;
       position: fixed;
-      z-index: 9999999;
+      z-index: 2000;
       `;
     }
   }

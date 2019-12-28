@@ -41,6 +41,7 @@ export default {
   copy: "복사",
   writing: "쓰기",
   editorTemplate: "Editor 템플릿",
+  leave: "탈퇴",
   valid: {
     title: "제목을 입력해주세요",
     name: "이름을 입력해주세요",
@@ -56,7 +57,8 @@ export default {
   confirm: {
     deleteNotebook: "노트북을 삭제하시겠습니까?",
     deleteMember: "구성원을 삭제하시겠습니까?",
-    deleteComments: "댓글을 삭제하시겠습니까?"
+    deleteComments: "댓글을 삭제하시겠습니까?",
+    deleteLeave: "정말 탈퇴하시겠습니까? 데이터 복구가 불가능합니다"
   },
   loading: {
     creating: "생성중...",

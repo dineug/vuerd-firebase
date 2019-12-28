@@ -202,11 +202,13 @@ export async function notebookModify(
   store.commit(Commit.resetMyNotebook);
 }
 
-export function notebookRemove(notebookId: string): Promise<void> {
+export async function notebookRemove(notebookId: string): Promise<void> {
   if (!store.state.user) {
     throw new Error("not found user");
   }
-  return getNotebooksDocRef(notebookId).delete();
+  await getNotebooksDocRef(notebookId).delete();
+  store.commit(Commit.resetNotebook);
+  store.commit(Commit.resetMyNotebook);
 }
 
 export function memberList(id: string): Promise<QuerySnapshot> {

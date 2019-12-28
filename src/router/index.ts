@@ -90,7 +90,7 @@ export const routes = {
     beforeEnter: signIn
   },
   SignIn: {
-    path: "/sign-in",
+    path: "/sign/in",
     name: "SignIn",
     component: SignIn,
     beforeEnter: signOut

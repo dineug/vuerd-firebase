@@ -41,6 +41,7 @@ export default {
   copy: "copy",
   writing: "Writing",
   editorTemplate: "Editor Template",
+  leave: "Leave",
   valid: {
     title: "Please enter a title",
     name: "Please enter a name",
@@ -56,7 +57,8 @@ export default {
   confirm: {
     deleteNotebook: "Are you sure you want to delete the notebook?",
     deleteMember: "Are you sure you want to delete the member?",
-    deleteComments: "Are you sure you want to delete the comments?"
+    deleteComments: "Are you sure you want to delete the comments?",
+    deleteLeave: "Are you sure you want to leave? Data recovery is not possible"
   },
   loading: {
     creating: "Creating...",

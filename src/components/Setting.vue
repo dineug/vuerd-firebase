@@ -79,9 +79,14 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onUpdate">
-              {{ $t("update") }}
-            </el-button>
+            <el-button-group>
+              <el-button type="primary" @click="onUpdate">
+                {{ $t("update") }}
+              </el-button>
+              <el-button type="info" plain @click="onLeave">
+                {{ $t("leave") }}
+              </el-button>
+            </el-button-group>
           </el-form-item>
         </el-form>
       </el-main>
@@ -103,10 +108,12 @@ import { upload, FileType } from "@/api/storageAPI";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { MAX_SIZE } from "@/data/image";
 import PictureAction from "@/models/PictureAction";
+import { User as AuthUser } from "@/plugins/firebase";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Sidebar from "@/components/common/Sidebar.vue";
 import NavHeader from "@/components/common/NavHeader.vue";
 import LanguageSelect from "@/components/Setting/LanguageSelect.vue";
+import { routes } from "@/router";
 
 @Component({
   components: {
@@ -268,6 +275,37 @@ export default class Setting extends Vue {
 
   private onBack() {
     this.$router.back();
+  }
+
+  private onLeave() {
+    const user = this.$store.state.user as AuthUser | null;
+    if (user) {
+      this.$confirm(this.$t("confirm.deleteLeave") as string, "Warning", {
+        confirmButtonText: this.$t("ok") as string,
+        cancelButtonText: this.$t("cancel") as string,
+        type: "warning"
+      })
+        .then(() => {
+          const loading = this.$loading({
+            lock: true,
+            background: COLOR_LOADING,
+            text: this.$t("loading.deleting") as string
+          });
+          user
+            .delete()
+            .then(() => {
+              this.$router.push(routes.Notebook);
+            })
+            .catch(err =>
+              this.$notify.error({
+                title: "Error",
+                message: err.message
+              })
+            )
+            .finally(() => loading.close());
+        })
+        .catch(() => {});
+    }
   }
   // ==================== Event Handler END ===================
 
