@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter, { RawLocation, Route } from "vue-router";
-import { signIn } from "./Guard";
+import { signIn, signOut } from "./Guard";
 import { ElLoadingComponent } from "element-ui/types/loading";
 import { COLOR_LOADING } from "@/data/color";
 import { performance, Trace } from "@/plugins/firebase";
@@ -18,6 +18,8 @@ const Document = () =>
   import(/* webpackChunkName: "user" */ "@/components/Document.vue");
 const NewNotebook = () =>
   import(/* webpackChunkName: "user" */ "@/components/NewNotebook.vue");
+const SignIn = () =>
+  import(/* webpackChunkName: "user" */ "@/components/SignIn.vue");
 const Editor = () =>
   import(/* webpackChunkName: "editor" */ "@/components/Editor.vue");
 const Export = () =>
@@ -86,6 +88,12 @@ export const routes = {
     name: "NewNotebook",
     component: NewNotebook,
     beforeEnter: signIn
+  },
+  SignIn: {
+    path: "/sign-in",
+    name: "SignIn",
+    component: SignIn,
+    beforeEnter: signOut
   },
   Editor: {
     path: "/notebooks/:id/editor",

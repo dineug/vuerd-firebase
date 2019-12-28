@@ -153,6 +153,9 @@
             <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
           </el-menu-item>
         </el-popover>
+        <el-menu-item v-else index="sign-in">
+          <font-awesome-icon class="font-awesome" icon="sign-in-alt" />
+        </el-menu-item>
       </el-tooltip>
       <el-tooltip
         content="Github issues"
@@ -170,6 +173,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import SignInProvider from "@/models/SignInProvider";
 import {
   COLOR_SIDEBAR,
   COLOR_SIDEBAR_ACTIVE,
@@ -199,10 +203,6 @@ import { routes } from "@/router";
 import { fromEvent, Observable, Subscription } from "rxjs";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NewNotebookDrawer from "@/components/common/NewNotebookDrawer.vue";
-
-const enum Provider {
-  google = "google"
-}
 
 @Component({
   components: {
@@ -360,15 +360,21 @@ export default class NavMenu extends Vue {
         this.setActive();
         break;
       case "sign-in":
+        if (this.mode === "vertical") {
+          this.setActive();
+        } else {
+          this.$router.push(routes.SignIn);
+        }
+        break;
       case "notification":
         this.setActive();
         break;
     }
   }
 
-  private onSignIn(provider: Provider) {
+  private onSignIn(provider: SignInProvider) {
     switch (provider) {
-      case Provider.google:
+      case SignInProvider.google:
         auth
           .signInWithPopup(new firebase.auth.GoogleAuthProvider())
           .catch((err: AuthError) => {

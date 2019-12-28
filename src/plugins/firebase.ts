@@ -5,7 +5,7 @@ import "firebase/storage";
 import "firebase/analytics";
 import "firebase/performance";
 import store, { Commit } from "@/store";
-import router from "@/router";
+import router, { routes } from "@/router";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbknapvaSLGiJkzPmwO-lg8NNgKOUlrOM",
@@ -49,6 +49,7 @@ auth.onAuthStateChanged((user: User | null) => {
     store.commit(Commit.signIn, user);
     if (
       store.state.referer !== "/" &&
+      store.state.referer !== routes.SignIn.path &&
       router.currentRoute.path !== store.state.referer
     ) {
       router.push(store.state.referer);

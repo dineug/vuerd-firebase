@@ -14,3 +14,16 @@ export function signIn(
     next(routes.Notebook);
   }
 }
+
+export function signOut(
+  to: Route,
+  from: Route,
+  next: (to?: RawLocation) => void
+) {
+  if (store.state.user) {
+    next(routes.Notebook);
+  } else {
+    store.commit(Commit.referer, from.path);
+    next();
+  }
+}

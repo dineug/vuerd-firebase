@@ -34,6 +34,7 @@
 
 <script lang="ts">
 import log from "@/ts/Logger";
+import { HEADER_HEIGHT, HEADER_WIDTH_MAX, WIDTH_MIN } from "@/data/size";
 import { treeList } from "@/api/TreeAPI";
 import {
   convertTreeModel,
@@ -56,9 +57,6 @@ import ContainerToolBar from "@/components/Document/ContainerToolBar.vue";
 const SIDEBAR_WIDTH = 64;
 const MARGIN = 10;
 const EXPLORER_WIDTH = 200;
-const WIDTH_MIN = 768;
-const HEADER_HEIGTH = 60;
-const WIDTH_MAX = 402;
 
 const enum Direction {
   left = "left",
@@ -93,7 +91,7 @@ export default class Document extends Vue {
   private treeActive: TreeModel | null = null;
   private sidebarWidth: number = SIDEBAR_WIDTH;
   private show: boolean = true;
-  private headerHeight: number = HEADER_HEIGTH;
+  private headerHeight: number = HEADER_HEIGHT;
 
   get contentViewWidth(): number {
     if (this.show) {
@@ -226,7 +224,7 @@ export default class Document extends Vue {
       this.explorerWidth = 0;
     }
     this.headerHeight =
-      this.windowWidth < WIDTH_MAX ? HEADER_HEIGTH * 2 : HEADER_HEIGTH;
+      this.windowWidth < HEADER_WIDTH_MAX ? HEADER_HEIGHT * 2 : HEADER_HEIGHT;
   }
 
   private onMousemoveSash(event: MouseEvent) {

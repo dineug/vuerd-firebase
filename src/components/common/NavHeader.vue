@@ -5,12 +5,10 @@
 </template>
 
 <script lang="ts">
+import { HEADER_HEIGHT, HEADER_WIDTH_MAX } from "@/data/size";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NavMenu from "@/components/common/NavMenu.vue";
-
-const HEADER_HEIGTH = 60;
-const WIDTH_MAX = 402;
 
 @Component({
   components: {
@@ -19,7 +17,7 @@ const WIDTH_MAX = 402;
 })
 export default class NavHeader extends Vue {
   private show: boolean = false;
-  private height: number = HEADER_HEIGTH;
+  private height: number = HEADER_HEIGHT;
 
   get headerStyle(): string {
     return `
@@ -45,8 +43,8 @@ export default class NavHeader extends Vue {
   private created() {
     eventBus.$on(Bus.NavHeader.show, this.onShow);
     eventBus.$on(Bus.NavHeader.hide, this.onHide);
-    if (window.innerWidth < WIDTH_MAX) {
-      this.height = HEADER_HEIGTH * 2;
+    if (window.innerWidth < HEADER_WIDTH_MAX) {
+      this.height = HEADER_HEIGHT * 2;
     }
   }
 

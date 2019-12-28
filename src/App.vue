@@ -5,11 +5,10 @@
 </template>
 
 <script lang="ts">
+import { WIDTH_MIN } from "@/data/size";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { fromEvent, Observable, Subscription } from "rxjs";
 import { Component, Vue } from "vue-property-decorator";
-
-const WIDTH_MIN = 768;
 
 @Component
 export default class App extends Vue {
