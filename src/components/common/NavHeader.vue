@@ -9,6 +9,7 @@ import eventBus, { Bus } from "@/ts/EventBus";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import NavMenu from "@/components/common/NavMenu.vue";
 
+const HEADER_HEIGTH = 60;
 const WIDTH_MAX = 402;
 
 @Component({
@@ -18,7 +19,7 @@ const WIDTH_MAX = 402;
 })
 export default class NavHeader extends Vue {
   private show: boolean = false;
-  private height: number = 60;
+  private height: number = HEADER_HEIGTH;
 
   get headerStyle(): string {
     return `
@@ -45,7 +46,7 @@ export default class NavHeader extends Vue {
     eventBus.$on(Bus.NavHeader.show, this.onShow);
     eventBus.$on(Bus.NavHeader.hide, this.onHide);
     if (window.innerWidth < WIDTH_MAX) {
-      this.height = 120;
+      this.height = HEADER_HEIGTH * 2;
     }
   }
 

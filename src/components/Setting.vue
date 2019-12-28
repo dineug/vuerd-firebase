@@ -280,10 +280,6 @@ export default class Setting extends Vue {
     eventBus.$on(Bus.Setting.setInfo, this.onSetInfo);
   }
 
-  private mounted() {
-    (this.$refs.name as HTMLInputElement).focus();
-  }
-
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
     this.inputFile.remove();

@@ -346,10 +346,6 @@ export default class NotebookInfo extends Vue {
     this.setNotebook();
   }
 
-  private mounted() {
-    (this.$refs.title as HTMLInputElement).focus();
-  }
-
   private destroyed() {
     this.inputFile.removeEventListener("change", this.onChangeFile);
     this.inputFile.remove();

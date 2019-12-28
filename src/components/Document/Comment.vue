@@ -1,5 +1,5 @@
 <template>
-  <el-drawer :title="$t('comment')" :visible.sync="drawer" size="90%">
+  <el-drawer :title="$t('comment')" :visible.sync="drawer" size="85%">
     <div class="comment-box" :style="commentBoxStyle" ref="scroll">
       <el-timeline>
         <el-timeline-item v-if="comments.length === 0" key="comment-none">
@@ -278,9 +278,6 @@ export default class Comment extends Vue {
     log.debug("Comment onDrawerStart");
     this.reset();
     this.drawer = !this.drawer;
-    setTimeout(() => {
-      (this.$refs.message as HTMLInputElement).focus();
-    }, 100);
   }
 
   private onDrawerEnd() {

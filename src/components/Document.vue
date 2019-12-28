@@ -2,6 +2,9 @@
   <el-container>
     <sidebar />
     <el-container class="document-container">
+      <el-header style="padding: 0; height: auto;">
+        <nav-header />
+      </el-header>
       <explorer
         v-if="show"
         :width="explorerWidth"
@@ -10,14 +13,7 @@
         :search="search"
         @changeSearch="onSearch"
       />
-      <div
-        class="main"
-        :style="{
-          left: `${explorerWidth}px`,
-          width: `${contentViewWidth}px`,
-          height: `${contentViewHeight}px`
-        }"
-      >
+      <div class="main" :style="mainStyle">
         <container-tool-bar :height="windowHeight" />
         <container-view
           :width="contentViewWidth"
@@ -51,6 +47,7 @@ import { fromEvent, Observable, Subscription } from "rxjs";
 import { Commit } from "@/store";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Sidebar from "@/components/common/Sidebar.vue";
+import NavHeader from "@/components/common/NavHeader.vue";
 import Explorer from "@/components/Document/Explorer.vue";
 import Sash from "@/components/common/Sash.vue";
 import ContainerView from "@/components/Document/ContainerView.vue";
@@ -60,6 +57,8 @@ const SIDEBAR_WIDTH = 64;
 const MARGIN = 10;
 const EXPLORER_WIDTH = 200;
 const WIDTH_MIN = 768;
+const HEADER_HEIGTH = 60;
+const WIDTH_MAX = 402;
 
 const enum Direction {
   left = "left",
@@ -69,6 +68,7 @@ const enum Direction {
 @Component({
   components: {
     Sidebar,
+    NavHeader,
     Explorer,
     Sash,
     ContainerView,
@@ -93,17 +93,44 @@ export default class Document extends Vue {
   private treeActive: TreeModel | null = null;
   private sidebarWidth: number = SIDEBAR_WIDTH;
   private show: boolean = true;
+  private headerHeight: number = HEADER_HEIGTH;
 
   get contentViewWidth(): number {
-    return this.windowWidth - this.explorerWidth - this.sidebarWidth - MARGIN;
+    if (this.show) {
+      return this.windowWidth - this.explorerWidth - this.sidebarWidth - MARGIN;
+    } else {
+      return this.windowWidth;
+    }
   }
 
   get contentViewHeight(): number {
-    return this.windowHeight - MARGIN * 2;
+    if (this.show) {
+      return this.windowHeight - MARGIN * 2;
+    } else {
+      return this.windowHeight - this.headerHeight;
+    }
   }
 
   get sashLeft(): number {
     return this.explorerWidth + this.sidebarWidth;
+  }
+
+  get mainStyle(): string {
+    if (this.show) {
+      return `
+        left: ${this.explorerWidth}px;
+        width: ${this.contentViewWidth}px;
+        height: ${this.contentViewHeight}px;
+        margin: 10px 10px 10px 0;
+      `;
+    } else {
+      return `
+        left: ${this.explorerWidth}px;
+        width: ${this.contentViewWidth}px;
+        height: ${this.contentViewHeight}px;
+        margin: 0;
+      `;
+    }
   }
 
   @Watch("treeList")
@@ -192,14 +219,14 @@ export default class Document extends Vue {
     this.windowHeight = window.innerHeight;
     this.show = this.windowWidth > WIDTH_MIN;
     if (this.show) {
-      this.sidebarWidth = SIDEBAR_WIDTH;
-      if (this.explorerWidth === 10) {
+      if (this.explorerWidth === 0) {
         this.explorerWidth = EXPLORER_WIDTH;
       }
     } else {
-      this.explorerWidth = 10;
-      this.sidebarWidth = 0;
+      this.explorerWidth = 0;
     }
+    this.headerHeight =
+      this.windowWidth < WIDTH_MAX ? HEADER_HEIGTH * 2 : HEADER_HEIGTH;
   }
 
   private onMousemoveSash(event: MouseEvent) {
@@ -262,12 +289,12 @@ export default class Document extends Vue {
 
   .main {
     position: relative;
-    margin: 10px 10px 10px 0;
     background-color: white;
     border-radius: 4px;
     border: 1px solid #ebeef5;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
+    overflow: hidden;
   }
 }
 </style>

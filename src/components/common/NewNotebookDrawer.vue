@@ -23,9 +23,6 @@ export default class NewNotebookDrawer extends Vue {
     const vm = this.$refs.newNotebook as any;
     if (vm) {
       vm.reset();
-      setTimeout(() => {
-        (vm.$refs.title as HTMLInputElement).focus();
-      }, 100);
     }
   }
 
