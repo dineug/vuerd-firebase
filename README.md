@@ -4,8 +4,6 @@
 
 [![Build Status](https://travis-ci.com/vuerd/vuerd-firebase.svg?branch=master)](https://travis-ci.com/vuerd/vuerd-firebase)
 
-<iframe src="https://vuerd.io/notebooks/w6uWzA3KdN1SsyXasIjU/export/fAEOKTNK3h1jIQchaACt" width="800" height="500" frameborder="0"></iframe>
-
 ## Supported Server Korea - firebase
 | Name | Region |
 | --- | --- |
