@@ -9,7 +9,7 @@
       @input="onInput"
     />
     <div class="explorer-tree scrollbar" :style="explorerTreeStyle">
-      <tree-view :trees="trees" />
+      <tree-view :trees="trees" :preview="preview" />
     </div>
   </div>
 </template>
@@ -35,6 +35,8 @@ export default class Explorer extends Vue {
   private trees!: TreeModel[];
   @Prop({ type: String, default: "" })
   private search!: string;
+  @Prop({ type: Boolean, default: false })
+  private preview!: boolean;
 
   get explorerStyle(): string {
     return `

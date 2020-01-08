@@ -24,6 +24,10 @@ const Editor = () =>
   import(/* webpackChunkName: "editor" */ "@/components/Editor.vue");
 const Export = () =>
   import(/* webpackChunkName: "export" */ "@/components/Export.vue");
+const DocumentPreview = () =>
+  import(
+    /* webpackChunkName: "documentPreview" */ "@/components/DocumentPreview.vue"
+  );
 
 Vue.use(VueRouter);
 
@@ -73,6 +77,15 @@ export const routes = {
     path: "/notebooks/:id/setting",
     name: "NotebookSetting",
     component: NotebookSetting,
+    beforeEnter: signIn
+  },
+  DocumentPreview: {
+    path: "/notebooks/:id/document/preview",
+    name: "DocumentPreview",
+    component: DocumentPreview,
+    props: (route: Route) => ({
+      treeActiveId: route.query.active
+    }),
     beforeEnter: signIn
   },
   Document: {

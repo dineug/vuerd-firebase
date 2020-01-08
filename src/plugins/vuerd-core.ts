@@ -103,6 +103,12 @@ VuerdCore.use({
                 execute(): void {
                   router.back();
                 }
+              },
+              {
+                name: "Preview",
+                execute(): void {
+                  eventBus.$emit(Bus.Editor.preview);
+                }
               }
             ]
           }

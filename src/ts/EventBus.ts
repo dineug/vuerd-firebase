@@ -1,7 +1,8 @@
 import Vue from "vue";
 
 enum Editor {
-  reload = "Editor.reload"
+  reload = "Editor.reload",
+  preview = "Editor.preview"
 }
 
 enum NewNotebookDrawer {

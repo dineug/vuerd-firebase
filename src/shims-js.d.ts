@@ -47,8 +47,9 @@ interface KakaoLinkOption {
 interface KakaoStory {
   share(option: { url: string; text: string }): void;
 }
-
 interface Window {
   FB: FB;
   Kakao: Kakao;
+  previewCreated: () => void;
+  previewSend: (data: any) => void;
 }

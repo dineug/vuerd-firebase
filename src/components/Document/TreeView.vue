@@ -11,6 +11,7 @@
       <tree-view
         v-if="node.children && node.children.length !== 0"
         :trees="node.children"
+        :preview="preview"
       />
     </li>
   </ul>
@@ -28,19 +29,33 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class TreeView extends Vue {
   @Prop({ type: Array, default: () => [] })
   private trees!: TreeModel[];
+  @Prop({ type: Boolean, default: false })
+  private preview!: boolean;
 
   private onActive(treeModel: TreeModel) {
     log.debug("TreeView onActive");
     if (this.$route.query.active !== treeModel.id) {
-      this.$router.push({
-        name: routes.Document.name,
-        params: {
-          id: this.$route.params.id
-        },
-        query: {
-          active: treeModel.id
-        }
-      });
+      if (this.preview) {
+        this.$router.push({
+          name: routes.DocumentPreview.name,
+          params: {
+            id: this.$route.params.id
+          },
+          query: {
+            active: treeModel.id
+          }
+        });
+      } else {
+        this.$router.push({
+          name: routes.Document.name,
+          params: {
+            id: this.$route.params.id
+          },
+          query: {
+            active: treeModel.id
+          }
+        });
+      }
     }
   }
 

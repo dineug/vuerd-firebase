@@ -59,27 +59,27 @@ export default class ExportIframe extends Vue {
   }
 
   private markdownToHtml(tree: TreeNodeModel): string {
-    const value = `
-    <iframe
-      src="https://vuerd.io/notebooks/${this.$route.params.id}/export/${tree.id}"
-      width="890"
-      height="500"
-      frameborder="0"
-    ></iframe>
-    `;
-    return marked(value);
+    const value: string[] = [
+      "```html",
+      `<iframe`,
+      `  src="https://vuerd.io/notebooks/${this.$route.params.id}/export/${tree.id}"`,
+      `  width="890"`,
+      `  height="500"`,
+      `  frameborder="0"`,
+      `></iframe>`,
+      "```"
+    ];
+    return marked(value.join("\n"));
   }
 
   private onIframeCopy(tree: TreeNodeModel) {
     const textarea = document.createElement("textarea");
-    textarea.value = `
-    <iframe
-      src="https://vuerd.io/notebooks/${this.$route.params.id}/export/${tree.id}"
-      width="800"
-      height="500"
-      frameborder="0"
-    ></iframe>
-    `;
+    textarea.value = `<iframe
+  src="https://vuerd.io/notebooks/${this.$route.params.id}/export/${tree.id}"
+  width="800"
+  height="500"
+  frameborder="0"
+></iframe>`;
     document.body.append(textarea);
     textarea.select();
     textarea.setSelectionRange(0, 999);

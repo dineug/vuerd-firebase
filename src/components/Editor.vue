@@ -16,7 +16,8 @@ import { editorModify, editorDetail } from "@/api/UserAPI";
 import { getTreesColRef } from "@/api/TreeAPI";
 import { TreeNodeModel, TreeNodeModelImpl } from "@/api/TreeModel";
 import log from "@/ts/Logger";
-import { Commit } from "@/store";
+import store, { Commit } from "@/store";
+import { popupData } from "@/ts/util";
 import eventBus, { Bus } from "@/ts/EventBus";
 import { fromEvent, Observable, Subscription } from "rxjs";
 import { Component, Prop, Vue } from "vue-property-decorator";
@@ -34,6 +35,7 @@ export default class Editor extends Vue {
   private windowHeight: number = window.innerHeight;
   private resize$: Observable<Event> = fromEvent(window, "resize");
   private subResize!: Subscription;
+  private preview: Window | null = null;
 
   private getConfigEditor() {
     editorDetail().then(doc => {
@@ -52,6 +54,7 @@ export default class Editor extends Vue {
           treeList.push(new TreeNodeModelImpl(doc));
         });
         this.$store.commit(Commit.setTreeList, treeList);
+        this.previewSend();
       },
       err => {
         this.$notify.error({
@@ -61,6 +64,12 @@ export default class Editor extends Vue {
         this.$router.back();
       }
     );
+  }
+
+  private previewSend() {
+    if (this.preview !== null) {
+      this.preview.previewSend(this.$store.state.treeList);
+    }
   }
 
   // ==================== Event Handler ===================
@@ -78,6 +87,18 @@ export default class Editor extends Vue {
       this.load = true;
     });
   }
+
+  private onPreview() {
+    if (this.preview !== null) {
+      this.preview.close();
+      this.preview = null;
+    }
+    this.preview = open(
+      `/notebooks/${this.$route.params.id}/document/preview`,
+      "documentPreview",
+      popupData(900, 900).toString()
+    );
+  }
   // ==================== Event Handler END ===================
 
   // ==================== Life Cycle ====================
@@ -87,6 +108,10 @@ export default class Editor extends Vue {
     this.getTrees();
     this.getConfigEditor();
     eventBus.$on(Bus.Editor.reload, this.onReload);
+    eventBus.$on(Bus.Editor.preview, this.onPreview);
+    window.previewCreated = () => {
+      this.previewSend();
+    };
   }
 
   private mounted() {
@@ -99,8 +124,13 @@ export default class Editor extends Vue {
     this.subResize.unsubscribe();
     this.$store.commit(Commit.setTreeList, []);
     eventBus.$off(Bus.Editor.reload, this.onReload);
+    eventBus.$off(Bus.Editor.preview, this.onPreview);
     if (this.unsubscribe) {
       this.unsubscribe();
+    }
+    if (this.preview !== null) {
+      this.preview.close();
+      this.preview = null;
     }
   }
   // ==================== Life Cycle END ====================
