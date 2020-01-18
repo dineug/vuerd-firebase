@@ -85,8 +85,7 @@ export const routes = {
     component: DocumentPreview,
     props: (route: Route) => ({
       treeActiveId: route.query.active
-    }),
-    beforeEnter: signIn
+    })
   },
   Document: {
     path: "/notebooks/:id/document",
