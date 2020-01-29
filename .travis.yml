@@ -17,5 +17,4 @@ script:
   - npm install
   - cd ..
   - yarn
-  - yarn lint
   - yarn build

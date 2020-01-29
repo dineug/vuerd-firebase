@@ -4107,6 +4107,11 @@ dom-storage@2.1.0:
   resolved "https://registry.yarnpkg.com/dom-storage/-/dom-storage-2.1.0.tgz#00fb868bc9201357ea243c7bcfd3304c1e34ea39"
   integrity sha512-g6RpyWXzl0RR6OTElHKBl7nwnK87GUyZMYC7JWsB/IA73vpqK2K6LT39x4VepLxlSsWBFrPVLnsSR5Jyty0+2Q==
 
+dom-to-image@^2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/dom-to-image/-/dom-to-image-2.6.0.tgz#8a503608088c87b1c22f9034ae032e1898955867"
+  integrity sha1-ilA2CAiMh7HCL5A0rgMuGJiVWGc=
+
 domain-browser@^1.1.1:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/domain-browser/-/domain-browser-1.2.0.tgz#3d31f50191a6749dd1375a7f522e823d42e54eda"
@@ -11069,13 +11074,14 @@ vuerd-core@^0.4.9:
     vue-property-decorator "^8.3.0"
     vuex "^3.1.2"
 
-vuerd-plugin-erd@^0.2.13:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/vuerd-plugin-erd/-/vuerd-plugin-erd-0.2.13.tgz#d61cfc9b907ca46a8522287257a54aecd4745672"
-  integrity sha512-p/5xetLsOO7vd6WypH6jFwsHOicnK6zumEkBmnDE2Ccja4gTGZv3T09RgPoYYi0zK5xKyXEmzuUFDFhA2PYnUw==
+vuerd-plugin-erd@^0.2.14:
+  version "0.2.14"
+  resolved "https://registry.yarnpkg.com/vuerd-plugin-erd/-/vuerd-plugin-erd-0.2.14.tgz#941dcc6fc688416714158d9682c54404faaf28e6"
+  integrity sha512-xNYYUIA5BJdwuXKQmsScmTMX7m8AP8WX6wixTqblQKyqZBhhmD7LiBY0NfxYeTJpD3xboiEI/O/cdifW8GmGKQ==
   dependencies:
     "@tweenjs/tween.js" "^18.4.2"
     core-js "^3.4.8"
+    dom-to-image "^2.6.0"
     highlight.js "^9.16.2"
     rxjs "^6.5.3"
     uuid "^3.3.3"
