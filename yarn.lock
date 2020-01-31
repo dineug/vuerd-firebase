@@ -5413,6 +5413,16 @@ highlight.js@^9.12.0, highlight.js@^9.16.2, highlight.js@^9.6.0:
   dependencies:
     handlebars "^4.5.3"
 
+highlight.js@^9.18.0:
+  version "9.18.0"
+  resolved "https://registry.yarnpkg.com/highlight.js/-/highlight.js-9.18.0.tgz#6b1763cfcd53744313bd3f31f1210f7beb962c79"
+  integrity sha512-A97kI1KAUzKoAiEoaGcf2O9YPS8nbDTCRFokaaeBhnqjQTvbAuAJrQMm21zw8s8xzaMtCQBtgbyGXLGxdxQyqQ==
+
+highlightjs-graphql@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/highlightjs-graphql/-/highlightjs-graphql-1.0.1.tgz#e6e3a69585348a14492386260bb2c0c54c6a2e7b"
+  integrity sha512-g5kt/orsUJTjIt5pgs/uvi78kXndpCtYwzE7H3D0d07r3ETs9oHSZHD0EGaRPndiQ/4EYXt12rnsDkljn3ilAA==
+
 hmac-drbg@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/hmac-drbg/-/hmac-drbg-1.0.1.tgz#d2745701025a6c775a6c545793ed502fc0c649a1"
@@ -11074,15 +11084,16 @@ vuerd-core@^0.4.9:
     vue-property-decorator "^8.3.0"
     vuex "^3.1.2"
 
-vuerd-plugin-erd@^0.2.15:
-  version "0.2.15"
-  resolved "https://registry.yarnpkg.com/vuerd-plugin-erd/-/vuerd-plugin-erd-0.2.15.tgz#6c955e3b2c34220e2827b1c5f21bc9c429e73224"
-  integrity sha512-tqF0xASziru4n65xg+LzPAS+sAeG6ANiEgwriVCRJB5IE9LfE0iBBipnd35myKBUxBT0QDr7IHnmZJWu+gsEnw==
+vuerd-plugin-erd@^0.2.16:
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/vuerd-plugin-erd/-/vuerd-plugin-erd-0.2.16.tgz#f338940544b99f09584b33138e2fd521aab53642"
+  integrity sha512-zWuDJi94Lke0tL4yYU++cX1BJDcyww0j1E+bwPifZo/FeYzyMW/Q/XMH3/B+xZOppR/bNHAlmm7qoF847T0Obw==
   dependencies:
     "@tweenjs/tween.js" "^18.4.2"
     core-js "^3.4.8"
     dom-to-image "^2.6.0"
-    highlight.js "^9.16.2"
+    highlight.js "^9.18.0"
+    highlightjs-graphql "^1.0.1"
     rxjs "^6.5.3"
     uuid "^3.3.3"
     vue "^2.6.10"
